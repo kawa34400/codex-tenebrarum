@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Générateurs — Codex Tenebrarum</title>
+<!--meta-->
+<meta name="description" content="Un Inquisiteur et sa suite, une dynastie de Libres-Marchands, un monde impérial : le cogitator tire les dossiers, à vous d&#x27;écrire leur histoire.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Codex Tenebrarum">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:title" content="Générateurs">
+<meta property="og:description" content="Un Inquisiteur et sa suite, une dynastie de Libres-Marchands, un monde impérial : le cogitator tire les dossiers, à vous d&#x27;écrire leur histoire.">
+<meta property="og:url" content="https://kawa34400.github.io/codex-tenebrarum/generateurs.html">
+<meta property="og:image" content="https://kawa34400.github.io/codex-tenebrarum/icones/partage.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Codex Tenebrarum, le cogitator du lore de Warhammer 40 000">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://kawa34400.github.io/codex-tenebrarum/generateurs.html">
+<!--/meta-->
+<link rel="stylesheet" href="style.css">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#03100a">
+<link rel="icon" href="icones/icone-32.png">
+<link rel="apple-touch-icon" href="icones/icone-180.png">
+<style>
+  .gen-wrap { max-width: 1040px; }
+  .gen-onglets { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-bottom: 0.9rem; }
+  .gen-onglets button { font-family: var(--crt); font-size: 1.45rem; background: transparent; color: var(--ph-dim); border: 1px solid var(--ph-faint); padding: 0.1rem 0.9rem; cursor: pointer; }
+  .gen-onglets button[aria-selected="true"] { color: var(--ecran); background: var(--ph); border-color: var(--ph); text-shadow: none; }
+  .gen-actions { display: flex; flex-wrap: wrap; gap: 0.4rem; align-items: center; margin-bottom: 1rem; }
+  .gen-actions button { font-family: var(--crt); font-size: 1.35rem; background: transparent; color: var(--ph); border: 1px solid var(--ph-dim); padding: 0.05rem 0.8rem; cursor: pointer; }
+  .gen-actions button.prim { background: var(--ph); color: var(--ecran); border-color: var(--ph); text-shadow: none; }
+  .gen-actions button:hover { box-shadow: 0 0 12px var(--ph-glow); }
+  .gen-actions .note { font-family: var(--crt); font-size: 1.2rem; color: var(--ph-dim); }
+  .gen-fiche { border: 1px solid var(--ph-dim); background: var(--ecran); padding: 1.1rem 1.4rem 1.3rem; }
+  .gen-fiche .eyebrow { font-family: var(--crt); font-size: 1.35rem; color: var(--ph-dim); }
+  .gen-fiche h2 { margin: 0.1rem 0 0.2rem; padding: 0; border: 0; font-size: clamp(2rem, 4.6vw, 3.2rem); line-height: 1.05; }
+  .gen-fiche h2::before { content: none; }
+  .gen-fiche .devise { font-style: italic; margin: 0 0 0.9rem; }
+  .gen-grille { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 0.6rem 1.4rem; border-top: 1px solid var(--ph-faint); border-bottom: 1px solid var(--ph-faint); padding: 0.8rem 0; margin-bottom: 0.9rem; }
+  .gen-grille dt { font-family: var(--crt); font-size: 1.25rem; color: var(--ph-dim); }
+  .gen-grille dd { margin: 0; font-size: 0.93rem; }
+  .gen-fiche h3 { margin: 0.9rem 0 0.35rem; font-size: 1rem; }
+  .gen-fiche p, .gen-fiche li { font-size: 0.93rem; line-height: 1.6; max-width: none; }
+  .gen-fiche ul { margin: 0; padding-left: 1.1rem; }
+  .gen-fiche .secret { border: 1px dashed var(--chaos); color: var(--chaos); padding: 0.4rem 0.8rem; margin-top: 0.9rem; font-size: 0.92rem; }
+  .gen-fiche .secret b { font-family: var(--crt); font-size: 1.25rem; font-weight: normal; letter-spacing: 0.04em; }
+  .gen-fiche .renvois { font-family: var(--crt); font-size: 1.2rem; margin-top: 0.9rem; color: var(--ph-dim); }
+  .gen-fiche .renvois a { text-decoration: none; margin-right: 0.8rem; }
+  .gen-avert { font-family: var(--crt); font-size: 1.15rem; color: var(--ph-dim); margin-top: 1rem; }
+  @media print {
+    .gen-onglets, .gen-actions, .gen-avert { display: none; }
+    .gen-fiche { border: 1px solid #000; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="inner">
+    <a class="brand" href="index.html"><span class="skull">✠</span>Codex Tenebrarum</a>
+    <nav class="main-nav">
+      <a href="index.html">Accueil</a>
+      <a href="chronologie.html">Chronologie</a>
+      <a href="factions.html">Factions</a>
+      <a href="personnages.html">Personnages</a>
+      <a href="univers.html" class="active">Univers</a>
+      <a href="carte.html">Carte</a>
+      <a href="cartographe.html">Cartographe</a>
+    </nav>
+  </div>
+</header>
+<div class="breadcrumb"><a href="univers.html">Univers</a> <span>›</span> Générateurs</div>
+<section class="page-hero">
+  <div class="eyebrow">Univers · Registres de l'Administratum</div>
+  <h1>Générateurs</h1>
+  <p class="tagline">Un Inquisiteur et sa suite, une dynastie de Libres-Marchands, un monde impérial : le cogitator tire les dossiers, à vous d'écrire leur histoire.</p>
+</section>
+
+<main class="wrap gen-wrap">
+  <div class="gen-onglets" role="tablist">
+    <button type="button" role="tab" data-g="inq" aria-selected="true">Inquisiteur</button>
+    <button type="button" role="tab" data-g="lm" aria-selected="false">Libre-Marchand</button>
+    <button type="button" role="tab" data-g="monde" aria-selected="false">Monde impérial</button>
+  </div>
+  <div class="gen-actions">
+    <button type="button" class="prim" id="generer">Générer</button>
+    <button type="button" id="lien">Copier le lien</button>
+    <button type="button" id="imprimer">Imprimer</button>
+    <span class="note" id="note"></span>
+  </div>
+  <article class="gen-fiche" id="fiche" aria-live="polite"></article>
+  <p class="gen-avert">Les dossiers générés sont des créations à partir d'éléments du lore, pour vos parties ou vos récits. Chaque tirage a un numéro : le lien le retrouve à l'identique.</p>
+  <a class="back-top" href="univers.html">▲ Retour à Univers &amp; Concepts</a>
+</main>
+
+<footer class="site-footer">
+  <span class="latin">Ave Imperator</span>
+  Codex Tenebrarum — compendium non officiel du lore de Warhammer 40 000.<br>
+  Propriété de Games Workshop. Œuvre de fan, à but informatif.
+</footer>
+
+<script>
+(function () {
+  "use strict";
+  var R; // générateur pseudo-aléatoire à graine (mulberry32)
+  function graine(s) { var a = s >>> 0; R = function () { a = (a + 0x6D2B79F5) >>> 0; var t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+  function un(l) { return l[Math.floor(R() * l.length)]; }
+  function entre(a, b) { return a + Math.floor(R() * (b - a + 1)); }
+  function plusieurs(l, n) { var c = l.slice(), o = []; while (o.length < n && c.length) o.push(c.splice(Math.floor(R() * c.length), 1)[0]); return o; }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function maj(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+  function romain(n) { return ["I","II","III","IV","V","VI","VII","VIII","IX","X","XI","XII"][n - 1]; }
+
+  /* ---------- Noms ---------- */
+  var PRENOMS = ["Gideon","Cassia","Lucan","Seraphine","Tobias","Helena","Konrad","Ilse","Barnabas","Octavia","Ezekiel","Vianna","Mordecai","Livia","Silas","Agathe","Horatio","Isolde","Varan","Jaeger","Severina","Lothar","Melisande","Quintus","Talia","Augustin","Ravenna","Hadrian","Persephone","Caius"];
+  var NOMS = ["Ravor","Vex","Haldane","Corvane","Stroud","Malvern","Thorne","Ashgrave","Kessler","Draxx","Valerius","Montague","Orsini","Krait","Vorne","Sallust","Delacroix","Grael","Hesketh","Quill","Asperon","Varnhagen","Lorne","Castellan","Wyrd","Morrow","Brack","Feyd","Ostrander","Sabre"];
+  var SYL1 = ["Ar","Bel","Cad","Dra","Ex","Gal","Hel","Ist","Kal","Lun","Mar","Nov","Os","Pra","Quel","Rho","Sar","Tal","Ul","Var","Zan","Oph","Cre","Dun"];
+  var SYL2 = ["a","e","i","o","u","ae","io"];
+  var SYL3 = ["dor","lis","mos","rax","thas","vin","goth","nia","dax","ria","ton","ven","phis","kar","tus","lon","mire","sis"];
+  function nomMonde() { return un(SYL1) + un(SYL2) + un(SYL3); }
+
+  /* ---------- Inquisiteur ---------- */
+  var ORDOS = [
+    ["Ordo Malleus", "traque les démons et ceux qui pactisent avec le Warp", "ordo-malleus.html"],
+    ["Ordo Hereticus", "traque l'hérésie, les psykers non déclarés et les mutants", "ordo-hereticus.html"],
+    ["Ordo Xenos", "surveille les espèces extraterrestres et leurs artefacts", "ordo-xenos.html"],
+    ["Ordo Sepulturum", "enquête sur les épidémies de morts-vivants et la Peste du Non-Croyant", "imperium-inquisition.html"],
+    ["Ordo Chronos", "veille sur l'intégrité du temps et des registres", "ordo-chronos.html"],
+    ["Ordo Machinum", "surveille l'Adeptus Mechanicus et les technologies interdites", "imperium-mechanicus.html"]
+  ];
+  var PHILO = [
+    ["Puritain — Amalathien", "croit que l'Imperium doit être préservé tel quel, dans l'unité et la stabilité"],
+    ["Puritain — Monodominant", "n'accorde aucune pitié : tout ce qui n'est pas humain et pur doit brûler"],
+    ["Puritain — Thorien", "espère la renaissance de l'Empereur dans un corps de chair"],
+    ["Radical — Recongrégateur", "veut abattre les institutions corrompues pour reconstruire l'Imperium"],
+    ["Radical — Xanthite", "estime qu'on peut employer le pouvoir du Warp contre le Chaos lui-même"],
+    ["Radical — Istvaanien", "pense que seule la guerre et la souffrance rendent l'humanité plus forte"]
+  ];
+  var SUITE = [
+    ["un interrogateur", "son apprenti, formé pour lui succéder"],
+    ["une astropathe", "aveugle, chargée de ses communications"],
+    ["un savant", "archiviste vivant au cerveau augmenté"],
+    ["un servitor de combat", "aux bras remplacés par des armes"],
+    ["une Sœur de bataille", "détachée par l'Ordo Hereticus"],
+    ["un ancien Garde impérial", "seul survivant de son régiment"],
+    ["un prédicateur de l'Ecclésiarchie", "dont les sermons enflamment les foules"],
+    ["une assassin Callidus", "prêtée par l'Officio Assassinorum"],
+    ["un Technoprêtre renégat", "toléré pour ses connaissances interdites"],
+    ["une psyker sanctionnée", "liée par serment depuis le Vaisseau Noir"],
+    ["un mercenaire de la ruche", "acheté, et fidèle tant qu'il est payé"],
+    ["un Space Marine de la Deathwatch", "prêté pour une seule mission"],
+    ["un hacker de données", "sorti des archives de l'Administratum"],
+    ["un chirurgeon", "qui maintient tout le monde en vie"]
+  ];
+  var ARMES = ["un pistolet à plasma de l'Âge Sombre", "une épée de force héritée de son maître", "un pistolet bolter frappé de la Rosette",
+    "un marteau démonique sanctifié", "une lame psy en argent consacré", "un fusil de précision Exitus réformé", "un gantelet énergétique", "un bâton de force gravé de prières"];
+  var MISSIONS = [
+    "Un culte prolifère dans les bas-fonds de la ruche {m}. Personne n'a encore vu son chef.",
+    "Un vaisseau de pèlerins réapparu après trois siècles dans le Warp vient d'accoster à {m}.",
+    "Un gouverneur planétaire de {m} cesse de payer la dîme et ne répond plus aux astropathes.",
+    "Un artefact xenos a été vendu aux enchères sur {m}. L'acheteur a disparu.",
+    "Des enfants de {m} se mettent à parler une langue morte depuis la Grande Croisade.",
+    "Un Inquisiteur ami a été déclaré hérétique. Il demande refuge sur {m}.",
+    "Un monde-tombe nécron montre des signes d'éveil sous les mines de {m}.",
+    "Un régiment entier de {m} affirme avoir vu l'Empereur sur le champ de bataille."
+  ];
+  var SECRETS_INQ = [
+    "Il conserve dans un coffre-stase un livre qui lui parle la nuit.",
+    "Son interrogateur est un agent d'un autre Inquisiteur.",
+    "Il a fait condamner son propre maître pour hérésie, à tort.",
+    "Un démon lié lui fournit des prophéties en échange de noms.",
+    "Il ignore être lui-même un psyker latent.",
+    "Il protège en secret une enclave xenos qui lui a sauvé la vie.",
+    "Il a effacé une planète des registres pour cacher une erreur."
+  ];
+  function inquisiteur() {
+    var o = un(ORDOS), p = un(PHILO), n = un(PRENOMS) + " " + un(NOMS), m = nomMonde();
+    var suite = plusieurs(SUITE, entre(3, 5));
+    var age = entre(90, 420);
+    return {
+      eye: "DOSSIER INQUISITORIAL · " + o[0].toUpperCase(),
+      titre: "Inquisiteur " + n,
+      devise: un(["Innocence ne prouve rien.", "La foi sans action est vaine.", "Le doute est le premier pas vers la damnation.", "Tout pour l'Empereur, rien pour moi.", "Je suis le marteau, ils sont l'enclume.", "La vérité est un poison que je bois pour vous."]),
+      fiche: [["Ordo", o[0]], ["Courant", p[0]], ["Âge", age + " ans (rajeunissements)"], ["Arme de prédilection", maj(un(ARMES))], ["Base d'opération", "Forteresse cachée de " + nomMonde()], ["Réputation", un(["Redouté par ses pairs", "Méconnu, et c'est voulu", "Héros des prêcheurs", "Sous enquête de l'Ordo Hereticus", "Légende du sous-secteur"])]],
+      sections: [
+        ["Profil", "<p>L'Ordo " + esc(o[0].replace("Ordo ", "")) + " " + esc(o[1]) + ". " + esc(n.split(" ")[0]) + " " + esc(p[1]) + ".</p>"],
+        ["La suite", "<ul>" + suite.map(function (s) { return "<li>" + esc(maj(s[0])) + ", " + esc(s[1]) + ".</li>"; }).join("") + "</ul>"],
+        ["Mission en cours", "<p>" + esc(un(MISSIONS).replace("{m}", m)) + "</p>"]
+      ],
+      secret: un(SECRETS_INQ),
+      renvois: [["imperium-inquisition.html", "L'Inquisition"]].concat(o[2] !== "imperium-inquisition.html" ? [[o[2], o[0] === "Ordo Machinum" ? "Adeptus Mechanicus" : o[0]]] : []).concat([["heros-eisenhorn.html", "Eisenhorn"], ["cartographe.html?q=inquisition", "Romans de l'Inquisition"]])
+    };
+  }
+
+  /* ---------- Libre-Marchand ---------- */
+  var CLASSES = ["croiseur léger classe Dauntless", "croiseur classe Lunar", "croiseur lourd classe Mars", "galion marchand classe Universe", "frégate classe Sword", "croiseur de grande croisade, relique du M31", "transport classe Jovian"];
+  var NAVIRES = ["Fortune Sanglante", "Avarice du Juste", "Étoile de Sel", "Dame des Abysses", "Promesse de l'Aube", "Serment Doré", "Lame du Néant", "Chant de Saturne", "Prix du Sang", "Dernière Lumière"];
+  var FORTUNES = ["le commerce d'épices et d'alcools de mondes perdus", "la récupération d'épaves de la Grande Croisade", "la vente d'armes xenos à des gouverneurs complaisants", "la découverte de mondes miniers vierges", "le transport de pèlerins vers Terra", "l'exploitation d'un Œil astropathique privé", "des reliques de l'Âge des Technologies revendues au Mechanicus"];
+  var CONTACTS = ["un Ethéré t'au, avec qui il commerce en secret", "un archonte drukhari, partenaire dangereux", "un Prescient aeldari qui lui envoie des visions", "un Kahl des Ligues de Votann", "un chef de guerre ork, client fidèle de ses armes", "aucun, il les extermine tous"];
+  var RIVAUX = ["la dynastie {n}, qui convoite sa Charte", "un Inquisiteur qui le soupçonne d'hérésie", "un Navigateur qui connaît trop de ses secrets", "sa propre sœur, héritière évincée", "un Seigneur de guerre corsaire du Chaos"];
+  var NAVIGATEURS = ["Maison Belisarius", "Maison Yeshar", "Maison Castana", "Maison Benetek", "Maison Vor'cle"];
+  var SECRETS_LM = [
+    "La Charte de la dynastie est un faux habile du M38.",
+    "Le Navigateur de bord est en train de muter au-delà de toute guérison.",
+    "Un compartiment scellé du vaisseau abrite un sarcophage nécron.",
+    "Le premier Libre-Marchand de la lignée a pactisé avec Tzeentch.",
+    "Il finance un culte pour déstabiliser un monde qu'il veut acheter.",
+    "Il connaît une route stable à travers la Grande Faille."
+  ];
+  function libreMarchand() {
+    var nomD = un(NOMS), autre = un(NOMS.filter(function (x) { return x !== nomD; }));
+    var siecle = entre(32, 41), annee = String(entre(1, 999)).padStart(3, "0");
+    return {
+      eye: "LETTRES DE MARQUE · CHARTE DE LIBRE-MARCHAND",
+      titre: "Dynastie " + nomD,
+      devise: un(["Au-delà des étoiles, tout est à prendre.", "Le profit est une prière.", "Nul port ne nous est interdit.", "La Charte avant le sang.", "Ce que l'Empereur n'a pas conquis, nous l'achetons."]),
+      fiche: [["Charte accordée", annee + ".M" + siecle], ["Héritier actuel", un(PRENOMS) + " " + nomD + " " + romain(entre(2, 11))], ["Vaisseau amiral", "« " + un(NAVIRES) + " », " + un(CLASSES)], ["Navigateur", un(NAVIGATEURS)], ["Flotte", entre(2, 14) + " vaisseaux"], ["Zone d'opération", un(["Segmentum Obscurus", "Segmentum Ultima", "Segmentum Pacificus", "Segmentum Tempestus", "Franges Est", "Imperium Nihilus"])]],
+      sections: [
+        ["Fortune", "<p>La dynastie a bâti sa fortune sur " + esc(un(FORTUNES)) + ".</p>"],
+        ["Contact xenos", "<p>" + esc(maj(un(CONTACTS))) + ".</p>"],
+        ["Rival", "<p>" + esc(maj(un(RIVAUX).replace("{n}", autre))) + ".</p>"]
+      ],
+      secret: un(SECRETS_LM),
+      renvois: [["rogue-traders.html", "Libres-Marchands"], ["imperium-marine.html", "Marine impériale"], ["cartographe.html?q=crime", "Romans hors des sentiers battus"]]
+    };
+  }
+
+  /* ---------- Monde impérial ---------- */
+  var CLASSES_M = [
+    ["Monde-ruche", "des cités-ruches de plusieurs kilomètres de haut", "imperium-militarum.html"],
+    ["Agri-monde", "des plaines cultivées qui nourrissent tout un sous-secteur", "imperium-militarum.html"],
+    ["Monde-forge", "des usines du Mechanicus à perte de vue", "imperium-mechanicus.html"],
+    ["Monde-forteresse", "des remparts conçus pour tenir des siècles", "imperium-militarum.html"],
+    ["Monde-chevalier", "des Maisons nobles et leurs machines", "imperium-knights.html"],
+    ["Monde-sanctuaire", "des cathédrales et des foules de pèlerins", "imperium-ministorum.html"],
+    ["Monde féodal", "une société médiévale qui ignore presque tout des étoiles", "imperium-astartes.html"],
+    ["Monde sauvage", "des tribus barbares, viviers de recrues Astartes", "imperium-astartes.html"],
+    ["Monde-cardinal", "la puissance de l'Ecclésiarchie", "imperium-ministorum.html"],
+    ["Monde minier", "des mines profondes et des colonies pénitentiaires", "imperium-militarum.html"]
+  ];
+  var DIMES = ["Aptus Non", "Solutio Tertius", "Solutio Particular", "Solutio Prima", "Decuma Tertius", "Decuma Particular", "Decuma Prima", "Exactis Tertius", "Exactis Particular", "Exactis Prima", "Exactis Extremis"];
+  var MENACES = [
+    ["un culte genestealer infiltré dans l'administration", "xenos-tyranides.html"],
+    ["une WAAAGH ! qui approche du système", "xenos-orks.html"],
+    ["une bande de guerre de la Black Legion en maraude", "chaos-astartes.html"],
+    ["un monde-tombe nécron qui s'éveille sous la croûte", "xenos-necrons.html"],
+    ["des raids drukhari qui enlèvent des villages entiers", "xenos-drukhari.html"],
+    ["l'avant-garde d'une flotte-ruche", "xenos-tyranides.html"],
+    ["un gouverneur gagné aux promesses du Bien Suprême", "xenos-tau.html"],
+    ["une tempête warp née de la Grande Faille", "evt-grande-faille.html"],
+    ["une épidémie qui porte la marque de Nurgle", "chaos-dieux.html"]
+  ];
+  var PARTICULARITES = ["Le soleil ne s'y couche jamais", "Une relique d'un Primarque y est vénérée", "Ses océans sont acides", "Un Titan mort y sert de cathédrale", "La population vit sous terre, la surface étant irradiée", "Ses lunes abritent une colonie pénitentiaire", "Un Space Marine y aurait accompli un miracle", "Ses astropathes y meurent anormalement jeunes", "Les ruines d'une ancienne cité aeldari y sont interdites d'accès"];
+  var REGIMENTS = ["Fusiliers", "Lanciers", "Grenadiers", "Chasseurs", "Dragons", "Gardes", "Rangers", "Mortifères"];
+  function monde() {
+    var c = un(CLASSES_M), nom = nomMonde(), num = romain(entre(1, 9)), me = un(MENACES);
+    var popu = c[0] === "Monde-ruche" ? entre(20, 140) + " milliards" : c[0] === "Monde féodal" || c[0] === "Monde sauvage" ? entre(2, 600) + " millions" : entre(50, 900) + " millions";
+    return {
+      eye: "REGISTRE DE L'ADMINISTRATUM · " + c[0].toUpperCase(),
+      titre: nom + " " + num,
+      devise: un(["Pour l'Empereur et la dîme.", "Nous tenons.", "Notre sang pour Terra.", "Les murs ne tombent pas.", "La foi nourrit, le travail sauve."]),
+      fiche: [["Classe", c[0]], ["Segmentum", un(["Solar", "Obscurus", "Pacificus", "Tempestus", "Ultima"])], ["Population", popu], ["Dîme", un(DIMES)], ["Gouverneur", un(PRENOMS) + " " + un(NOMS)], ["Régiment levé", romain(entre(1, 12)) + "ᵉ " + un(REGIMENTS) + " de " + nom]],
+      sections: [
+        ["Description", "<p>" + esc(nom) + " " + esc(num) + " est un " + esc(c[0].toLowerCase()) + ", connu pour " + esc(c[1]) + ". " + esc(un(PARTICULARITES)) + ".</p>"],
+        ["Menace actuelle", "<p>Les rapports signalent " + esc(me[0]) + ".</p>"]
+      ],
+      secret: un(["Le gouverneur détourne une part de la dîme pour sa garde personnelle.", "La population de la sous-ruche ne figure dans aucun recensement.", "Un astropathe a reçu un message de l'Œil de la Terreur.", "Les registres prouvent que ce monde a déjà été déclaré mort au M39.", "Un temple abrite un psyker non déclaré, vénéré comme un saint."]),
+      renvois: [[c[2], c[0] === "Monde-chevalier" ? "Chevaliers impériaux" : "Dossier lié"], [me[1], "Menace"], ["carte.html", "Carte galactique"]]
+    };
+  }
+
+  var GEN = { inq: inquisiteur, lm: libreMarchand, monde: monde };
+  var etat = { g: "inq", s: 0 };
+  function rendre() {
+    graine(etat.s);
+    var d = GEN[etat.g]();
+    document.getElementById("fiche").innerHTML =
+      '<div class="eyebrow">' + esc(d.eye) + " · N° " + etat.s + "</div><h2>" + esc(d.titre) + '</h2><p class="devise">« ' + esc(d.devise) + " »</p>" +
+      '<dl class="gen-grille">' + d.fiche.map(function (f) { return "<div><dt>" + esc(f[0]) + "</dt><dd>" + esc(f[1]) + "</dd></div>"; }).join("") + "</dl>" +
+      d.sections.map(function (s) { return "<h3>" + esc(s[0]) + "</h3>" + s[1]; }).join("") +
+      '<div class="secret"><b>SECRET · ACCÈS VERMILLON</b><br>' + esc(d.secret) + "</div>" +
+      '<div class="renvois">' + d.renvois.map(function (r) { return '<a href="' + r[0] + '">› ' + esc(r[1]) + "</a>"; }).join("") + "</div>";
+    document.querySelectorAll(".gen-onglets button").forEach(function (b) { b.setAttribute("aria-selected", b.getAttribute("data-g") === etat.g ? "true" : "false"); });
+    try { history.replaceState(null, "", "?g=" + etat.g + "&n=" + etat.s); } catch (e) {}
+  }
+  function nouveau() { etat.s = Math.floor(Math.random() * 999999) + 1; rendre(); }
+
+  var m = location.search.match(/[?&]g=(inq|lm|monde)/), n = location.search.match(/[?&]n=(\d+)/);
+  if (m) etat.g = m[1];
+  if (n) { etat.s = +n[1]; rendre(); } else nouveau();
+  document.querySelectorAll(".gen-onglets button").forEach(function (b) {
+    b.addEventListener("click", function () { etat.g = b.getAttribute("data-g"); nouveau(); });
+  });
+  document.getElementById("generer").addEventListener("click", nouveau);
+  document.getElementById("imprimer").addEventListener("click", function () { window.print(); });
+  document.getElementById("lien").addEventListener("click", function () {
+    var no = document.getElementById("note");
+    try { navigator.clipboard.writeText(location.href).then(function () { no.textContent = "LIEN COPIÉ."; }, function () { no.textContent = location.href; }); }
+    catch (e) { no.textContent = location.href; }
+  });
+})();
+</script>
+<script src="cogitator.js"></script>
+</body>
+</html>

@@ -66,10 +66,13 @@
     "imperium-inquisition": ["inquisition", "inquisition"], "imperium-assassins": ["officio-assassinorum", "assassins"],
     "imperium-mechanicus": ["adeptus-mechanicus", "mechanicus"], "imperium-sororitas": ["adepta-sororitas", "sororitas"],
     "imperium-ministorum": ["adepta-sororitas", "sororitas"], "imperium-militarum": ["astra-militarum", "garde"],
-    "militarum-tempestus": ["astra-militarum", "garde"], "imperium-knights": ["imperial-knights", null],
+    "militarum-tempestus": ["astra-militarum", "garde"], "imperium-knights": ["imperial-knights", "knights"],
     // Chaos
     "chaos-dieux": [null, "chaos"], "evt-croisades-noires": ["black-legion", "black-legion"],
     // Xenos
+    "xenos-arlequins": ["aeldari", "aeldari"], "xenos-aspects": ["aspect-warriors", "aeldari"], "xenos-ynnari": ["aeldari", "aeldari"],
+    "xenos-kroots": ["tau-empire", "tau"], "chaos-demons": [null, "chaos"], "chaos-chevaliers": [null, "chaos"],
+    "chapitre-legion-damnes": ["legion-damned", "debutant"], "imperium-marine": ["imperial-navy", "garde"],
     "xenos-aeldari": ["aeldari", "aeldari"], "craftworld-alaitoc": ["alaitoc", "aeldari"],
     "xenos-eldrad": ["aeldari", "aeldari"], "xenos-yvraine": ["aeldari", "aeldari"],
     "xenos-drukhari": ["drukhari", "drukhari"], "xenos-vect": ["drukhari", "drukhari"],
@@ -85,7 +88,7 @@
   var PREFIXES = [
     ["ordre-", "adepta-sororitas", "sororitas"], ["ordo-", "inquisition", "inquisition"],
     ["assassin-", "officio-assassinorum", "assassins"], ["regiment-", "astra-militarum", "garde"],
-    ["maison-", "imperial-knights", null], ["mechanicus-", "adeptus-mechanicus", "mechanicus"],
+    ["maison-", "imperial-knights", "knights"], ["mechanicus-", "adeptus-mechanicus", "mechanicus"],
     ["dynastie-", "necrons", "necrons"], ["clan-", "orks", "orks"], ["caste-", "tau-empire", "tau"],
     ["craftworld-", "aeldari", "aeldari"], ["drukhari-", "drukhari", "drukhari"],
     ["flotte-", null, "tyranides"], ["dieu-", null, "chaos"]
@@ -120,10 +123,26 @@
 
   /* Lien vers la toile des relations, à droite du fil d'Ariane */
   var fil = doc.querySelector(".breadcrumb");
-  if (fil && window.fetch !== undefined && !/^(toile|frise|carte|cartographe|examen|forge)$/.test(page)) {
+  if (fil && window.fetch !== undefined && !/^(toile|frise|carte|cartographe|examen|forge|lexique|comparateur|generateurs)$/.test(page)) {
     var lt = doc.createElement("a"); lt.href = "toile.html?d=" + page; lt.className = "fil-toile"; lt.textContent = "TOILE DES RELATIONS ›";
     fil.appendChild(lt);
+    // Impression du dossier : relevé (noir sur blanc) ou parchemin
+    var im = doc.createElement("span"); im.className = "fil-impr";
+    im.innerHTML = 'IMPRIMER : <button type="button" data-s="releve">RELEVÉ</button> · <button type="button" data-s="parchemin">PARCHEMIN</button>';
+    im.addEventListener("click", function (e) { var s = e.target.getAttribute && e.target.getAttribute("data-s"); if (s) window.COGI_IMPRIMER(s); });
+    fil.appendChild(im);
   }
+  // En-tête des pages imprimées (invisible à l'écran)
+  var main = doc.querySelector("main") || doc.body;
+  var ent = doc.createElement("div"); ent.className = "impr-entete";
+  ent.innerHTML = "<span>CODEX TENEBRARUM · " + esc((doc.title.split(" — ")[0] || "").toUpperCase()) + "</span><span>" +
+    (location.protocol.indexOf("http") === 0 ? esc(location.host + location.pathname) : "Copie locale") + "</span>";
+  var hero2 = doc.querySelector(".page-hero");
+  (hero2 ? hero2.parentNode : main).insertBefore(ent, hero2 || main.firstChild);
+  window.COGI_IMPRIMER = function (style) {
+    doc.documentElement.setAttribute("data-impr", style === "parchemin" ? "parchemin" : "releve");
+    setTimeout(function () { window.print(); }, 50);
+  };
 
   /* =========================================================
      2. LECTURES CONSEILLÉES (depuis le Cartographe)
@@ -165,7 +184,8 @@
     var g = window.CODEX_GLOSSAIRE[+span.dataset.g];
     if (!bulle) { bulle = doc.createElement("div"); bulle.className = "gl-bulle"; bulle.setAttribute("role", "tooltip"); bulle.id = "gl-bulle"; doc.body.appendChild(bulle); }
     bulle.innerHTML = '<div class="gl-t">' + esc(g.t.toUpperCase()) + '</div><div class="gl-d">' + esc(g.def) + "</div>" +
-      (g.page && g.page.replace(".html", "") !== page ? '<a href="' + g.page + '">Consulter le dossier ›</a>' : "");
+      (g.page && g.page.replace(".html", "") !== page ? '<a href="' + g.page + '">Consulter le dossier ›</a> ' : "") +
+      '<a href="lexique.html?q=' + encodeURIComponent(g.t) + '">Lexique ›</a>';
     bulle.style.display = "block";
     var r = span.getBoundingClientRect(), bw = Math.min(340, window.innerWidth - 24);
     bulle.style.width = bw + "px";
@@ -179,13 +199,14 @@
   }
   function cacher() { if (bulle) bulle.style.display = "none"; if (cibleActive) cibleActive.removeAttribute("aria-describedby"); cibleActive = null; }
   function glossaire() {
+    if (page === "lexique") return;
     var racine = doc.querySelector("main") || doc.querySelector(".wrap");
     if (!racine) return;
     charger("glossaire.js", function () { return !!window.CODEX_GLOSSAIRE; }).then(function () {
       var G = window.CODEX_GLOSSAIRE, faits = {}, total = 0;
       var motifs = [];
       G.forEach(function (g, i) {
-        if (g.page && g.page.replace(".html", "") === page) return;
+        if (g.survol === false || (g.page && g.page.replace(".html", "") === page)) return;
         g.alias.forEach(function (a) { motifs.push({ a: a, i: i }); });
       });
       motifs.sort(function (x, y) { return y.a.length - x.a.length; });
@@ -312,4 +333,23 @@
 
   classifies();   // avant le glossaire : les voiles sont exclus du balisage
   glossaire();
+
+  /* =========================================================
+     5. REGISTRE DES COMMENTAIRES (giscus, discussions GitHub)
+     Seulement sur le site en ligne, et seulement sur les dossiers.
+     ========================================================= */
+  (function commentaires() {
+    if (location.protocol.indexOf("http") !== 0 || !doc.querySelector(".page-hero")) return;
+    if (/^(index|toile|frise|carte|cartographe|examen|forge|lexique|comparateur|generateurs|factions|personnages|univers|chronologie)$/.test(page)) return;
+    var ancre = doc.querySelector("main .back-top"), main = doc.querySelector("main");
+    if (!main) return;
+    var sec = doc.createElement("section"); sec.className = "registre-com";
+    sec.innerHTML = '<h2>Registre des commentaires</h2><p class="rc-note">Débattez de ce dossier avec les autres acolytes. Connexion avec un compte GitHub.</p><div class="giscus"></div>';
+    if (ancre) main.insertBefore(sec, ancre); else main.appendChild(sec);
+    var sc = doc.createElement("script"); sc.src = "https://giscus.app/client.js"; sc.async = true; sc.crossOrigin = "anonymous";
+    var conf = { repo: "kawa34400/codex-tenebrarum", "repo-id": "R_kgDOVDx9nQ", category: "Announcements", "category-id": "DIC_kwDOVDx9nc4DHf-j",
+      mapping: "pathname", strict: "0", "reactions-enabled": "1", "emit-metadata": "0", "input-position": "top", theme: "transparent_dark", lang: "fr", loading: "lazy" };
+    Object.keys(conf).forEach(function (k) { sc.setAttribute("data-" + k, conf[k]); });
+    sec.appendChild(sc);
+  })();
 })();

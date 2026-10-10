@@ -677,3 +677,87 @@ li { margin: 0.35rem 0; }
 .breadcrumb .fil-toile { float: right; color: var(--ph-faint); }
 .breadcrumb .fil-toile:hover { color: var(--ecran); }
 @media (max-width: 640px) { .breadcrumb .fil-toile { float: none; display: block; } }
+
+/* Transmissions interceptées */
+#cogi-out .ln.trans { color: var(--xenos); }
+#cogi-out .trans-tete { letter-spacing: 0.04em; text-shadow: 0 0 8px var(--xenos-glow); }
+.trans-alerte {
+  position: fixed; right: 1rem; bottom: 3.6rem; z-index: 820; max-width: min(380px, calc(100vw - 2rem));
+  display: flex; flex-direction: column; align-items: flex-start; gap: 0.1rem; text-align: left;
+  background: var(--ecran); color: var(--xenos); border: 1px solid var(--xenos); padding: 0.4rem 0.8rem;
+  font-family: var(--crt); font-size: 1.25rem; cursor: pointer; box-shadow: 0 0 18px var(--xenos-glow);
+  animation: trans-in 0.35s steps(4) both, trans-clignote 1.2s steps(2) 3;
+}
+.trans-alerte b { font-weight: normal; letter-spacing: 0.05em; }
+.trans-alerte span { color: var(--ph); }
+.trans-alerte.part { opacity: 0; transition: opacity 0.5s; }
+@keyframes trans-in { from { transform: translateY(12px); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes trans-clignote { 50% { border-color: transparent; } }
+@media (prefers-reduced-motion: reduce) { .trans-alerte { animation: none; } }
+@media print { .trans-alerte { display: none !important; } }
+
+/* =========================================================
+   IMPRESSION DES DOSSIERS — « relevé » (défaut) ou « parchemin »
+   (choix via le fil d'Ariane ou la commande IMPRIMER PARCHEMIN)
+   ========================================================= */
+.breadcrumb .fil-impr { float: right; margin-right: 1.2rem; color: var(--ph-faint); font: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+.breadcrumb .fil-impr button { font: inherit; background: none; border: 0; padding: 0 0.15rem; color: var(--ph-dim); cursor: pointer; }
+.breadcrumb .fil-impr button:hover { color: var(--ecran); background: var(--ph); text-shadow: none; }
+.impr-entete { display: none; }
+@media (max-width: 640px) { .breadcrumb .fil-impr { float: none; display: block; margin: 0; } }
+
+@media print {
+  @page { margin: 16mm 15mm 18mm; }
+  html, html[data-phos] {
+    --ph: #111 !important; --ph-txt: #1d1d1d !important; --ph-dim: #555 !important; --ph-faint: #aaa !important;
+    --ph-glow: transparent !important; --ph-wash: transparent !important; --ecran: #fff !important; --ecran-2: #fff !important;
+    --chaos: #7a1a10 !important; --chaos-dim: #b05a50 !important; --chaos-glow: transparent !important;
+    --xenos: #5c4300 !important; --xenos-dim: #9c7a30 !important; --xenos-glow: transparent !important;
+  }
+  html, body { background: #fff !important; }
+  body { color: #1d1d1d; text-shadow: none !important; padding-bottom: 0; font-size: 10.5pt; line-height: 1.55; }
+  body::before, body::after, .crt-noise, .crt-roll, #cogi-term, .cogi-status, .site-header, .breadcrumb,
+  #cogi-boot, .trans-alerte, .gl-bulle, .cl-btn, .cl-note, .back-top, .purge-flash, .pict::before, .pict::after { display: none !important; }
+  * { text-shadow: none !important; box-shadow: none !important; animation: none !important; transition: none !important; }
+  .page-hero h1::after { display: none !important; }
+  .wrap { max-width: none; padding: 0; }
+  a { color: inherit !important; text-decoration: none; }
+  .gl { border-bottom: 0; }
+  h1, h2, h3, h4 { page-break-after: avoid; break-after: avoid; }
+  p, li, blockquote, .fiche, table, .classifie, figure { break-inside: avoid; }
+  img { filter: grayscale(1) contrast(1.2); }
+  .pict img { filter: brightness(0) !important; }
+  .page-hero { padding: 0 0 0.6rem; border-bottom: 2px solid #111; margin-bottom: 1rem; }
+  .card { border: 1px solid #aaa !important; background: none !important; }
+  table { display: table !important; }
+  .impr-entete {
+    display: flex !important; justify-content: space-between; gap: 1rem; border-bottom: 1px solid #111; padding-bottom: 0.25rem; margin-bottom: 0.8rem;
+    font-family: var(--crt); font-size: 12pt; letter-spacing: 0.05em; color: #111;
+  }
+  .site-footer { border-top: 1px solid #111; margin-top: 1.5rem; padding-top: 0.4rem; font-size: 8.5pt; color: #444; }
+
+  /* --- Variante parchemin --- */
+  html[data-impr="parchemin"], html[data-impr="parchemin"] body {
+    background: #f3e9d2 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  html[data-impr="parchemin"] {
+    --ph: #3b2414 !important; --ph-txt: #2b1d12 !important; --ph-dim: #7a5a3a !important; --ph-faint: #c2a77c !important; --ecran: #f3e9d2 !important;
+    --chaos: #7a1a10 !important; --crt: "Cinzel", "Trajan Pro", Georgia, serif; --mono: Georgia, "Book Antiqua", "Times New Roman", serif;
+  }
+  html[data-impr="parchemin"] body { font-size: 11.5pt; line-height: 1.6; }
+  html[data-impr="parchemin"] .page-hero { text-align: center; border-bottom: 3px double #7a5a3a; }
+  html[data-impr="parchemin"] .page-hero h1 { font-variant: small-caps; letter-spacing: 0.04em; }
+  html[data-impr="parchemin"] .page-hero .eyebrow::before { content: "✠ "; }
+  html[data-impr="parchemin"] h2 { border-bottom: 1px solid #c2a77c; font-variant: small-caps; }
+  html[data-impr="parchemin"] h2::before { content: "❧ " !important; color: #7a1a10; }
+  html[data-impr="parchemin"] .pict { float: right; border: 3px double #7a5a3a !important; }
+  html[data-impr="parchemin"] .pict img { filter: brightness(0) sepia(1) saturate(3) hue-rotate(-20deg) brightness(0.35) !important; }
+  html[data-impr="parchemin"] .impr-entete { justify-content: center; border-bottom: 3px double #7a5a3a; color: #3b2414; font-variant: small-caps; }
+  html[data-impr="parchemin"] .site-footer { text-align: center; border-top: 3px double #7a5a3a; color: #5a4028; }
+}
+
+/* Registre des commentaires (giscus) */
+.registre-com { margin: 3rem 0 1.5rem; border-top: 1px solid var(--ph-faint); padding-top: 0.5rem; }
+.registre-com .rc-note { font-family: var(--crt); font-size: 1.25rem; color: var(--ph-dim); }
+.registre-com .giscus { min-height: 120px; }
+@media print { .registre-com { display: none !important; } }

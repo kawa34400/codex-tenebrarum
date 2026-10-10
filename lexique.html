@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lexique — Codex Tenebrarum</title>
+<!--meta-->
+<meta name="description" content="Le vocabulaire du 41ᵉ millénaire, de l&#x27;Adeptus Astartes aux Ligues de Votann. Les termes soulignés en pointillés dans les dossiers renvoient ici.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Codex Tenebrarum">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:title" content="Lexique">
+<meta property="og:description" content="Le vocabulaire du 41ᵉ millénaire, de l&#x27;Adeptus Astartes aux Ligues de Votann. Les termes soulignés en pointillés dans les dossiers renvoient ici.">
+<meta property="og:url" content="https://kawa34400.github.io/codex-tenebrarum/lexique.html">
+<meta property="og:image" content="https://kawa34400.github.io/codex-tenebrarum/icones/partage.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Codex Tenebrarum, le cogitator du lore de Warhammer 40 000">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://kawa34400.github.io/codex-tenebrarum/lexique.html">
+<!--/meta-->
+<link rel="stylesheet" href="style.css">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#03100a">
+<link rel="icon" href="icones/icone-32.png">
+<link rel="apple-touch-icon" href="icones/icone-180.png">
+<style>
+  .lex-wrap { max-width: 1000px; }
+  .lex-filtre { display: flex; gap: 0.5rem; align-items: center; border: 1px solid var(--ph-dim); padding: 0.25rem 0.7rem; background: var(--ph-wash); margin-bottom: 0.8rem; }
+  .lex-filtre span { font-family: var(--crt); font-size: 1.7rem; color: var(--ph); }
+  .lex-filtre input { flex: 1; min-width: 0; background: transparent; border: 0; outline: none; color: var(--ph); font-family: var(--crt); font-size: 1.6rem; caret-color: var(--ph); }
+  .lex-filtre output { font-family: var(--crt); font-size: 1.3rem; color: var(--ph-dim); white-space: nowrap; }
+  .lettres { display: flex; flex-wrap: wrap; gap: 0.2rem; margin-bottom: 1.4rem; }
+  .lettres a, .lettres span { font-family: var(--crt); font-size: 1.45rem; min-width: 1.8rem; text-align: center; padding: 0 0.2rem; border: 1px solid var(--ph-faint); text-decoration: none; }
+  .lettres span { color: var(--ph-faint); border-color: transparent; }
+  .lex-lettre { font-family: var(--crt); font-size: 2.6rem; color: var(--ph); border-bottom: 1px solid var(--ph-faint); margin: 1.6rem 0 0.4rem; scroll-margin-top: 1rem; text-shadow: 0 0 8px var(--ph-glow); }
+  dl.lex { margin: 0; }
+  .lex-terme { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 0.2rem 1.2rem; padding: 0.55rem 0; border-bottom: 1px dotted var(--ph-faint); }
+  .lex-terme dt { font-family: var(--mono); font-weight: 600; color: var(--ph); }
+  .lex-terme dd { margin: 0; font-size: 0.93rem; line-height: 1.6; }
+  .lex-terme dd a { font-family: var(--crt); font-size: 1.25rem; text-decoration: none; margin-left: 0.3rem; white-space: nowrap; }
+  .lex-terme .var { display: block; font-family: var(--crt); font-size: 1.1rem; color: var(--ph-dim); }
+  .lex-terme:target { background: var(--ph-wash); outline: 1px dashed var(--ph-dim); }
+  .vide-lex { font-family: var(--crt); font-size: 1.4rem; color: var(--chaos); }
+  @media (max-width: 640px) { .lex-terme { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="inner">
+    <a class="brand" href="index.html"><span class="skull">✠</span>Codex Tenebrarum</a>
+    <nav class="main-nav">
+      <a href="index.html">Accueil</a>
+      <a href="chronologie.html">Chronologie</a>
+      <a href="factions.html">Factions</a>
+      <a href="personnages.html">Personnages</a>
+      <a href="univers.html" class="active">Univers</a>
+      <a href="carte.html">Carte</a>
+      <a href="cartographe.html">Cartographe</a>
+    </nav>
+  </div>
+</header>
+<div class="breadcrumb"><a href="univers.html">Univers</a> <span>›</span> Lexique</div>
+<section class="page-hero">
+  <div class="eyebrow">Univers · Glossaire de l'Ordo</div>
+  <h1>Lexique</h1>
+  <p class="tagline">Le vocabulaire du 41ᵉ millénaire, de l'Adeptus Astartes aux Ligues de Votann. Les termes soulignés en pointillés dans les dossiers renvoient ici.</p>
+</section>
+
+<main class="wrap lex-wrap">
+  <div class="lex-filtre"><span>&gt;</span><input id="filtre" spellcheck="false" placeholder="Filtrer : warp, chapitre, nécron…" aria-label="Filtrer le lexique"><output id="compte"></output></div>
+  <nav class="lettres" id="lettres" aria-label="Lettres"></nav>
+  <div id="liste"></div>
+  <a class="back-top" href="univers.html">▲ Retour à Univers &amp; Concepts</a>
+</main>
+
+<footer class="site-footer">
+  <span class="latin">Verbum Est Arma</span>
+  Codex Tenebrarum — compendium non officiel du lore de Warhammer 40 000.<br>
+  Propriété de Games Workshop. Œuvre de fan, à but informatif.
+</footer>
+
+<script src="glossaire.js"></script>
+<script src="cogitator-titres.js"></script>
+<script>
+(function () {
+  "use strict";
+  var G = window.CODEX_GLOSSAIRE.slice(), T = window.COGITATOR_TITRES || {};
+  function norm(s) { return (s || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/œ/g, "oe").replace(/^(l'|la |le |les )/, ""); }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function ancre(t) { return "t-" + norm(t).replace(/[^a-z0-9]+/g, "-"); }
+  G.sort(function (a, b) { return norm(a.t).localeCompare(norm(b.t), "fr"); });
+  function rendre(q) {
+    var n = norm(q), parL = {}, total = 0;
+    G.forEach(function (g) {
+      if (n && (norm(g.t) + " " + norm(g.alias.join(" ")) + " " + norm(g.def)).indexOf(n) < 0) return;
+      var l = norm(g.t).charAt(0).toUpperCase(); if (!/[A-Z]/.test(l)) l = "#";
+      (parL[l] = parL[l] || []).push(g); total++;
+    });
+    var lettres = Object.keys(parL).sort();
+    document.getElementById("lettres").innerHTML = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").map(function (l) {
+      return parL[l] ? '<a href="#L-' + l + '">' + l + "</a>" : "<span>" + l + "</span>";
+    }).join("");
+    document.getElementById("compte").textContent = total + " terme(s)";
+    document.getElementById("liste").innerHTML = total ? lettres.map(function (l) {
+      return '<div class="lex-lettre" id="L-' + l + '">' + l + '</div><dl class="lex">' + parL[l].map(function (g) {
+        var variantes = g.alias.filter(function (a) { return norm(a) !== norm(g.t); });
+        return '<div class="lex-terme" id="' + ancre(g.t) + '"><dt>' + esc(g.t) +
+          (variantes.length ? '<span class="var">' + esc(variantes.slice(0, 3).join(" · ")) + "</span>" : "") + "</dt><dd>" + esc(g.def) +
+          (g.page ? ' <a href="' + g.page + '">› ' + esc(T[g.page] || "Dossier") + "</a>" : "") + "</dd></div>";
+      }).join("") + "</dl>";
+    }).join("") : '<p class="vide-lex">AUCUN TERME NE CORRESPOND. Essayez un autre mot, ou tapez CHERCHER dans le terminal.</p>';
+  }
+  var f = document.getElementById("filtre");
+  f.addEventListener("input", function () { rendre(f.value); });
+  var m = location.search.match(/[?&]q=([^&]+)/);
+  if (m) f.value = decodeURIComponent(m[1]);
+  rendre(f.value);
+  if (location.hash) { var e = document.getElementById(location.hash.slice(1)); if (e) e.scrollIntoView(); }
+})();
+</script>
+<script src="cogitator.js"></script>
+</body>
+</html>

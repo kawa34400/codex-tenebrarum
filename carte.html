@@ -4,6 +4,21 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Carte Galactique — Codex Tenebrarum</title>
+<!--meta-->
+<meta name="description" content="Les mondes, secteurs et anomalies référencés par les archives. Cliquez une balise pour ouvrir sa fiche, ou tapez dans le terminal : SEARCH SUB-SECTOR AURELIA.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Codex Tenebrarum">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:title" content="Carte Galactique">
+<meta property="og:description" content="Les mondes, secteurs et anomalies référencés par les archives. Cliquez une balise pour ouvrir sa fiche, ou tapez dans le terminal : SEARCH SUB-SECTOR AURELIA.">
+<meta property="og:url" content="https://kawa34400.github.io/codex-tenebrarum/carte.html">
+<meta property="og:image" content="https://kawa34400.github.io/codex-tenebrarum/icones/partage.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Codex Tenebrarum, le cogitator du lore de Warhammer 40 000">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://kawa34400.github.io/codex-tenebrarum/carte.html">
+<!--/meta-->
 <link rel="stylesheet" href="style.css">
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#03100a">
@@ -37,6 +52,18 @@
   .mk .nom { position: absolute; left: 22px; top: 50%; transform: translateY(-50%); white-space: nowrap; font-family: var(--crt); font-size: 1.4rem; color: var(--ecran); background: var(--ph); padding: 0 0.35rem; display: none; text-shadow: none; pointer-events: none; z-index: 2; }
   .mk:hover .nom, .mk:focus-visible .nom, .mk.sel .nom { display: block; }
   .mk.cache { display: none; }
+  .calques { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+  .calques text { font-family: "VT323", monospace; font-size: 34px; letter-spacing: 2px; }
+  .cq { transition: opacity .3s; }
+  .cq.off { opacity: 0; }
+  .cq-nihilus path { fill: rgba(0,0,0,0.42); stroke: none; }
+  .cq-nihilus text { fill: var(--ph-dim); font-size: 46px; }
+  .cq-faille path { fill: none; stroke: var(--chaos); stroke-width: 14; stroke-linecap: round; stroke-linejoin: round; opacity: .55; stroke-dasharray: 2 18; filter: drop-shadow(0 0 8px var(--chaos)); }
+  .cq-ruches path { fill: none; stroke: var(--xenos); stroke-width: 6; stroke-dasharray: 18 12; }
+  .cq-ruches text { fill: var(--xenos); }
+  .filtres#calques button[aria-pressed="true"] { color: var(--xenos); border-color: var(--xenos-dim); }
+  .fiche-monde .evts { margin-top: .5rem; border-top: 1px dashed var(--ph-faint); padding-top: .4rem; }
+  .fiche-monde .evts a { font-size: 1.3rem; }
   .reticule { position: absolute; pointer-events: none; border: 1px dashed var(--ph); display: none; }
   .reticule.h { left: 0; right: 0; height: 0; border-width: 1px 0 0; opacity: 0.45; }
   .reticule.v { top: 0; bottom: 0; width: 0; border-width: 0 0 0 1px; opacity: 0.45; }
@@ -110,6 +137,20 @@
           <img src="logo/galaxy-map.jpg" alt="Carte de la galaxie : Segmentums, Grande Faille et mondes majeurs" draggable="false">
           <div class="teinte"></div>
           <div class="grille"></div>
+          <svg class="calques" viewBox="0 0 2000 1600" preserveAspectRatio="none" aria-hidden="true">
+            <defs>
+              <marker id="fleche" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="var(--xenos)"/></marker>
+            </defs>
+            <g class="cq cq-nihilus"><path d="M330 470 L620 580 L830 630 L1050 700 L1250 800 L1440 950 L1530 1060 L1650 1220 L1820 1260 L2000 1240 L2000 0 L330 0 Z"/>
+              <text x="1560" y="420">IMPERIUM NIHILUS</text></g>
+            <g class="cq cq-faille"><path d="M330 470 L620 580 L830 630 L1050 700 L1250 800 L1440 950 L1530 1060 L1650 1220 L1820 1260"/></g>
+            <g class="cq cq-ruches">
+              <path d="M1990 1470 C1850 1430 1700 1380 1545 1335" marker-end="url(#fleche)"/><text x="1720" y="1480">BÉHÉMOTH · 745.M41</text>
+              <path d="M1995 880 C1850 1000 1660 1150 1525 1250" marker-end="url(#fleche)"/><text x="1760" y="900">KRAKEN · ~992.M41</text>
+              <path d="M1240 1595 C1300 1300 1240 900 1180 540" marker-end="url(#fleche)"/><text x="1280" y="1560">LÉVIATHAN · ~997.M41</text>
+            </g>
+          </svg>
+
           <div class="reticule h" id="rh"></div><div class="reticule v" id="rv"></div>
         </div>
       </div>
@@ -120,6 +161,7 @@
       <div class="localiser">
         <label for="loc">Localiser</label>
         <div class="champ"><span>&gt;</span><input id="loc" spellcheck="false" placeholder="Baal, Cadia, Œil…" autocomplete="off"></div>
+        <div class="filtres" id="calques" aria-label="Calques"></div>
         <div class="filtres" id="filtres"></div>
         <ul class="liste-mondes" id="liste"></ul>
       </div>
@@ -135,6 +177,7 @@
 </footer>
 
 <script src="carte-data.js"></script>
+<script src="frise-data.js"></script>
 <script src="cogitator-titres.js"></script>
 <script>
 (function () {
@@ -170,6 +213,15 @@
     $("filtres").appendChild(b);
   });
 
+  [["nihilus", "Imperium Nihilus", false], ["faille", "Grande Faille", true], ["ruches", "Flottes-ruches", false]].forEach(function (c) {
+    var g = document.querySelector(".cq-" + c[0]), b = document.createElement("button");
+    b.type = "button"; b.textContent = "◈ " + c[1]; b.setAttribute("aria-pressed", c[2] ? "true" : "false");
+    if (!c[2]) g.classList.add("off");
+    b.addEventListener("click", function () { var on = g.classList.toggle("off") === false; b.setAttribute("aria-pressed", on ? "true" : "false"); });
+    $("calques").appendChild(b);
+  });
+  function evenements(id) { return (window.FRISE || []).filter(function (e) { return e.carte === id; }); }
+
   function appliquer() {
     var q = norm($("loc").value), ul = $("liste"); ul.innerHTML = "";
     L.filter(function (l) {
@@ -199,6 +251,7 @@
       "<h3>" + esc(l.nom) + "</h3>" +
       (l.x == null ? '<div class="hors">COORDONNÉES NON CARTOGRAPHIÉES — accès restreint</div>' : '<div class="type coord">' + coordTxt(l.x, l.y) + "</div>") +
       "<p>" + esc(l.desc) + "</p>" +
+      (evenements(l.id).length ? '<div class="liens evts"><div class="type">SUR LA FRISE</div>' + evenements(l.id).map(function (e) { return '<a href="frise.html?e=' + e.id + '">' + esc(e.debut.replace("~", "≈ ")) + " · " + esc(e.nom) + "</a>"; }).join("") + "</div>" : "") +
       (l.pages.length ? '<div class="liens">' + l.pages.map(function (p) { return '<a href="' + p + '">' + esc(titrePage(p)) + "</a>"; }).join("") + "</div>" : "");
     appliquer();
     try { history.replaceState(null, "", "?m=" + id); } catch (e) {}

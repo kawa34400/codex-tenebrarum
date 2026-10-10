@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Comparateur de factions — Codex Tenebrarum</title>
+<!--meta-->
+<meta name="description" content="Placez deux puissances face à face : origines, organisation, forces, failles, ennemis et romans pour les découvrir.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Codex Tenebrarum">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:title" content="Comparateur de factions">
+<meta property="og:description" content="Placez deux puissances face à face : origines, organisation, forces, failles, ennemis et romans pour les découvrir.">
+<meta property="og:url" content="https://kawa34400.github.io/codex-tenebrarum/comparateur.html">
+<meta property="og:image" content="https://kawa34400.github.io/codex-tenebrarum/icones/partage.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Codex Tenebrarum, le cogitator du lore de Warhammer 40 000">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://kawa34400.github.io/codex-tenebrarum/comparateur.html">
+<!--/meta-->
+<link rel="stylesheet" href="style.css">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#03100a">
+<link rel="icon" href="icones/icone-32.png">
+<link rel="apple-touch-icon" href="icones/icone-180.png">
+<style>
+  .cmp-wrap { max-width: 1180px; }
+  .cmp-choix { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); gap: 0.8rem; align-items: end; border: 1px solid var(--ph-dim); background: var(--ecran); padding: 0.8rem 1rem 1rem; margin-bottom: 0.6rem; }
+  .cmp-choix label { display: block; font-family: var(--crt); font-size: 1.35rem; color: var(--ph-dim); margin-bottom: 0.15rem; }
+  .cmp-choix select { width: 100%; background: transparent; color: var(--ph); border: 1px solid var(--ph-faint); padding: 0.35rem 0.5rem; font-family: var(--mono); font-size: 0.95rem; outline: none; }
+  .cmp-choix select option { background: var(--ecran); color: var(--ph); }
+  .cmp-choix select:focus { border-color: var(--ph); }
+  .cmp-vs { font-family: var(--crt); font-size: 2.2rem; color: var(--ph-dim); padding-bottom: 0.1rem; }
+  .cmp-actions { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1.2rem; }
+  .cmp-actions button { font-family: var(--crt); font-size: 1.35rem; background: transparent; color: var(--ph); border: 1px solid var(--ph-dim); padding: 0.05rem 0.8rem; cursor: pointer; }
+  .cmp-actions button:hover { box-shadow: 0 0 12px var(--ph-glow); }
+  .cmp-note { font-family: var(--crt); font-size: 1.2rem; color: var(--ph-dim); align-self: center; }
+  .alerte-ennemis { font-family: var(--crt); font-size: 1.5rem; color: var(--chaos); border: 1px dashed var(--chaos); padding: 0.2rem 0.8rem; margin-bottom: 1rem; text-shadow: 0 0 8px var(--chaos-glow); }
+  .cmp-rang { border-top: 1px solid var(--ph-faint); padding: 0.7rem 0 0.9rem; }
+  .cmp-rang > h3 { margin: 0 0 0.45rem; font-size: 1rem; }
+  .cmp-cols { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1.6rem; }
+  .cmp-cols > div { min-width: 0; }
+  .cmp-cols p { margin: 0; font-size: 0.93rem; line-height: 1.6; max-width: none; }
+  .cmp-cols ul { margin: 0; padding-left: 1.1rem; font-size: 0.92rem; line-height: 1.55; }
+  .cmp-tete { display: grid; grid-template-columns: 84px minmax(0, 1fr); gap: 0.9rem; align-items: center; }
+  .cmp-tete .embl { width: 84px; height: 84px; border: 1px solid var(--ph-faint); display: grid; place-items: center; font-family: var(--crt); font-size: 2.4rem; color: var(--ph-dim); }
+  .cmp-tete .embl img { width: 70px; height: 70px; object-fit: contain; filter: url(#cogi-ph) drop-shadow(0 0 5px var(--ph-glow)); }
+  .chaos .cmp-tete .embl img { filter: url(#cogi-chaos) drop-shadow(0 0 5px var(--chaos-glow)); }
+  .xenos .cmp-tete .embl img { filter: url(#cogi-xenos) drop-shadow(0 0 5px var(--xenos-glow)); }
+  .cmp-tete .fam { font-family: var(--crt); font-size: 1.25rem; color: var(--ph-dim); letter-spacing: 0.04em; }
+  .cmp-tete h2 { margin: 0; padding: 0; border: 0; font-size: clamp(1.7rem, 3.4vw, 2.5rem); line-height: 1.05; }
+  .cmp-tete h2::before { content: none; }
+  .chaos .cmp-tete h2, .chaos .cmp-tete .fam { color: var(--chaos); }
+  .xenos .cmp-tete h2, .xenos .cmp-tete .fam { color: var(--xenos); }
+  .cmp-tete .devise { font-style: italic; font-size: 0.92rem; margin: 0.2rem 0 0; }
+  .cmp-tete a { font-family: var(--crt); font-size: 1.2rem; text-decoration: none; }
+  .jauge { display: grid; grid-template-columns: 9.5rem minmax(0, 1fr); gap: 0.6rem; align-items: center; margin: 0.15rem 0; font-family: var(--crt); font-size: 1.25rem; }
+  .jauge .barre { display: grid; grid-template-columns: repeat(5, 1fr); gap: 3px; }
+  .jauge .barre i { height: 0.8rem; border: 1px solid var(--ph-faint); }
+  .jauge .barre i.on { background: var(--ph); border-color: var(--ph); box-shadow: 0 0 6px var(--ph-glow); }
+  .chaos .jauge .barre i.on { background: var(--chaos); border-color: var(--chaos); box-shadow: 0 0 6px var(--chaos-glow); }
+  .xenos .jauge .barre i.on { background: var(--xenos); border-color: var(--xenos); box-shadow: 0 0 6px var(--xenos-glow); }
+  .ennemi-croise { color: var(--chaos); font-weight: 600; }
+  .romans li { margin-bottom: 0.25rem; }
+  .romans .aut { color: var(--ph-dim); font-size: 0.85rem; }
+  .avert { font-family: var(--crt); font-size: 1.15rem; color: var(--ph-dim); margin-top: 1.2rem; }
+  @media (max-width: 700px) {
+    .cmp-choix { grid-template-columns: 1fr; }
+    .cmp-vs { text-align: center; padding: 0; }
+    .cmp-cols { grid-template-columns: 1fr; gap: 0.9rem; }
+    .cmp-cols > div + div { border-top: 1px dotted var(--ph-faint); padding-top: 0.7rem; }
+    .jauge { grid-template-columns: 8rem minmax(0, 1fr); }
+  }
+  @media print {
+    .cmp-choix, .cmp-actions { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="inner">
+    <a class="brand" href="index.html"><span class="skull">✠</span>Codex Tenebrarum</a>
+    <nav class="main-nav">
+      <a href="index.html">Accueil</a>
+      <a href="chronologie.html">Chronologie</a>
+      <a href="factions.html" class="active">Factions</a>
+      <a href="personnages.html">Personnages</a>
+      <a href="univers.html">Univers</a>
+      <a href="carte.html">Carte</a>
+      <a href="cartographe.html">Cartographe</a>
+    </nav>
+  </div>
+</header>
+<div class="breadcrumb"><a href="factions.html">Factions</a> <span>›</span> Comparateur</div>
+<section class="page-hero">
+  <div class="eyebrow">Factions · Analyse tactique comparée</div>
+  <h1>Comparateur de factions</h1>
+  <p class="tagline">Placez deux puissances face à face : origines, organisation, forces, failles, ennemis et romans pour les découvrir.</p>
+</section>
+
+<main class="wrap cmp-wrap">
+  <div class="cmp-choix">
+    <div><label for="fa">Faction A</label><select id="fa"></select></div>
+    <div class="cmp-vs">⟷</div>
+    <div><label for="fb">Faction B</label><select id="fb"></select></div>
+  </div>
+  <div class="cmp-actions">
+    <button type="button" id="inverser">⇄ Inverser</button>
+    <button type="button" id="hasard">Duel au hasard</button>
+    <button type="button" id="partager">Copier le lien</button>
+    <span class="cmp-note" id="note"></span>
+  </div>
+  <div id="resultat"></div>
+  <p class="avert">Les jauges sont une estimation narrative du cogitator, pas une règle de jeu.</p>
+  <a class="back-top" href="factions.html">▲ Retour aux Factions</a>
+</main>
+
+<footer class="site-footer">
+  <span class="latin">Scientia Potentia Est</span>
+  Codex Tenebrarum — compendium non officiel du lore de Warhammer 40 000.<br>
+  Propriété de Games Workshop. Œuvre de fan, à but informatif.
+</footer>
+
+<script src="comparateur-data.js"></script>
+<script src="cartographe-data.js"></script>
+<script>
+(function () {
+  "use strict";
+  var F = window.COMPARATEUR, AX = window.COMPARATEUR_AXES;
+  var LIV = window.CARTO_LIVRES || [], TH = window.CARTO_THEMES || [];
+  var parId = {}; F.forEach(function (f) { parId[f.id] = f; });
+  var FAM = { imperium: "IMPERIUM", chaos: "CHAOS", xenos: "XENOS" };
+  var fa = document.getElementById("fa"), fb = document.getElementById("fb");
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+
+  [fa, fb].forEach(function (sel) {
+    sel.innerHTML = ["imperium", "chaos", "xenos"].map(function (fam) {
+      return '<optgroup label="' + FAM[fam] + '">' + F.filter(function (f) { return f.fam === fam; }).map(function (f) {
+        return '<option value="' + f.id + '">' + esc(f.nom) + "</option>";
+      }).join("") + "</optgroup>";
+    }).join("");
+  });
+
+  function romans(f) {
+    if (!f.carto) return [];
+    var th = TH.filter(function (t) { return t.id === f.carto; })[0]; if (!th) return [];
+    var liste;
+    if (th.choix) liste = th.choix.map(function (id) { return LIV.filter(function (l) { return l.id === id; })[0]; }).filter(Boolean);
+    else liste = LIV.filter(function (l) { return (l.tags || []).some(function (t) { return (th.tags || []).indexOf(t) >= 0; }); })
+      .sort(function (a, b) { return (a.niv || 9) - (b.niv || 9); });
+    return liste.slice(0, 3).map(function (l) { return { t: l.vf || l.t, a: l.a, y: l.y }; }).concat([{ lien: th.nom }]);
+  }
+
+  function colonne(f, autre, rang) {
+    var cl = f.fam;
+    switch (rang) {
+      case "tete":
+        return '<div class="' + cl + '"><div class="cmp-tete"><div class="embl">' +
+          (f.logo ? '<img src="logo/' + f.logo + '.svg" alt="">' : (f.fam === "chaos" ? "✷" : f.fam === "xenos" ? "⌬" : "✠")) + '</div><div><div class="fam">' + FAM[f.fam] + "</div><h2>" + esc(f.nom) +
+          '</h2><p class="devise">« ' + esc(f.devise) + ' »</p><a href="' + f.page + '">› Ouvrir le dossier</a></div></div></div>';
+      case "origine": return '<div class="' + cl + '"><p>' + esc(f.origine) + "</p></div>";
+      case "organisation": return '<div class="' + cl + '"><p>' + esc(f.organisation) + "</p></div>";
+      case "forces": return '<div class="' + cl + '"><ul>' + f.forces.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + "</ul></div>";
+      case "faiblesses": return '<div class="' + cl + '"><ul>' + f.faiblesses.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + "</ul></div>";
+      case "profil":
+        return '<div class="' + cl + '">' + AX.map(function (a) {
+          var v = f.axes[a[0]], w = autre.axes[a[0]], h = "";
+          for (var i = 1; i <= 5; i++) h += '<i class="' + (i <= v ? "on" : "") + '"></i>';
+          return '<div class="jauge"><span>' + a[1] + (v > w ? " ▲" : "") + '</span><span class="barre" role="img" aria-label="' + v + ' sur 5">' + h + "</span></div>";
+        }).join("") + "</div>";
+      case "ennemis":
+        return '<div class="' + cl + '"><p>' + f.ennemis.map(function (id) {
+          var e = parId[id]; if (!e) return "";
+          return '<a href="?a=' + f.id + "&b=" + id + '"' + (id === autre.id ? ' class="ennemi-croise"' : "") + ">" + esc(e.nom) + "</a>";
+        }).filter(Boolean).join(" · ") + '</p><p style="margin-top:0.4rem"><b>Alliés :</b> ' + esc(f.allies) + "</p></div>";
+      case "romans":
+        var r = romans(f);
+        if (!r.length) return '<div class="' + cl + '"><p>Aucun parcours dédié pour l\'instant. <a href="cartographe.html">Ouvrir le Cartographe ›</a></p></div>';
+        return '<div class="' + cl + '"><ul class="romans">' + r.map(function (l) {
+          if (l.lien) return '<li><a href="cartographe.html?q=' + encodeURIComponent(l.lien) + '">› Parcours complet : ' + esc(l.lien) + "</a></li>";
+          return "<li><i>" + esc(l.t) + '</i> <span class="aut">— ' + esc(l.a) + (l.y ? ", " + l.y : "") + "</span></li>";
+        }).join("") + "</ul></div>";
+    }
+  }
+
+  var RANGS = [["tete", ""], ["origine", "Origines"], ["organisation", "Organisation"], ["forces", "Forces"], ["faiblesses", "Faiblesses"],
+    ["profil", "Profil tactique"], ["ennemis", "Ennemis jurés"], ["romans", "Romans pour commencer"]];
+
+  function rendre() {
+    var A = parId[fa.value], B = parId[fb.value];
+    var croise = A.ennemis.indexOf(B.id) >= 0 || B.ennemis.indexOf(A.id) >= 0;
+    var h = "";
+    if (A.id === B.id) h += '<div class="alerte-ennemis">MÊME FACTION SÉLECTIONNÉE DES DEUX CÔTÉS. Choisissez un adversaire.</div>';
+    else if (croise) h += '<div class="alerte-ennemis">⚠ ENNEMIS JURÉS : ces deux puissances s\'affrontent dans le lore.</div>';
+    h += RANGS.map(function (r) {
+      return '<section class="cmp-rang">' + (r[1] ? "<h3>" + r[1] + "</h3>" : "") + '<div class="cmp-cols">' + colonne(A, B, r[0]) + colonne(B, A, r[0]) + "</div></section>";
+    }).join("");
+    document.getElementById("resultat").innerHTML = h;
+    try { history.replaceState(null, "", "?a=" + A.id + "&b=" + B.id); } catch (e) {}
+    document.title = A.nom + " contre " + B.nom + " — Codex Tenebrarum";
+  }
+
+  var q = {}; location.search.replace(/[?&]([ab])=([^&]+)/g, function (_, k, v) { q[k] = decodeURIComponent(v); });
+  fa.value = parId[q.a] ? q.a : "astartes";
+  fb.value = parId[q.b] ? q.b : "chaos-astartes";
+  fa.addEventListener("change", rendre); fb.addEventListener("change", rendre);
+  document.getElementById("inverser").addEventListener("click", function () { var t = fa.value; fa.value = fb.value; fb.value = t; rendre(); });
+  document.getElementById("hasard").addEventListener("click", function () {
+    var a = F[Math.floor(Math.random() * F.length)], b;
+    do { b = F[Math.floor(Math.random() * F.length)]; } while (b.id === a.id);
+    fa.value = a.id; fb.value = b.id; rendre();
+  });
+  document.getElementById("partager").addEventListener("click", function () {
+    var n = document.getElementById("note");
+    try { navigator.clipboard.writeText(location.href).then(function () { n.textContent = "LIEN COPIÉ."; }, function () { n.textContent = location.href; }); }
+    catch (e) { n.textContent = location.href; }
+  });
+  rendre();
+})();
+</script>
+<script src="cogitator.js"></script>
+</body>
+</html>

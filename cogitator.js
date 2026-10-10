@@ -424,8 +424,13 @@
       ["CARTOGRAPHE", "Ouvre le Cartographe de la Black Library"],
       ["EXAMEN", "Passer l'examen d'acolyte et gagner un grade"],
       ["TOME", "Ouvre le Codex complet en PDF"],
+      ["DEFINIR <terme>", "Définition du lexique : DEFINIR WARP"],
       ["FRISE · TOILE [dossier]", "Frise chronologique · relations du dossier courant"],
       ["FORGE", "Créer son propre Chapitre"],
+      ["COMPARER [a] [b]", "Comparateur de factions : COMPARER ORKS TAU"],
+      ["GENERER INQ|MARCHAND|MONDE", "Générateurs de l'Administratum"],
+      ["TRANSMISSION [ON|OFF]", "Intercepte un message astropathique"],
+      ["IMPRIMER [PARCHEMIN]", "Imprime le dossier (relevé ou parchemin)"],
       ["SON ON|OFF", "Ambiance sonore du cogitator"],
       ["ECOUTER · SILENCE", "Lecture du dossier par un servitor / arrêt"],
       ["HASARD", "Ouvre un dossier au hasard (alias RANDOM)"],
@@ -558,6 +563,20 @@
   });
   cmd(["ECOUTER", "VOIX", "LECTURE", "SPEAK"], "Lecture vocale", function () { if (lireDossier()) { ln("Lecture du dossier par le servitor… (SILENCE pour arrêter)", "ok"); ouvrir(false); } });
   cmd(["SILENCE", "STOP", "TAIS-TOI"], "Arrêt lecture", function () { arreterLecture(); ln("Le servitor se tait.", "ok"); });
+  cmd(["DEFINIR", "DEFINE", "LEXIQUE", "GLOSSAIRE", "QUEST-CE"], "Lexique", function (arg) {
+    if (!arg) { aller("lexique.html"); return; }
+    return new Promise(function (ok) {
+      function go() {
+        var q = norm(arg).trim(), G = window.CODEX_GLOSSAIRE || [];
+        var g = G.filter(function (x) { return norm(x.t) === q || x.alias.some(function (a) { return norm(a) === q; }); })[0] ||
+                G.filter(function (x) { return norm(x.t + " " + x.alias.join(" ")).indexOf(q) >= 0; })[0];
+        if (!g) ln("TERME ABSENT DU LEXIQUE : " + arg.toUpperCase() + ". Essayez CHERCHER " + arg.toUpperCase() + ".", "err");
+        else { ln(g.t.toUpperCase() + " —", "ok"); ln(g.def); lnHTML('<a href="lexique.html?q=' + encodeURIComponent(g.t) + '">› Lexique</a>' + (g.page ? ' · <a href="' + g.page + '">› Dossier</a>' : ""), "dim"); }
+        ok();
+      }
+      if (window.CODEX_GLOSSAIRE) go(); else { var sc = doc.createElement("script"); sc.src = "glossaire.js"; sc.onload = go; sc.onerror = function () { ln("LEXIQUE INDISPONIBLE.", "err"); ok(); }; doc.head.appendChild(sc); }
+    });
+  });
   cmd(["FRISE", "TIMELINE"], "Frise chronologique", function () { aller("frise.html"); });
   cmd(["TOILE", "RELATIONS", "GRAPHE"], "Toile des relations", function (arg) {
     if (arg && page === "toile.html" && window.TOILE_CENTRER) { if (window.TOILE_CENTRER(arg)) { ln("Toile recentrée.", "ok"); ouvrir(false); } else ln("DOSSIER INTROUVABLE DANS LA TOILE.", "err"); return; }
@@ -565,7 +584,26 @@
     return index().then(function (D) { var r = chercher(D, arg); aller("toile.html" + (r.res.length ? "?d=" + r.res[0].d.f.replace(".html", "") : "")); }, erreurIndex);
   });
   cmd(["FORGE", "CREER", "CHAPITRE"], "Forge de Chapitre", function () { aller("forge.html"); });
-  cmd(["TOME", "PDF", "IMPRIMER"], "Tome PDF", function () { ln("Ouverture du Tome complet (PDF, ~30 Mo)…", "ok"); setTimeout(function () { location.href = "Codex-Tenebrarum-TOME.pdf"; }, 300); });
+  cmd(["COMPARER", "COMPARE", "VERSUS", "VS"], "Comparateur de factions", function (arg) {
+    var ALIAS = { "space marines": "astartes", marines: "astartes", astartes: "astartes", custodes: "custodes", garde: "militarum", militarum: "militarum",
+      mechanicus: "mechanicus", sororitas: "sororitas", soeurs: "sororitas", inquisition: "inquisition", chevaliers: "knights", knights: "knights",
+      chaos: "chaos-astartes", traitres: "chaos-astartes", demons: "demons", renegats: "chaos-chevaliers", necrons: "necrons", aeldari: "aeldari",
+      eldars: "aeldari", eldar: "aeldari", drukhari: "drukhari", orks: "orks", ork: "orks", tau: "tau", kroots: "kroots", tyranides: "tyranides",
+      tyranids: "tyranides", votann: "votann" };
+    var t = (arg || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z ]/g, " ").split(/\s+|\bcontre\b/).filter(Boolean);
+    var ids = t.map(function (m) { return ALIAS[m]; }).filter(Boolean);
+    aller("comparateur.html" + (ids.length ? "?a=" + ids[0] + (ids[1] ? "&b=" + ids[1] : "") : ""));
+  });
+  cmd(["GENERER", "GENERATEUR", "GENERATEURS", "TIRER"], "Générateurs", function (arg) {
+    var a = (arg || "").toLowerCase(), g = /march|lm|dynast/.test(a) ? "lm" : /monde|planet/.test(a) ? "monde" : /inq/.test(a) ? "inq" : "";
+    aller("generateurs.html" + (g ? "?g=" + g : ""));
+  });
+  cmd(["TOME", "PDF"], "Tome PDF", function () { ln("Ouverture du Tome complet (PDF, ~30 Mo)…", "ok"); setTimeout(function () { location.href = "Codex-Tenebrarum-TOME.pdf"; }, 300); });
+  cmd(["IMPRIMER", "PRINT", "IMPRESSION"], "Impression du dossier", function (arg) {
+    var st = /PARCH/i.test(arg || "") ? "parchemin" : "releve";
+    ln("Envoi au scriptorium… format " + (st === "parchemin" ? "PARCHEMIN" : "RELEVÉ") + ".", "ok"); ouvrir(false);
+    setTimeout(function () { if (window.COGI_IMPRIMER) window.COGI_IMPRIMER(st); else window.print(); }, 250);
+  });
   cmd(["EXAMEN", "QUIZ", "TEST"], "Examen d'acolyte", function () { aller("examen.html"); });
   cmd(["HASARD", "RANDOM", "ALEA"], "Dossier au hasard", function () {
     return index().then(function (D) { var d = D[Math.floor(Math.random() * D.length)]; ln("Tirage du Tarot… " + d.title.toUpperCase(), "ok"); setTimeout(function () { aller(d.f); }, 400); }, erreurIndex);
@@ -604,6 +642,66 @@
     ln("Que tes conduits restent purs et ta mémoire sans faille. — Litanie mineure", "dim");
   });
 
+  /* =========================================================
+     TRANSMISSIONS INTERCEPTÉES (messages astropathiques aléatoires)
+     ========================================================= */
+  var TRANSMISSIONS = [
+    ["Kasr Myrak", "...la porte tient encore... le Seigneur Castellan Creed ordonne... les Pylônes se taisent un à un...", "regiment-cadiens.html", "Les Cadiens"],
+    ["Baal Secundus", "...la Flotte-ruche couvre les trois soleils... le Sang appelle le Sang... envoyez Dante...", "chapitre-blood-angels.html", "Les Blood Angels"],
+    ["Armageddon, ruche Hades", "...le Vieux Yarrick est vivant... la Bête revient... nous tiendrons jusqu'au dernier fusil...", "heros-yarrick.html", "Commissaire Yarrick"],
+    ["Vaisseau noir Ixion", "...cargaison psyker à bord... trois sanctionnés... l'un d'eux rêve d'un œil ouvert dans le Warp...", "univers-psykers.html", "Les psykers"],
+    ["Macragge", "...le Primarque s'est éveillé... la Croisade Indomitus quitte Terra... que l'espoir renaisse...", "evt-indomitus.html", "La Croisade Indomitus"],
+    ["Inconnu (Œil de la Terreur)", "...ILS ARRIVENT... la Black Legion forme ses rangs... le Seigneur de guerre a brisé Cadia...", "champion-abaddon.html", "Abaddon"],
+    ["Monde-forge Stygies VIII", "...artefact xenos récupéré sous les dunes... des glyphes s'allument au contact... les Skitarii tombent sans bruit...", "xenos-necrons.html", "Les Nécrons"],
+    ["Fenris", "...les Loups hurlent sous les deux lunes... la Grande Chasse est lancée... un loup n'abandonne jamais la meute...", "chapitre-space-wolves.html", "Les Space Wolves"],
+    ["Commorragh (source incertaine)", "...ils viennent la nuit... les villages se vident... on entend rire dans les ombres...", "xenos-drukhari.html", "Les Drukhari"],
+    ["Frange Est, système Dal'yth", "...ils proposent la paix... le Bien Suprême, disent-ils... la moitié du régiment a déposé les armes...", "xenos-tau.html", "L'Empire T'au"],
+    ["Valhalla", "...le froid ne nous tuera pas... l'ennemi verdit l'horizon... WAAAGH... WAAAGH...", "xenos-orks.html", "Les Orks"],
+    ["Astronomican, Terra", "...le Phare faiblit au-delà de la Faille... l'Imperium Nihilus est dans le noir... priez...", "evt-grande-faille.html", "La Grande Faille"],
+    ["Vaisseau Le Pèlerin Silencieux", "...les Navigateurs ne voient plus rien... la Toile s'ouvre devant nous... quelqu'un danse sur la coque...", "xenos-arlequins.html", "Les Arlequins"],
+    ["Prospero (archive scellée)", "...un millier d'yeux brûlent... les Loups sont venus... le savoir n'est pas un crime...", "legion-thousand-sons.html", "Les Thousand Sons"],
+    ["Titan Princeps Vulcanus", "...l'Esprit de la Machine est en colère... la Légion avance... la ville tremble à chaque pas...", "mechanicus-titanicus.html", "Les Titans"],
+    ["Bastion de l'Ordo Malleus", "...le Nom véritable a été prononcé... le démon est banni, pas détruit... il reviendra dans mille ans...", "ordo-malleus.html", "L'Ordo Malleus"],
+    ["Sous-secteur Aurelia", "...Exterminatus autorisé... trois heures avant impact... que l'Empereur pardonne...", "carte.html?m=aurelia", "Aurelia sur la carte"],
+    ["Ulthwé", "...les runes se brisent... le Prescient a vu la fin... un chemin, un seul...", "craftworld-ulthwe.html", "Ulthwé"],
+    ["Iyanden", "...les morts marchent à nos côtés... la flotte Kraken a dévoré nos foyers...", "craftworld-iyanden.html", "Iyanden"],
+    ["Nostramo (écho résiduel)", "...nous avons vu la vérité... la peur est la seule loi... nous venons pour vous...", "legion-night-lords.html", "Les Night Lords"],
+    ["Vraks Prime", "...le cardinal a trahi... dix-sept ans de siège... les tranchées ne finissent jamais...", "regiment-krieg.html", "Le Corps de la Mort de Krieg"],
+    ["Mars, Olympus Mons", "...l'Archimagos Cawl a ouvert la voûte... ils sont plus grands, plus forts... Primaris...", "heros-cawl.html", "Belisarius Cawl"],
+    ["Pèlerinage de la Sainte Vivante", "...elle est revenue... ses ailes de lumière... la foule s'agenouille...", "heros-celestine.html", "Sainte Celestine"],
+    ["Cargo Ad Astra, Segmentum Pacificus", "...les Libres-Marchands ont acheté le silence de l'équipage... la cargaison respire...", "rogue-traders.html", "Les Libres-Marchands"]
+  ];
+  var transOn = lire("trans", "on") !== "off", transTimer = null;
+  function brouiller(t) { return t.replace(/[a-zéèàù]/gi, function (c) { return Math.random() < 0.06 ? "▒" : c; }); }
+  function transmission(force) {
+    if (!force && (!transOn || doc.hidden)) return;
+    var m = TRANSMISSIONS[Math.floor(Math.random() * TRANSMISSIONS.length)];
+    var heure = String(Math.floor(Math.random() * 24)).padStart(2, "0") + ":" + String(Math.floor(Math.random() * 60)).padStart(2, "0");
+    lnHTML('<span class="trans-tete">+++ TRANSMISSION INTERCEPTÉE · ' + esc(m[0].toUpperCase()) + " · " + heure + " +++</span>", "trans");
+    ln("« " + brouiller(m[1]) + " »", "trans");
+    lnHTML('↳ Dossier associé : <a href="' + m[2] + '">' + esc(m[3]) + "</a>", "dim");
+    out.scrollTop = out.scrollHeight;
+    bip(1320, 0.05, "sine", 0.02); setTimeout(function () { bip(1760, 0.05, "sine", 0.02); }, 120); setTimeout(function () { clic(); }, 260);
+    var old = doc.querySelector(".trans-alerte"); if (old) old.remove();
+    if (term.classList.contains("ouvert")) return;
+    var a = el("button", "trans-alerte"); a.type = "button";
+    a.innerHTML = '<b>+++ TRANSMISSION INTERCEPTÉE +++</b><span>' + esc(m[0]) + " · " + esc(m[3]) + " ›</span>";
+    a.addEventListener("click", function () { ouvrir(true); a.remove(); out.scrollTop = out.scrollHeight; });
+    doc.body.appendChild(a);
+    setTimeout(function () { if (a.parentNode) a.classList.add("part"); setTimeout(function () { a.remove(); }, 600); }, 14000);
+  }
+  function planifierTrans(premier) {
+    clearTimeout(transTimer); if (!transOn) return;
+    transTimer = setTimeout(function () { transmission(false); planifierTrans(false); }, (premier ? 60 + Math.random() * 90 : 240 + Math.random() * 240) * 1000);
+  }
+  planifierTrans(true);
+  cmd(["TRANSMISSIONS", "TRANSMISSION", "IMPRIMER ", "INTERCEPTER", "ASTROPATHE"], "Transmissions interceptées", function (arg) {
+    var a = (arg || "").toUpperCase();
+    if (a === "OFF") { transOn = false; ecrire("trans", "off"); clearTimeout(transTimer); ln("Écoute astropathique suspendue.", "ok"); return; }
+    if (a === "ON") { transOn = true; ecrire("trans", "on"); planifierTrans(true); ln("Écoute astropathique rétablie.", "ok"); return; }
+    transmission(true);
+  });
+
   function erreurIndex() { ln("ÉCHEC DE CHARGEMENT DE L'INDEX (cogitator-index.js manquant ?).", "err"); }
   function aller(u) { ln("Ouverture du dossier…", "dim"); setTimeout(function () { location.href = u; }, 180); }
 
@@ -632,7 +730,7 @@
   });
 
   // Autocomplétion
-  var COMPL = ["AIDE", "CHERCHER ", "OUVRIR ", "LISTE ", "CARTE ", "SOMMAIRE", "ALLER ", "LIRE ", "CARTOGRAPHE", "EXAMEN", "FRISE", "TOILE", "FORGE", "ECOUTER", "SILENCE", "SON ON", "SON OFF", "HASARD", "ACCUEIL", "RETOUR", "EFFACER", "THEME ", "CRT ", "ETAT",
+  var COMPL = ["AIDE", "CHERCHER ", "OUVRIR ", "LISTE ", "CARTE ", "SOMMAIRE", "ALLER ", "LIRE ", "CARTOGRAPHE", "EXAMEN", "FRISE", "TOILE", "FORGE", "COMPARER ", "GENERER ", "TRANSMISSION", "DEFINIR ", "LEXIQUE", "ECOUTER", "SILENCE", "SON ON", "SON OFF", "HASARD", "ACCUEIL", "RETOUR", "EFFACER", "THEME ", "CRT ", "ETAT",
     "LISTE FACTIONS", "LISTE PERSONNAGES", "LISTE CHRONOLOGIE", "LISTE UNIVERS", "THEME VERT", "THEME AMBRE", "THEME BLANC", "CRT ON", "CRT OFF"];
   inp.addEventListener("keydown", function (e) {
     if (e.key.length === 1 || e.key === "Backspace") clic();
