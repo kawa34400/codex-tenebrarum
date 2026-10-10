@@ -765,3 +765,12 @@ li { margin: 0.35rem 0; }
 .registre-com .rc-note { font-family: var(--crt); font-size: 1.25rem; color: var(--ph-dim); }
 .registre-com .giscus { min-height: 120px; }
 @media print { .registre-com { display: none !important; } }
+
+/* Barres de défilement aux couleurs du phosphore (au lieu des barres blanches du système) */
+:root { color-scheme: dark; }
+html, * { scrollbar-color: var(--ph-dim) var(--ecran); scrollbar-width: thin; }
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: var(--ecran); border-left: 1px solid var(--ph-faint); }
+::-webkit-scrollbar-thumb { background: var(--ph-faint); border: 2px solid var(--ecran); }
+::-webkit-scrollbar-thumb:hover { background: var(--ph-dim); }
+::-webkit-scrollbar-corner { background: var(--ecran); }

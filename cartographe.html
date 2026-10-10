@@ -133,6 +133,53 @@
   .legende { display: flex; flex-wrap: wrap; gap: 0.3rem 1.4rem; font-family: var(--crt); font-size: 1.35rem; color: var(--ph-dim); margin-top: 0.5rem; }
   .legende svg { vertical-align: middle; margin-right: 0.3rem; }
 
+  /* --- Bibliothèque entière --- */
+  .bib-outils { display: flex; flex-wrap: wrap; gap: 0.5rem 1.2rem; align-items: center; margin-bottom: 1rem; }
+  .champ-bib { flex: 1 1 260px; display: flex; align-items: center; gap: 0.4rem; border: 1px solid var(--ph-dim); padding: 0.25rem 0.7rem; background: var(--ph-wash); }
+  .champ-bib span { font-family: var(--crt); font-size: 1.6rem; color: var(--ph); }
+  .champ-bib input { flex: 1; min-width: 0; background: transparent; border: 0; outline: none; color: var(--ph); font-family: var(--mono); font-size: 0.95rem; padding: 0.25rem 0; }
+  .champ-bib input::placeholder { color: var(--ph-mute); }
+  .bib-compte { font-family: var(--crt); font-size: 1.35rem; color: var(--ph-dim); margin-left: auto; }
+  .detours input:disabled + * , .detours:has(input:disabled) { opacity: 0.5; }
+  .ere { margin: 0 0 2rem; }
+  .ere > h3 { font-family: var(--crt); font-weight: normal; font-size: 1.9rem; line-height: 1.1; margin: 0 0 0.8rem; padding: 0.2rem 0.7rem; background: var(--ph-wash); border-left: 4px solid var(--ph); color: var(--ph); }
+  .ere > h3::before { content: none; }
+  .ere > h3 b { font-weight: normal; color: var(--ecran); background: var(--ph); padding: 0 0.35rem; margin-right: 0.4rem; text-shadow: none; }
+  .ere > h3 span { color: var(--ph-dim); font-size: 0.75em; }
+  .camp { margin: 0 0 1rem; }
+  .camp > h4 { font-size: 1.45rem; margin: 0 0 0.5rem; color: var(--ph-dim); letter-spacing: 0.05em; text-transform: uppercase; }
+  .camp.chaos > h4 { color: var(--chaos); } .camp.xenos > h4 { color: var(--xenos); }
+  .series { columns: 250px; column-gap: 0.9rem; }
+  .serie { break-inside: avoid; display: inline-block; width: 100%; margin: 0 0 0.9rem; border: 1px solid var(--ph-faint); border-top: 2px solid var(--ph-dim); background: rgba(0,0,0,0.22); padding: 0.45rem 0.55rem 0.5rem; }
+  .serie.chaos { border-top-color: var(--chaos-dim); } .serie.xenos { border-top-color: var(--xenos-dim); }
+  .serie.seule { border-top-style: dashed; }
+  .serie-t { font-family: var(--mono); font-weight: 600; font-size: 0.95rem; color: var(--ph); line-height: 1.3; }
+  .serie.chaos .serie-t { color: var(--chaos); } .serie.xenos .serie-t { color: var(--xenos); }
+  .serie-t span { font-family: var(--crt); font-weight: normal; font-size: 1.2rem; color: var(--ph-dim); margin-left: 0.2rem; }
+  .serie-a { font-family: var(--crt); font-size: 1.2rem; color: var(--ph-dim); line-height: 1.1; margin-top: 0.1rem; }
+  .serie ol { list-style: none; margin: 0.35rem 0 0; padding: 0; max-width: none; }
+  .serie li { margin: 0; }
+  .serie li::before { content: none; }
+  .bl { display: grid; grid-template-columns: 1.5rem minmax(0, 1fr) auto auto; align-items: baseline; gap: 0 0.45rem; width: 100%; text-align: left; background: transparent; border: 0; border-left: 2px solid transparent; color: var(--ph-txt); font-family: var(--mono); font-size: 0.87rem; line-height: 1.35; padding: 0.2rem 0.3rem; cursor: pointer; }
+  .bl .n { font-family: var(--crt); font-size: 1.2rem; color: var(--ph-dim); text-align: right; }
+  .bl .aa { font-family: var(--crt); font-size: 1.15rem; color: var(--ph-dim); white-space: nowrap; }
+  .bl.deux .aa { grid-column: 2; grid-row: 2; white-space: normal; line-height: 1.1; }
+  .bl .et { grid-row: 1; grid-column: 4; font-family: var(--crt); font-size: 1.1rem; color: var(--ecran); background: var(--ph); padding: 0 0.3rem; text-shadow: none; }
+  .serie.grande ol { columns: 230px; column-gap: 1rem; }
+  .serie.grande li { break-inside: avoid; }
+  .serie.grande { margin-bottom: 1rem; }
+  .bl:hover { background: var(--ph-wash); color: var(--ph); }
+  .bl.dans .tt { color: var(--ph); font-weight: 600; }
+  .bl.lu .tt { text-decoration: line-through; text-decoration-color: var(--ph-dim); }
+  .bl.sel { background: var(--ph); color: var(--ecran); text-shadow: none; }
+  .bl.sel .n, .bl.sel .aa, .bl.sel .tt { color: var(--ecran); }
+  .bl.avant { border-left-color: var(--xenos); background: rgba(255,190,61,0.07); }
+  .bl.apres { border-left-color: var(--ph); background: var(--ph-wash); }
+  .bib-legende { font-family: var(--crt); font-size: 1.25rem; color: var(--ph-dim); display: flex; flex-wrap: wrap; gap: 0.2rem 1.2rem; margin: -0.4rem 0 1.1rem; }
+  .bib-legende i { display: inline-block; width: 0.7rem; height: 0.9rem; vertical-align: -1px; margin-right: 0.3rem; border-left: 2px solid; }
+  .bib-vide { font-family: var(--crt); font-size: 1.4rem; color: var(--chaos); }
+  .fiche-livre .suite-l { font-size: 0.88rem; color: var(--ph-dim); margin-top: 0.5rem; }
+
   .nd { cursor: pointer; }
   .nd rect.boite { fill: var(--ecran); stroke: var(--ph-dim); stroke-width: 1.2; }
   .nd.chaos rect.boite { stroke: var(--chaos-dim); }
@@ -245,13 +292,22 @@
     <div class="carto-grille">
       <div>
         <div class="graphe" id="graphe"><span class="cadre-titre" id="cadreTitre">GRAPHE DE LECTURE</span><svg id="svg" role="img" aria-label="Graphe des romans"></svg></div>
+        <div class="biblio" id="biblio" hidden>
+          <div class="bib-outils">
+            <div class="champ-bib"><span>&gt;</span><input id="bibFiltre" spellcheck="false" placeholder="Filtrer : titre, auteur, série…" aria-label="Filtrer la bibliothèque"></div>
+            <label class="detours"><input type="checkbox" id="bibParcours"> Seulement le parcours en cours</label>
+            <span class="bib-compte" id="bibCompte"></span>
+          </div>
+          <div class="bib-legende"><span><i style="border-color:var(--ph);background:var(--ph)"></i>étape du parcours</span><span><i style="border-color:var(--xenos)"></i>à lire avant le roman choisi</span><span><i style="border-color:var(--ph)"></i>à lire après</span></div>
+          <div id="bibCorps"></div>
+        </div>
         <div class="legende" id="legende">
           <span><svg width="34" height="10"><line x1="0" y1="5" x2="34" y2="5" stroke="currentColor" stroke-width="3"/></svg>ordre de lecture</span>
           <span><svg width="34" height="10"><rect x="1" y="1" width="32" height="8" fill="none" stroke="currentColor" stroke-dasharray="4 3"/></svg>détour de contexte</span>
           <span>Cliquez un roman pour voir sa fiche et ses liens.</span>
         </div>
       </div>
-      <aside class="fiche-livre" id="fiche" aria-live="polite"><div class="vide">Sélectionnez un roman pour afficher sa fiche.</div></aside>
+      <aside class="fiche-livre" id="fiche" aria-live="polite"><div class="vide">Sélectionnez un roman pour afficher sa fiche et les livres à lire avant ou après.</div></aside>
     </div>
   </div>
 
@@ -408,8 +464,9 @@
 
   function rendreGraphe() {
     var svg = $("svg"); while (svg.firstChild) svg.removeChild(svg.firstChild);
-    $("legende").style.display = etat.vue === "tout" ? "none" : "";
-    if (etat.vue === "tout" || !etat.ordre.length) { $("cadreTitre").textContent = "BIBLIOTHÈQUE ENTIÈRE — " + LIVRES.length + " ROMANS" + (etat.ordre.length ? " · parcours en surbrillance" : " · cliquez un point"); return vueEnsemble(svg); }
+    var tout = etat.vue === "tout" || !etat.ordre.length;
+    $("graphe").hidden = tout; $("biblio").hidden = !tout; $("legende").style.display = tout ? "none" : "";
+    if (tout) return rendreBiblio();
     $("cadreTitre").textContent = "GRAPHE DE LECTURE — " + etat.ordre.length + " ROMANS";
     var W = Math.max(280, $("graphe").clientWidth - 2);
     var nw = W < 560 ? W - 48 : 250, nh = 80, gx = 44, gy = 46, marge = 22;
@@ -465,67 +522,78 @@
     surligner();
   }
 
-  /* Vue d'ensemble : graphe de forces calculé une fois */
-  var layout = null;
-  function calculerLayout(W, H) {
-    var nodes = LIVRES.map(function (b, i) {
-      var cx = b.fam === "chaos" ? W * 0.74 : b.fam === "xenos" ? W * 0.22 : W * 0.5;
-      var cy = b.ere === "M31" ? H * 0.3 : b.ere === "M42" ? H * 0.72 : H * 0.55;
-      var a = i * 2.39996;
-      return { id: b.id, x: cx + Math.cos(a) * (30 + i % 7 * 12), y: cy + Math.sin(a) * (30 + i % 5 * 12), vx: 0, vy: 0, b: b, cx: cx, cy: cy };
-    });
-    var idx = {}; nodes.forEach(function (n, i) { idx[n.id] = i; });
-    var links = [];
-    LIVRES.forEach(function (b) { (b.req || []).forEach(function (r) { links.push([idx[r], idx[b.id], 46]); }); (b.ctx || []).forEach(function (c) { links.push([idx[c[0]], idx[b.id], 90]); }); });
-    for (var it = 0; it < 320; it++) {
-      var alpha = 1 - it / 320;
-      for (var i = 0; i < nodes.length; i++) for (var j = i + 1; j < nodes.length; j++) {
-        var a = nodes[i], c = nodes[j], dx = c.x - a.x, dy = c.y - a.y, d2 = dx * dx + dy * dy + 0.01;
-        if (d2 > 90000) continue;
-        var f = 2600 / d2 * alpha, d = Math.sqrt(d2);
-        a.vx -= dx / d * f; a.vy -= dy / d * f; c.vx += dx / d * f; c.vy += dy / d * f;
-      }
-      links.forEach(function (l) {
-        var a = nodes[l[0]], c = nodes[l[1]], dx = c.x - a.x, dy = c.y - a.y, d = Math.sqrt(dx * dx + dy * dy) + 0.01;
-        var f = (d - l[2]) * 0.02 * alpha; a.vx += dx / d * f; a.vy += dy / d * f; c.vx -= dx / d * f; c.vy -= dy / d * f;
-      });
-      nodes.forEach(function (n) {
-        n.vx += (n.cx - n.x) * 0.0025 * alpha; n.vy += (n.cy - n.y) * 0.0025 * alpha;
-        n.x += n.vx; n.y += n.vy; n.vx *= 0.6; n.vy *= 0.6;
-        n.x = Math.max(30, Math.min(W - 150, n.x)); n.y = Math.max(30, Math.min(H - 30, n.y));
-      });
-    }
-    return { nodes: nodes, idx: idx };
-  }
-  function vueEnsemble(svg) {
-    var W = 1100, H = 820;
-    if (!layout) layout = calculerLayout(W, H);
-    var Wc = Math.max(760, $("graphe").clientWidth - 2);
-    svg.setAttribute("width", Wc); svg.setAttribute("height", Math.round(H * Wc / W)); svg.setAttribute("viewBox", "0 0 " + W + " " + H);
-    var dans = {}; etat.ordre.forEach(function (id) { dans[id] = 1; });
-    var gE = S("g", {}, svg), gN = S("g", {}, svg);
-    [["XENOS", 0.22, "var(--xenos-dim)"], ["IMPERIUM", 0.5, "var(--ph-dim)"], ["CHAOS", 0.74, "var(--chaos-dim)"]].forEach(function (z) {
-      var t = S("text", { x: W * z[1], y: 26, "text-anchor": "middle", style: "font-family:VT323,monospace;font-size:27px;fill:" + z[2] }, svg); t.textContent = z[0];
-    });
+  /* Bibliothèque entière : carte rangée par époque, allégeance et série */
+  var ERES = [["M31", "L'Hérésie d'Horus", "30ᵉ et 31ᵉ millénaires"], ["M41", "Le 41ᵉ millénaire", "l'Imperium à l'agonie"], ["M42", "L'ère Indomitus", "après la Grande Faille"]];
+  var CAMPS = [["imperium", "Imperium"], ["chaos", "Chaos"], ["xenos", "Xenos"]];
+  var SERIES = null;
+  function preparerSeries() {
+    var parNom = {}, liste = [];
     LIVRES.forEach(function (b) {
-      var z = layout.nodes[layout.idx[b.id]];
-      (b.req || []).concat((b.ctx || []).map(function (c) { return c[0]; })).forEach(function (r) {
-        var a = layout.nodes[layout.idx[r]], isReq = (b.req || []).indexOf(r) >= 0;
-        var on = dans[r] && dans[b.id];
-        S("line", { x1: a.x, y1: a.y, x2: z.x, y2: z.y, "class": (isReq ? "lien-req" : "lien-ctx") + (on ? " lien-on" : ""), "data-a": r, "data-b": b.id, opacity: etat.ordre.length && !on ? 0.2 : 0.7 }, gE);
-      });
+      var n = nomSerie(b), k = n ? "s|" + n : "i|" + b.ere + "|" + b.fam;
+      if (!parNom[k]) { parNom[k] = { nom: n || "Romans indépendants", seule: !n, ere: b.ere, fam: b.fam, ids: [] }; liste.push(parNom[k]); }
+      parNom[k].ids.push(b.id);
     });
-    layout.nodes.forEach(function (n) {
-      var b = n.b, att = dans[b.id];
-      var g = S("g", { "class": "pt " + b.fam + (att ? " att" : "") + (lus[b.id] ? " lu" : "") + (sel === b.id ? " sel" : ""), transform: "translate(" + n.x + "," + n.y + ")", tabindex: "0", role: "button", "aria-label": b.t + ", " + b.a, opacity: etat.ordre.length && !att ? 0.4 : 1 }, gN);
-      g.dataset.id = b.id;
-      S("circle", { r: att ? 8 : 6 }, g);
-      var t = S("text", { x: 11, y: 5, "class": (etat.ordre.length && !att) ? "cache" : "" }, g); t.textContent = b.t.length > 22 ? b.t.slice(0, 21) + "…" : b.t;
-      g.addEventListener("click", function () { choisir(b.id); });
-      g.addEventListener("keydown", function (e) { if (e.key === "Enter") choisir(b.id); });
+    liste.forEach(function (g) {
+      g.ids.sort(function (x, y) { var a = P[x], b = P[y], ta = +(tome(a).replace(/\D/g, "") || 0), tb = +(tome(b).replace(/\D/g, "") || 0); return g.seule ? a.y - b.y : (ta - tb || a.y - b.y); });
+      var aut = []; g.ids.forEach(function (id) { if (aut.indexOf(P[id].a) < 0) aut.push(P[id].a); }); g.auteurs = aut;
     });
-    surligner();
+    liste.sort(function (a, b) { return (a.seule - b.seule) || (b.ids.length - a.ids.length) || a.nom.localeCompare(b.nom, "fr"); });
+    return liste;
   }
+  function rendreBiblio() {
+    if (!SERIES) SERIES = preparerSeries();
+    var q = norm($("bibFiltre").value), seulP = $("bibParcours").checked, dans = {}, total = 0;
+    etat.ordre.forEach(function (id, i) { dans[id] = i + 1; });
+    $("bibParcours").disabled = !etat.ordre.length;
+    var h = "";
+    ERES.forEach(function (e) {
+      var blocsEre = "";
+      CAMPS.forEach(function (c) {
+        var blocs = SERIES.filter(function (g) { return g.ere === e[0] && g.fam === c[0]; }).map(function (g) {
+          var ids = g.ids.filter(function (id) {
+            var b = P[id];
+            if (seulP && !dans[id]) return false;
+            return !q || norm(b.t + " " + (b.vf || "") + " " + b.a + " " + g.nom).indexOf(q) >= 0;
+          });
+          if (!ids.length) return null;
+          total += ids.length;
+          return { n: ids.length, h: '<div class="serie ' + g.fam + (g.seule ? " seule" : "") + (ids.length > 12 ? " grande" : "") + '"><div class="serie-t">'  + esc(g.nom) + ' <span>' + g.ids.length + "</span></div>" +
+            (g.seule ? "" : '<div class="serie-a">' + esc(g.auteurs.slice(0, 2).join(", ")) + (g.auteurs.length > 2 ? "…" : "") + "</div>") +
+            "<ol>" + ids.map(function (id) {
+              var b = P[id], t = tome(b).replace("tome ", "");
+              return '<li><button type="button" class="bl' + (g.seule ? " deux" : "") + (dans[id] ? " dans" : "") + (lus[id] ? " lu" : "") + (sel === id ? " sel" : "") + '" data-bl="' + id + '">' +
+                '<span class="n">' + (g.seule ? "·" : (t || "·")) + '</span><span class="tt">' + esc(b.t) + '</span><span class="aa">' + (g.seule ? esc(b.a) + " · " : "") + b.y + "</span>" +
+                (dans[id] ? '<span class="et" title="Étape du parcours">' + dans[id] + "</span>" : "") + "</button></li>";
+            }).join("") + "</ol></div>" };
+        }).filter(Boolean);
+        if (blocs.length) {
+          var grands = blocs.filter(function (x) { return x.n > 12; }).map(function (x) { return x.h; }).join("");
+          var petits = blocs.filter(function (x) { return x.n <= 12; }).map(function (x) { return x.h; }).join("");
+          blocsEre += '<div class="camp ' + c[0] + '"><h4>' + c[1] + "</h4>" + grands + (petits ? '<div class="series">' + petits + "</div>" : "") + "</div>";
+        }
+      });
+      if (blocsEre) h += '<section class="ere"><h3><b>' + e[0] + "</b> " + esc(e[1]) + " <span>· " + esc(e[2]) + "</span></h3>" + blocsEre + "</section>";
+    });
+    $("bibCorps").innerHTML = h || '<p class="bib-vide">AUCUN ROMAN NE CORRESPOND.</p>';
+    $("bibCompte").textContent = total + " / " + LIVRES.length + " romans";
+    $("bibCorps").querySelectorAll("[data-bl]").forEach(function (bt) { bt.addEventListener("click", function () { choisir(bt.dataset.bl); }); });
+    marquerLiens();
+  }
+  /* Met en évidence les livres liés au roman sélectionné (à lire avant / après) */
+  function marquerLiens() {
+    var avant = {}, apresL = {};
+    if (sel) {
+      (P[sel].req || []).forEach(function (r) { avant[r] = 1; });
+      (P[sel].ctx || []).forEach(function (c) { avant[c[0]] = 1; });
+      LIVRES.forEach(function (b) { if ((b.req || []).indexOf(sel) >= 0 || (b.ctx || []).some(function (c) { return c[0] === sel; })) apresL[b.id] = 1; });
+    }
+    document.querySelectorAll("#bibCorps [data-bl]").forEach(function (bt) {
+      var id = bt.dataset.bl;
+      bt.classList.toggle("sel", id === sel); bt.classList.toggle("avant", !!avant[id]); bt.classList.toggle("apres", !!apresL[id]);
+    });
+  }
+  $("bibFiltre").addEventListener("input", function () { rendreBiblio(); });
+  $("bibParcours").addEventListener("change", function () { rendreBiblio(); });
 
   var survolId = null;
   function survol(id) { survolId = id; surligner(); }
@@ -538,7 +606,7 @@
     });
   }
 
-  function choisir(id) { sel = id; surligner(); fiche(id); }
+  function choisir(id) { sel = id; surligner(); if (!$("biblio").hidden) marquerLiens(); fiche(id); }
 
   var NIV = ["", "Pour débuter", "Intermédiaire", "Pour vétérans"];
   var ERE = { M31: "Hérésie · M31", M41: "M41", M42: "Ère Indomitus · M42" };
@@ -558,12 +626,17 @@
     (b.ctx || []).forEach(function (c) { if (c[0] !== precedent) h += '<div class="apres">Conseillé après <a href="#" data-go="' + c[0] + '">' + esc(P[c[0]].t) + "</a> — " + esc(c[1]) + "</div>"; });
     return h;
   }
+  function ensuite(id) {
+    var l = LIVRES.filter(function (x) { return (x.req || []).indexOf(id) >= 0 || (x.ctx || []).some(function (c) { return c[0] === id; }); });
+    if (!l.length) return "";
+    return '<div class="suite-l">À lire ensuite : ' + l.slice(0, 6).map(function (x) { return '<a href="#" data-go="' + x.id + '">' + esc(x.t) + "</a>"; }).join(", ") + (l.length > 6 ? "…" : "") + "</div>";
+  }
   function fiche(id) {
     var b = P[id], n = etat.ordre.indexOf(id);
     $("fiche").innerHTML =
       '<div class="etap">' + (n >= 0 ? "ÉTAPE " + (n + 1) + " / " + etat.ordre.length + (etat.role[id] === "contexte" ? " · DÉTOUR DE CONTEXTE" : "") : "HORS PARCOURS") + "</div>" +
       "<h3>" + esc(b.t) + "</h3>" + (b.vf ? '<div class="meta">VF : <b>' + esc(b.vf) + "</b></div>" : "") + '<div class="meta">' + meta(b, true) + "</div>" +
-      "<p>" + esc(b.resume) + "</p>" + '<p class="pourquoi">' + esc(b.pourquoi) + "</p>" + apres(b, null) +
+      "<p>" + esc(b.resume) + "</p>" + '<p class="pourquoi">' + esc(b.pourquoi) + "</p>" + apres(b, null) + ensuite(id) +
       '<button type="button" class="lu-btn" aria-pressed="' + (lus[id] ? "true" : "false") + '">' + (lus[id] ? "✓ Lu" : "Marquer comme lu") + "</button>";
     $("fiche").querySelector(".lu-btn").addEventListener("click", function () { basculerLu(id); });
     lierGo($("fiche"));
@@ -575,6 +648,8 @@
         if (etat.vue === "itin") { var c = document.querySelector('.livre[data-id="' + a.dataset.go + '"]'); if (c) { c.scrollIntoView({ block: "center" }); c.classList.add("flash"); setTimeout(function () { c.classList.remove("flash"); }, 1400); return; } }
         if (etat.vue === "itin") changerVue("graphe");
         choisir(a.dataset.go);
+        var bt = document.querySelector('#bibCorps [data-bl="' + a.dataset.go + '"]');
+        if (bt && !$("biblio").hidden) bt.scrollIntoView({ block: "center" });
       });
     });
   }
