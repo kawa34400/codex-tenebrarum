@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Frise Chronologique — Codex Tenebrarum</title>
+<link rel="stylesheet" href="style.css">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#03100a">
+<link rel="icon" href="icones/icone-32.png">
+<link rel="apple-touch-icon" href="icones/icone-180.png">
+<style>
+  .frise-wrap { max-width: 1280px; }
+  .commandes { display: flex; flex-wrap: wrap; gap: 0.4rem 1.2rem; align-items: center; margin-bottom: 0.8rem; font-family: var(--crt); font-size: 1.4rem; color: var(--ph-dim); }
+  .commandes button { font-family: var(--crt); font-size: 1.4rem; background: transparent; color: var(--ph-dim); border: 1px solid var(--ph-faint); padding: 0 0.6rem; cursor: pointer; }
+  .commandes button:hover, .commandes button[aria-pressed="true"] { background: var(--ph); color: var(--ecran); border-color: var(--ph); text-shadow: none; }
+  .commandes .grp { display: flex; gap: 0.25rem; align-items: center; flex-wrap: wrap; }
+  .ecran-frise { border: 1px solid var(--ph-dim); background: rgba(0,0,0,0.3); display: grid; grid-template-columns: 210px minmax(0, 1fr); }
+  .mythes { border-right: 1px dashed var(--ph-dim); padding: 0.6rem 0.8rem; background: repeating-linear-gradient(135deg, var(--ph-wash) 0 8px, transparent 8px 16px); }
+  .mythes h4 { margin: 0 0 0.4rem; font-size: 1.5rem; }
+  .mythe { display: block; width: 100%; text-align: left; background: transparent; border: 1px solid var(--xenos-dim); color: var(--xenos); font-family: var(--mono); font-size: 0.82rem; padding: 0.35rem 0.5rem; margin-bottom: 0.4rem; cursor: pointer; }
+  .mythe span { display: block; font-family: var(--crt); font-size: 1.2rem; color: var(--xenos-dim); }
+  .mythe:hover, .mythe.sel { background: var(--xenos); color: var(--ecran); text-shadow: none; }
+  .mythe:hover span, .mythe.sel span { color: var(--ecran); }
+  .defil { overflow-x: auto; overflow-y: hidden; cursor: grab; scrollbar-color: var(--ph-dim) #000; }
+  .defil.glisse { cursor: grabbing; }
+  #frise { display: block; }
+  #frise text { font-family: "VT323", monospace; }
+  .graduation line { stroke: var(--ph-faint); }
+  .graduation text { fill: var(--ph-dim); font-size: 17px; }
+  .graduation .maj line { stroke: var(--ph-dim); }
+  .graduation .maj text { fill: var(--ph); font-size: 20px; }
+  .piste-lbl { fill: var(--ph-dim); font-size: 16px; letter-spacing: 0.08em; }
+  .piste-fond { fill: var(--ph-wash); }
+  .ev { cursor: pointer; }
+  .ev rect { fill: var(--ecran); stroke: var(--ph); stroke-width: 1.5; }
+  .ev.chaos rect, .ev.chaos path { stroke: var(--chaos); }
+  .ev.xenos rect, .ev.xenos path { stroke: var(--xenos); }
+  .ev path { fill: var(--ecran); stroke: var(--ph); stroke-width: 2; }
+  .ev text { fill: var(--ph-txt); font-size: 18px; }
+  .ev.chaos text { fill: var(--chaos); } .ev.xenos text { fill: var(--xenos); }
+  .ev:hover rect, .ev.sel rect { fill: var(--ph); } .ev.chaos:hover rect, .ev.chaos.sel rect { fill: var(--chaos); } .ev.xenos:hover rect, .ev.xenos.sel rect { fill: var(--xenos); }
+  .ev:hover path, .ev.sel path { fill: var(--ph); } .ev.chaos:hover path, .ev.chaos.sel path { fill: var(--chaos); } .ev.xenos:hover path, .ev.xenos.sel path { fill: var(--xenos); }
+  .ev.sel text, .ev:hover text { fill: #fff; }
+  .ev:focus { outline: none; } .ev:focus-visible rect, .ev:focus-visible path { stroke-width: 3.5; }
+  .curseur-ligne { stroke: var(--ph); stroke-dasharray: 3 4; opacity: 0.6; pointer-events: none; }
+  .fiche-ev { margin-top: 1rem; border: 1px solid var(--ph-dim); padding: 0.9rem 1.2rem; min-height: 120px; background: var(--ecran); }
+  .fiche-ev .vide { font-family: var(--crt); font-size: 1.45rem; color: var(--ph-dim); }
+  .fiche-ev .date { font-family: var(--crt); font-size: 1.45rem; color: var(--ph-dim); }
+  .fiche-ev h3 { margin: 0.1rem 0 0.3rem; } .fiche-ev h3::before { content: none; }
+  .fiche-ev p { max-width: 75ch; font-size: 0.95rem; }
+  .fiche-ev .liens { display: flex; flex-wrap: wrap; gap: 0.4rem 1.4rem; }
+  .fiche-ev .liens a { font-family: var(--crt); font-size: 1.4rem; text-decoration: none; }
+  @media (max-width: 760px) { .ecran-frise { grid-template-columns: 1fr; } .mythes { border-right: 0; border-bottom: 1px dashed var(--ph-dim); } }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="inner">
+    <a class="brand" href="index.html"><span class="skull">✠</span>Codex Tenebrarum</a>
+    <nav class="main-nav">
+      <a href="index.html">Accueil</a>
+      <a href="chronologie.html" class="active">Chronologie</a>
+      <a href="factions.html">Factions</a>
+      <a href="personnages.html">Personnages</a>
+      <a href="univers.html">Univers</a>
+      <a href="carte.html">Carte</a>
+      <a href="cartographe.html">Cartographe</a>
+    </nav>
+  </div>
+</header>
+<div class="breadcrumb"><a href="chronologie.html">Chronologie</a> <span>›</span> Frise interactive</div>
+<section class="page-hero">
+  <div class="eyebrow">Chronologie · Du M15 au M42</div>
+  <h1>Frise des Âges</h1>
+  <p class="tagline">Vingt-huit millénaires d'histoire humaine sur une seule ligne. Zoomez sur un millénaire, cliquez un événement pour ouvrir son dossier, sa balise sur la carte et les romans qui le racontent.</p>
+</section>
+
+<main class="wrap frise-wrap">
+  <div class="commandes">
+    <div class="grp" role="group" aria-label="Zoom"><span>Échelle</span>
+      <button type="button" id="zm" aria-label="Dézoomer">−</button><span id="zv">vue d'ensemble</span><button type="button" id="zp" aria-label="Zoomer">+</button>
+    </div>
+    <div class="grp" role="group" aria-label="Aller à"><span>Aller à</span>
+      <button type="button" data-va="all">Tout</button>
+      <button type="button" data-va="hh">Hérésie</button>
+      <button type="button" data-va="m41">41ᵉ millénaire</button>
+      <button type="button" data-va="m42">Fin du M41 · M42</button>
+    </div>
+  </div>
+
+  <div class="ecran-frise">
+    <aside class="mythes">
+      <h4>Temps mythiques</h4>
+      <div id="mythes"></div>
+    </aside>
+    <div class="defil" id="defil"><svg id="frise" role="img" aria-label="Frise chronologique"></svg></div>
+  </div>
+  <div class="fiche-ev" id="fiche" aria-live="polite"><div class="vide">Sélectionnez un événement sur la frise.</div></div>
+
+  <a class="back-top" href="chronologie.html">▲ Retour à la Chronologie</a>
+</main>
+
+<footer class="site-footer">
+  <span class="latin">Bellum Sine Fine</span>
+  Codex Tenebrarum — compendium non officiel du lore de Warhammer 40 000.<br>
+  Propriété de Games Workshop. Œuvre de fan, à but informatif.
+</footer>
+
+<script src="frise-data.js"></script>
+<script src="cogitator-titres.js"></script>
+<script src="cartographe-data.js"></script>
+<script>
+(function () {
+  "use strict";
+  var E = window.FRISE, M = window.FRISE_MYTHES, NS = "http://www.w3.org/2000/svg";
+  var $ = function (id) { return document.getElementById(id); };
+  function S(t, a, p) { var e = document.createElementNS(NS, t); for (var k in a) e.setAttribute(k, a[k]); if (p) p.appendChild(e); return e; }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+
+  /* "005.M31" → 30.005 · "M36" → 35 (début) ou 36 (fin) · "~M30" → 29.5 */
+  function val(s, fin) {
+    var t = s.replace("~", ""), m = t.match(/^(?:(\d{1,3})\.)?M(\d+)$/);
+    if (!m) return null;
+    var mil = +m[2] - 1;
+    if (m[1] != null) return mil + (+m[1]) / 1000;
+    if (s.charAt(0) === "~" && !fin) return mil + 0.5;
+    return fin ? mil + 1 : mil;
+  }
+  var DEB = 14, FIN = 42.05, PISTES = [["imperium", "IMPERIUM"], ["chaos", "CHAOS"], ["xenos", "XENOS"]];
+  var ECHELLES = [0, 120, 400, 1500, 6000]; // px par millénaire (0 = ajusté à l'écran)
+  var niv = 0, sel = null;
+  E.forEach(function (e) { e.a = val(e.debut, false); e.b = e.fin ? val(e.fin, true) : null; if (e.b != null && e.b < e.a) e.b = e.a; });
+
+  function ppm() { return niv === 0 ? Math.max(30, ($("defil").clientWidth - 70) / (FIN - DEB)) : ECHELLES[niv]; }
+  function x(v) { return 20 + (v - DEB) * ppm(); }
+
+  function dessiner() {
+    var svg = $("frise"); while (svg.firstChild) svg.removeChild(svg.firstChild);
+    var W = Math.ceil(x(FIN) + 40), p = ppm();
+    // Placement : pistes, puis rangées pour éviter les chevauchements
+    var rangees = {}, hauteurPiste = {};
+    var items = E.map(function (e) {
+      var x1 = x(e.a), x2 = e.b != null ? Math.max(x(e.b), x1 + 10) : x1;
+      var lbl = e.nom, larg = lbl.length * 8.4 + 22;
+      return { e: e, x1: x1, x2: x2, fin: Math.max(x2, x1 + larg) + 12 };
+    }).sort(function (a, b) { return a.x1 - b.x1; });
+    PISTES.forEach(function (pi) { rangees[pi[0]] = []; });
+    items.forEach(function (it) {
+      var r = rangees[it.e.piste], k = 0;
+      while (r[k] != null && r[k] > it.x1) k++;
+      r[k] = it.fin; it.rang = k;
+    });
+    var y = 46, Y = {};
+    PISTES.forEach(function (pi) { var n = Math.max(1, rangees[pi[0]].length); Y[pi[0]] = y; hauteurPiste[pi[0]] = n * 42 + 18; y += hauteurPiste[pi[0]] + 8; });
+    var H = y + 10;
+    svg.setAttribute("width", W); svg.setAttribute("height", H); svg.setAttribute("viewBox", "0 0 " + W + " " + H);
+    // Fonds de pistes
+    PISTES.forEach(function (pi) {
+      S("rect", { x: 0, y: Y[pi[0]] - 6, width: W, height: hauteurPiste[pi[0]], "class": "piste-fond" }, svg);
+      var t = S("text", { x: 8, y: Y[pi[0]] + 8, "class": "piste-lbl" }, svg); t.textContent = pi[1];
+    });
+    // Graduations
+    var g = S("g", { "class": "graduation" }, svg);
+    var pas = p >= 1500 ? 0.1 : p >= 400 ? 0.25 : 1;
+    for (var v = Math.ceil(DEB / pas) * pas; v <= FIN + 1e-9; v += pas) {
+      var maj = Math.abs(v - Math.round(v)) < 1e-6, gx = x(v);
+      var gg = S("g", { "class": maj ? "maj" : "" }, g);
+      S("line", { x1: gx, x2: gx, y1: 26, y2: H, "stroke-width": maj ? 1 : 0.6 }, gg);
+      var lab = maj ? "M" + (Math.round(v) + 1) : String(Math.round((v - Math.floor(v)) * 1000)).padStart(3, "0") + ".M" + (Math.floor(v) + 1);
+      if (maj || p >= 400) { var tt = S("text", { x: gx + 4, y: 20 }, gg); tt.textContent = lab; }
+    }
+    // Événements
+    items.forEach(function (it) {
+      var e = it.e, yy = Y[e.piste] + 8 + it.rang * 42;
+      var gr = S("g", { "class": "ev " + e.piste + (sel === e.id ? " sel" : ""), tabindex: "0", role: "button", "aria-label": e.nom + ", " + e.debut + (e.fin ? " à " + e.fin : "") }, svg);
+      gr.dataset.id = e.id;
+      if (e.b != null && it.x2 - it.x1 > 12) {
+        S("rect", { x: it.x1, y: yy, width: it.x2 - it.x1, height: 12, rx: 0 }, gr);
+        var t = S("text", { x: it.x1 + 4, y: yy + 29 }, gr); t.textContent = e.nom;
+      } else {
+        S("path", { d: "M" + it.x1 + " " + (yy - 1) + " l8 8 l-8 8 l-8 -8 z" }, gr);
+        var t2 = S("text", { x: it.x1 + 12, y: yy + 13 }, gr); t2.textContent = e.nom;
+      }
+      gr.addEventListener("click", function () { choisir(e.id); });
+      gr.addEventListener("keydown", function (ev) { if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); choisir(e.id); } });
+    });
+    $("zv").textContent = niv === 0 ? "vue d'ensemble" : (ECHELLES[niv] >= 1500 ? "siècle par siècle" : "×" + niv);
+  }
+
+  function titre(p) { return (window.COGITATOR_TITRES || {})[p] || p; }
+  function themeNom(id) { var t = (window.CARTO_THEMES || []).filter(function (x) { return x.id === id; })[0]; return t ? t.nom : null; }
+  function fiche(o, date) {
+    var liens = [];
+    if (o.page) liens.push('<a href="' + o.page + '">› Dossier : ' + esc(titre(o.page)) + "</a>");
+    if (o.carte) liens.push('<a href="carte.html?m=' + o.carte + '">› Voir sur la carte</a>');
+    if (o.lire && themeNom(o.lire)) liens.push('<a href="cartographe.html?q=' + encodeURIComponent(themeNom(o.lire)) + '">› Romans : ' + esc(themeNom(o.lire)) + "</a>");
+    $("fiche").innerHTML = '<div class="date">' + esc(date) + "</div><h3>" + esc(o.nom) + "</h3><p>" + esc(o.txt) + '</p><div class="liens">' + liens.join("") + "</div>";
+  }
+  function choisir(id) {
+    var e = E.filter(function (z) { return z.id === id; })[0]; if (!e) return;
+    sel = id;
+    document.querySelectorAll(".mythe").forEach(function (b) { b.classList.remove("sel"); });
+    document.querySelectorAll("#frise .ev").forEach(function (g) { g.classList.toggle("sel", g.dataset.id === id); });
+    fiche(e, e.debut + (e.fin ? " → " + e.fin : ""));
+    try { history.replaceState(null, "", "?e=" + id); } catch (er) {}
+  }
+
+  // Temps mythiques
+  M.forEach(function (m, i) {
+    var b = document.createElement("button"); b.type = "button"; b.className = "mythe " + m.piste;
+    b.innerHTML = "<span>" + esc(m.quand) + "</span>" + esc(m.nom);
+    b.addEventListener("click", function () {
+      sel = null; document.querySelectorAll("#frise .ev").forEach(function (g) { g.classList.remove("sel"); });
+      document.querySelectorAll(".mythe").forEach(function (z) { z.classList.toggle("sel", z === b); });
+      fiche(m, m.quand);
+    });
+    $("mythes").appendChild(b);
+  });
+
+  // Zoom & navigation
+  function centrerSur(v) { var d = $("defil"); d.scrollLeft = x(v) - d.clientWidth / 2; }
+  function setNiv(n, centre) {
+    var d = $("defil"), c = centre != null ? centre : DEB + (d.scrollLeft + d.clientWidth / 2 - 20) / ppm();
+    niv = Math.max(0, Math.min(ECHELLES.length - 1, n)); dessiner(); centrerSur(c);
+  }
+  $("zp").addEventListener("click", function () { setNiv(niv + 1); });
+  $("zm").addEventListener("click", function () { setNiv(niv - 1); });
+  var VA = { all: [0, 28], hh: [3, 30.01], m41: [2, 40.5], m42: [3, 40.95] };
+  document.querySelectorAll("[data-va]").forEach(function (b) { b.addEventListener("click", function () { var v = VA[b.dataset.va]; setNiv(v[0], v[1]); }); });
+  var drag = null, d = $("defil");
+  d.addEventListener("pointerdown", function (e) { if (e.pointerType !== "mouse" || e.target.closest(".ev")) return; drag = { x: e.clientX, l: d.scrollLeft }; d.classList.add("glisse"); });
+  window.addEventListener("pointermove", function (e) { if (drag) d.scrollLeft = drag.l - (e.clientX - drag.x); });
+  window.addEventListener("pointerup", function () { drag = null; d.classList.remove("glisse"); });
+  d.addEventListener("wheel", function (e) { if (!e.ctrlKey) return; e.preventDefault(); var r = d.getBoundingClientRect(); var c = DEB + (d.scrollLeft + e.clientX - r.left - 20) / ppm(); setNiv(niv + (e.deltaY < 0 ? 1 : -1), c); }, { passive: false });
+  var rz; window.addEventListener("resize", function () { clearTimeout(rz); rz = setTimeout(function () { if (niv === 0) dessiner(); }, 150); });
+
+  dessiner();
+  var m = location.search.match(/[?&]e=([^&]+)/);
+  if (m) { var ev = E.filter(function (z) { return z.id === m[1]; })[0]; if (ev) { setNiv(2, ev.a); choisir(ev.id); } }
+  window.FRISE_CHOISIR = function (id) { var ev = E.filter(function (z) { return z.id === id; })[0]; if (ev) { setNiv(2, ev.a); choisir(id); } };
+})();
+</script>
+<script src="cogitator.js"></script>
+</body>
+</html>

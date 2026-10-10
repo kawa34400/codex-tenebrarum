@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Toile des Relations — Codex Tenebrarum</title>
+<link rel="stylesheet" href="style.css">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#03100a">
+<link rel="icon" href="icones/icone-32.png">
+<link rel="apple-touch-icon" href="icones/icone-180.png">
+<style>
+  .toile-wrap { max-width: 1280px; }
+  .t-cmd { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem 1.4rem; margin-bottom: 1rem; }
+  .t-cmd label { display: block; font-family: var(--crt); font-size: 1.45rem; color: var(--ph-dim); }
+  .t-champ { display: flex; gap: 0.4rem; align-items: center; border: 1px solid var(--ph-dim); padding: 0.2rem 0.6rem; background: var(--ph-wash); }
+  .t-champ span { font-family: var(--crt); font-size: 1.7rem; color: var(--ph); }
+  .t-champ input { flex: 1; min-width: 0; background: transparent; border: 0; outline: none; color: var(--ph); font-family: var(--crt); font-size: 1.6rem; caret-color: var(--ph); }
+  .t-champ button { font-family: var(--crt); font-size: 1.4rem; background: var(--ph); color: var(--ecran); border: 0; padding: 0 0.7rem; cursor: pointer; text-shadow: none; }
+  .t-grille { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 1.2rem; align-items: start; }
+  .t-ecran { border: 1px solid var(--ph-dim); background: rgba(0,0,0,0.3); position: relative; }
+  .t-ecran .barre { padding: 0.2rem 0.7rem; border-bottom: 1px solid var(--ph-faint); font-family: var(--crt); font-size: 1.3rem; color: var(--ph-dim); display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+  #toile { display: block; width: 100%; height: auto; }
+  .lien { stroke: var(--ph-faint); stroke-width: 1; transition: opacity 0.4s; }
+  .lien.c { stroke: var(--ph-dim); stroke-width: 1.4; }
+  .lien.chemin { stroke: var(--ph); stroke-width: 3; filter: drop-shadow(0 0 4px var(--ph-glow)); }
+  .nd { cursor: pointer; transition: transform 0.55s cubic-bezier(.3,.7,.2,1), opacity 0.4s; }
+  @media (prefers-reduced-motion: reduce) { .nd { transition: none; } }
+  .nd circle { fill: var(--ecran); stroke: var(--ph); stroke-width: 2; }
+  .nd.chaos circle { stroke: var(--chaos); } .nd.xenos circle { stroke: var(--xenos); }
+  .nd text { font-family: "VT323", monospace; font-size: 19px; fill: var(--ph-txt); paint-order: stroke; stroke: var(--ecran); stroke-width: 4px; }
+  .nd.chaos text { fill: var(--chaos); } .nd.xenos text { fill: var(--xenos); }
+  .nd.centre circle { fill: var(--ph); stroke-width: 3; filter: drop-shadow(0 0 10px var(--ph-glow)); }
+  .nd.centre.chaos circle { fill: var(--chaos); } .nd.centre.xenos circle { fill: var(--xenos); }
+  .nd.centre text { font-size: 26px; fill: #fff; }
+  .nd:hover circle, .nd:focus-visible circle { fill: var(--ph-dim); } .nd:focus { outline: none; }
+  .t-panneau { border: 1px solid var(--ph-dim); padding: 0.9rem 1rem; background: var(--ecran); }
+  .t-panneau .cat { font-family: var(--crt); font-size: 1.3rem; color: var(--ph-dim); }
+  .t-panneau h3 { margin: 0.1rem 0 0.5rem; } .t-panneau h3::before { content: none; }
+  .t-panneau .ouvrir { display: inline-block; font-family: var(--crt); font-size: 1.5rem; text-decoration: none; margin-bottom: 0.6rem; }
+  .voisins { list-style: none; margin: 0; padding: 0; max-height: 46vh; overflow-y: auto; max-width: none; }
+  .voisins li { margin: 0; } .voisins li::before { content: none; }
+  .voisins button { width: 100%; text-align: left; background: transparent; border: 0; border-bottom: 1px dotted var(--ph-faint); color: var(--ph-txt); font-family: var(--mono); font-size: 0.85rem; padding: 0.25rem 0.2rem; cursor: pointer; display: flex; justify-content: space-between; gap: 0.4rem; }
+  .voisins button span { font-family: var(--crt); font-size: 1.15rem; color: var(--ph-dim); }
+  .voisins button:hover { background: var(--ph); color: var(--ecran); text-shadow: none; } .voisins button:hover span { color: var(--ecran); }
+  .chemin-res { font-family: var(--crt); font-size: 1.35rem; color: var(--ph); margin: 0.4rem 0 0; min-height: 1.5em; }
+  .chemin-res a { text-decoration: none; }
+  .chemin-res .err { color: var(--chaos); }
+  .historique { font-family: var(--crt); font-size: 1.2rem; color: var(--ph-dim); margin-top: 0.6rem; }
+  .historique button { font-family: var(--crt); font-size: 1.2rem; background: transparent; border: 0; color: var(--ph-dim); cursor: pointer; padding: 0; text-decoration: underline; }
+  @media (max-width: 960px) { .t-grille, .t-cmd { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="inner">
+    <a class="brand" href="index.html"><span class="skull">✠</span>Codex Tenebrarum</a>
+    <nav class="main-nav">
+      <a href="index.html">Accueil</a>
+      <a href="chronologie.html">Chronologie</a>
+      <a href="factions.html">Factions</a>
+      <a href="personnages.html">Personnages</a>
+      <a href="univers.html">Univers</a>
+      <a href="carte.html">Carte</a>
+      <a href="cartographe.html">Cartographe</a>
+    </nav>
+  </div>
+</header>
+
+<section class="page-hero">
+  <div class="eyebrow">Analyse noosphérique · Relations entre dossiers</div>
+  <h1>Toile des Relations</h1>
+  <p class="tagline">Chaque dossier cite d'autres dossiers. La toile relie ces mentions : choisissez un point de départ, puis voyagez de nœud en nœud — ou demandez au cogitator comment deux dossiers sont reliés.</p>
+</section>
+
+<main class="wrap toile-wrap">
+  <div class="t-cmd">
+    <form id="fCentre" autocomplete="off">
+      <label for="centre">Dossier central</label>
+      <div class="t-champ"><span>&gt;</span><input id="centre" list="liste-dossiers" spellcheck="false" placeholder="Horus, Cadia, Trazyn…"><button type="submit">Centrer</button></div>
+    </form>
+    <form id="fChemin" autocomplete="off">
+      <label for="cible">Relier au dossier…</label>
+      <div class="t-champ"><span>&gt;</span><input id="cible" list="liste-dossiers" spellcheck="false" placeholder="ex. Ghazghkull"><button type="submit">Relier</button></div>
+      <div class="chemin-res" id="chemin" aria-live="polite"></div>
+    </form>
+  </div>
+  <datalist id="liste-dossiers"></datalist>
+
+  <div class="t-grille">
+    <div class="t-ecran">
+      <div class="barre"><span id="tInfo">TOILE</span><span>Clic : recentrer · double-clic : ouvrir le dossier</span></div>
+      <svg id="toile" viewBox="0 0 1000 760" role="img" aria-label="Toile des relations entre dossiers"></svg>
+    </div>
+    <aside class="t-panneau" id="panneau" aria-live="polite"></aside>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <span class="latin">Omnia Conexa Sunt</span>
+  Codex Tenebrarum — compendium non officiel du lore de Warhammer 40 000.<br>
+  Propriété de Games Workshop. Œuvre de fan, à but informatif.
+</footer>
+
+<script src="cogitator-liens.js"></script>
+<script>
+(function () {
+  "use strict";
+  var D = window.COGITATOR_LIENS, N = D.n, NS = "http://www.w3.org/2000/svg";
+  var $ = function (id) { return document.getElementById(id); };
+  function S(t, a, p) { var e = document.createElementNS(NS, t); for (var k in a) e.setAttribute(k, a[k]); if (p) p.appendChild(e); return e; }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function norm(s) { return (s || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/['’\-]/g, " ").trim(); }
+  var CAT = { astartes: "Space Marines", chaos: "Chaos", primarque: "Primarque", heros: "Personnage", histoire: "Événement", univers: "Univers", imperium: "Imperium", xenos: "Xenos" };
+
+  // Graphe d'adjacence
+  var adj = N.map(function () { return {}; });
+  D.e.forEach(function (e) { adj[e[0]][e[1]] = e[2]; adj[e[1]][e[0]] = e[2]; });
+  var deg = adj.map(function (a) { return Object.keys(a).length; });
+  var parF = {}; N.forEach(function (n, i) { parF[n.f] = i; });
+
+  // Liste de recherche
+  var dl = $("liste-dossiers");
+  N.map(function (n, i) { return i; }).filter(function (i) { return deg[i]; }).sort(function (a, b) { return N[a].t.localeCompare(N[b].t, "fr"); })
+    .forEach(function (i) { var o = document.createElement("option"); o.value = N[i].t; dl.appendChild(o); });
+  function trouver(q) {
+    var n = norm(q); if (!n) return -1;
+    var ex = -1, part = -1;
+    N.forEach(function (x, i) { if (!deg[i]) return; var t = norm(x.t); if (t === n) ex = i; else if (part < 0 && t.indexOf(n) >= 0) part = i; });
+    return ex >= 0 ? ex : part;
+  }
+
+  var svg = $("toile"), gL = S("g", {}, svg), gN = S("g", {}, svg), noeuds = {}, centre = -1, chemin = [], hist = [];
+  var W = 1000, H = 760, CX = W / 2, CY = H / 2;
+
+  function noeud(i) {
+    if (noeuds[i]) return noeuds[i];
+    var g = S("g", { "class": "nd " + N[i].fam, tabindex: "0", role: "button" }, gN);
+    g.setAttribute("aria-label", N[i].t);
+    S("circle", { r: 9 }, g);
+    var t = S("text", { x: 0, y: -15, "text-anchor": "middle" }, g); t.textContent = N[i].t.length > 26 ? N[i].t.slice(0, 25) + "…" : N[i].t;
+    g.style.transform = "translate(" + CX + "px," + CY + "px)"; g.style.opacity = 0;
+    g.addEventListener("click", function () { if (i !== centre) centrer(i); });
+    g.addEventListener("dblclick", function () { location.href = N[i].f; });
+    g.addEventListener("keydown", function (e) { if (e.key === "Enter") { if (i === centre) location.href = N[i].f; else centrer(i); } });
+    noeuds[i] = g; return g;
+  }
+
+  function centrer(i, garderChemin) {
+    if (i < 0) return;
+    if (centre >= 0 && centre !== i) { hist.push(centre); if (hist.length > 8) hist.shift(); }
+    centre = i; if (!garderChemin) chemin = [];
+    var vois = Object.keys(adj[i]).map(Number).sort(function (a, b) { return (adj[i][b] - adj[i][a]) || (deg[b] - deg[a]); });
+    var visibles = vois.slice(0, 22);
+    chemin.forEach(function (c) { if (c !== i && visibles.indexOf(c) < 0) visibles.push(c); });
+    var pos = {}; pos[i] = [CX, CY];
+    // anneau(x) : on répartit les voisins sur un ou deux cercles
+    var n = visibles.length, r1 = n > 12 ? 230 : 260, r2 = 340;
+    visibles.forEach(function (v, k) {
+      var deux = n > 12 && k % 2 === 1, r = deux ? r2 : r1;
+      var a = -Math.PI / 2 + (k / Math.max(1, n)) * Math.PI * 2;
+      pos[v] = [CX + Math.cos(a) * r * 1.28, CY + Math.sin(a) * r * 0.92];
+    });
+    // Nœuds
+    Object.keys(noeuds).forEach(function (k) {
+      if (!(k in pos)) { var g = noeuds[k]; g.style.opacity = 0; g.style.pointerEvents = "none"; }
+    });
+    Object.keys(pos).forEach(function (k) {
+      var g = noeud(+k), p = pos[k];
+      g.style.pointerEvents = ""; g.classList.toggle("centre", +k === i);
+      requestAnimationFrame(function () { g.style.transform = "translate(" + p[0] + "px," + p[1] + "px)"; g.style.opacity = 1; });
+      g.querySelector("circle").setAttribute("r", +k === i ? 16 : 6 + Math.min(8, Math.sqrt(deg[k])));
+    });
+    // Liens : centre → voisins, puis liens entre voisins
+    while (gL.firstChild) gL.removeChild(gL.firstChild);
+    var ids = Object.keys(pos).map(Number), surChemin = {};
+    for (var c = 0; c + 1 < chemin.length; c++) { surChemin[chemin[c] + "-" + chemin[c + 1]] = surChemin[chemin[c + 1] + "-" + chemin[c]] = 1; }
+    ids.forEach(function (a) {
+      ids.forEach(function (b) {
+        if (a >= b || !adj[a][b]) return;
+        var cl = "lien" + ((a === i || b === i) ? " c" : "") + (surChemin[a + "-" + b] ? " chemin" : "");
+        S("line", { x1: pos[a][0], y1: pos[a][1], x2: pos[b][0], y2: pos[b][1], "class": cl, opacity: (a === i || b === i || surChemin[a + "-" + b]) ? 0.9 : 0.35 }, gL);
+      });
+    });
+    $("tInfo").textContent = "TOILE · " + N[i].t.toUpperCase() + " · " + vois.length + " LIEN(S)" + (vois.length > visibles.length ? " (" + visibles.length + " AFFICHÉS)" : "");
+    panneau(i, vois);
+    try { history.replaceState(null, "", "?d=" + N[i].f.replace(".html", "")); } catch (e) {}
+  }
+
+  function panneau(i, vois) {
+    var p = $("panneau");
+    p.innerHTML = '<div class="cat">' + esc((CAT[N[i].cat] || "Dossier").toUpperCase()) + " · " + deg[i] + " liens</div>" +
+      "<h3>" + esc(N[i].t) + "</h3>" + '<a class="ouvrir" href="' + N[i].f + '">› Ouvrir le dossier</a>' +
+      '<ul class="voisins">' + vois.map(function (v) {
+        return '<li><button type="button" data-v="' + v + '">' + esc(N[v].t) + "<span>" + esc(CAT[N[v].cat] || "") + "</span></button></li>";
+      }).join("") + "</ul>" +
+      (hist.length ? '<div class="historique">Parcours : ' + hist.slice(-4).map(function (h) { return '<button type="button" data-v="' + h + '">' + esc(N[h].t) + "</button>"; }).join(" › ") + "</div>" : "");
+    p.querySelectorAll("[data-v]").forEach(function (b) { b.addEventListener("click", function () { centrer(+b.dataset.v); }); });
+  }
+
+  // Plus court chemin (parcours en largeur)
+  function relier(a, b) {
+    var prec = {}, file = [a], vu = {}; vu[a] = 1;
+    while (file.length) {
+      var x = file.shift(); if (x === b) break;
+      Object.keys(adj[x]).forEach(function (y) { y = +y; if (!vu[y]) { vu[y] = 1; prec[y] = x; file.push(y); } });
+    }
+    if (!vu[b]) return null;
+    var c = [b]; while (c[0] !== a) c.unshift(prec[c[0]]);
+    return c;
+  }
+
+  $("fCentre").addEventListener("submit", function (e) { e.preventDefault(); var i = trouver($("centre").value); if (i >= 0) centrer(i); else $("chemin").innerHTML = '<span class="err">DOSSIER INTROUVABLE.</span>'; });
+  $("fChemin").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var b = trouver($("cible").value), r = $("chemin");
+    if (b < 0) { r.innerHTML = '<span class="err">DOSSIER INTROUVABLE.</span>'; return; }
+    var c = relier(centre, b);
+    if (!c) { r.innerHTML = '<span class="err">AUCUNE RELATION CONSIGNÉE.</span>'; return; }
+    chemin = c;
+    r.innerHTML = (c.length - 1) + " DEGRÉ(S) : " + c.map(function (x) { return '<a href="' + N[x].f + '">' + esc(N[x].t) + "</a>"; }).join(" › ");
+    centrer(centre, true);
+  });
+
+  var m = location.search.match(/[?&]d=([^&]+)/), depart = m ? parF[decodeURIComponent(m[1]) + ".html"] : parF["primarque-horus.html"];
+  if (depart == null || !deg[depart]) depart = parF["primarque-horus.html"];
+  $("centre").value = N[depart].t;
+  centrer(depart);
+  window.TOILE_CENTRER = function (q) { var i = trouver(q); if (i >= 0) centrer(i); return i >= 0; };
+})();
+</script>
+<script src="cogitator.js"></script>
+</body>
+</html>

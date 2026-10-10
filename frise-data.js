@@ -1,0 +1,70 @@
+/* ============================================================
+   FRISE CHRONOLOGIQUE — événements
+   ------------------------------------------------------------
+   Les dates s'écrivent comme dans les archives : "014.M31" (an 14 du 31ᵉ millénaire),
+   "M36" (tout le millénaire), ou "~M30". debut/fin : début et fin (fin facultative).
+   piste  : imperium · chaos · xenos   (la ligne où s'affiche l'événement)
+   page   : dossier du Codex · carte : balise de la carte · lire : thème du Cartographe
+   Les « temps mythiques » (avant l'humanité) sont dans FRISE_MYTHES.
+   ============================================================ */
+window.FRISE_MYTHES = [
+  { nom:"La Guerre dans les Cieux", quand:"≈ 60 millions d'années", piste:"xenos", page:"evt-guerre-cieux.html", lire:"necrons",
+    txt:"Les Anciens et leurs créations affrontent les Nécrontyr et leurs maîtres C'tan. La guerre façonne la galaxie, puis les Nécrons s'endorment dans leurs tombeaux." },
+  { nom:"L'Empire Aeldari", quand:"Antiquité → M30", piste:"xenos", page:"evt-empire-aeldari.html", lire:"aeldari",
+    txt:"Héritiers des Anciens, les Aeldari bâtissent la plus grande civilisation de la galaxie — et sombrent peu à peu dans la décadence." }
+];
+
+window.FRISE = [
+  { id:"age-sombre", nom:"Âge Sombre de la Technologie", debut:"M15", fin:"M25", piste:"imperium", page:"evt-age-tenebres.html",
+    txt:"L'humanité colonise la galaxie grâce aux STC et aux machines pensantes. L'apogée technologique avant la longue nuit." },
+  { id:"discorde", nom:"Âge de la Discorde", debut:"M25", fin:"M30", piste:"imperium", page:"evt-discorde.html",
+    txt:"Tempêtes warp, révolte des machines et apparition des psykers : la civilisation humaine s'effondre monde après monde." },
+  { id:"chute-aeldari", nom:"Chute des Aeldari", debut:"~M30", piste:"chaos", page:"evt-chute-aeldari.html", carte:"oeil", lire:"aeldari",
+    txt:"La décadence aeldari donne naissance à Slaanesh. L'empire est anéanti et l'Œil de la Terreur s'ouvre." },
+  { id:"unification", nom:"Guerres d'Unification", debut:"~M30", piste:"imperium", page:"evt-unification.html", carte:"terra",
+    txt:"L'Empereur se révèle et réunifie Terra sous sa bannière, avec ses Guerriers-Tonnerre." },
+  { id:"grande-croisade", nom:"La Grande Croisade", debut:"798.M30", fin:"005.M31", piste:"imperium", page:"evt-grande-croisade.html", lire:"heresie",
+    txt:"L'Empereur et ses Primarques réunissent un million de mondes. Horus est nommé Maître de Guerre à la fin de la Croisade." },
+  { id:"nikaea", nom:"Concile de Nikaea", debut:"~001.M31", piste:"imperium", page:"evt-nikaea.html", lire:"thousand-sons",
+    txt:"L'Empereur interdit l'usage de la sorcellerie aux Légions. Magnus le Rouge plaide en vain." },
+  { id:"isstvan", nom:"Trahison d'Isstvan", debut:"005.M31", fin:"006.M31", piste:"chaos", page:"evt-heresie.html", lire:"heresie",
+    txt:"Horus purge les loyalistes de ses Légions sur Isstvan III, puis tend un piège mortel aux Légions loyales sur Isstvan V." },
+  { id:"heresie", nom:"L'Hérésie d'Horus", debut:"005.M31", fin:"014.M31", piste:"chaos", page:"evt-heresie.html", lire:"heresie",
+    txt:"Neuf Légions trahissent l'Empereur. La guerre civile embrase toute la galaxie." },
+  { id:"calth", nom:"Bataille de Calth", debut:"~007.M31", piste:"chaos", page:"primarque-guilliman.html", lire:"ultramarines",
+    txt:"Les Word Bearers frappent les Ultramarines par surprise dans le système de Calth." },
+  { id:"siege", nom:"Siège de Terra", debut:"014.M31", piste:"imperium", page:"evt-siege-terra.html", carte:"terra", lire:"siege-terra",
+    txt:"Horus assiège le Palais Impérial. Il est vaincu, mais l'Empereur est placé sur le Trône d'Or." },
+  { id:"chatiment", nom:"Le Châtiment & la Seconde Fondation", debut:"014.M31", fin:"021.M31", piste:"imperium", page:"evt-chatiment.html",
+    txt:"Les traîtres sont repoussés vers l'Œil de la Terreur. Le Codex Astartes divise les Légions en Chapitres." },
+  { id:"croisades-noires", nom:"Les Croisades Noires", debut:"M31", fin:"999.M41", piste:"chaos", page:"evt-croisades-noires.html", carte:"cadia", lire:"black-legion",
+    txt:"Treize grandes offensives d'Abaddon depuis l'Œil de la Terreur, jusqu'à la chute de Cadia." },
+  { id:"bete", nom:"Guerre de la Bête", debut:"544.M32", fin:"548.M32", piste:"xenos", page:"evt-guerre-bete.html", lire:"orks",
+    txt:"Une Waaagh! d'une ampleur inédite frappe jusqu'aux abords de Terra." },
+  { id:"nova-terra", nom:"Interrègne de Nova Terra", debut:"M34", fin:"M36", piste:"imperium", page:"evt-interregne.html",
+    txt:"Un schisme coupe l'Imperium en deux pendant des siècles." },
+  { id:"apostasie", nom:"Âge de l'Apostasie", debut:"~M36", piste:"imperium", page:"evt-apostasie.html", lire:"sororitas",
+    txt:"Le Haut Seigneur Goge Vandire plonge l'Imperium dans le Règne du Sang. Les Sœurs de Bataille naissent de sa chute." },
+  { id:"gothique", nom:"Guerre Gothique", debut:"~140.M41", piste:"chaos", page:"evt-croisades-noires.html", carte:"gothic",
+    txt:"Abaddon tente de s'emparer des Forteresses Noires dans le secteur Gothique." },
+  { id:"armageddon-1", nom:"Première Guerre d'Armageddon", debut:"444.M41", piste:"chaos", page:"evt-m41.html", carte:"armageddon",
+    txt:"Angron et ses démons envahissent Armageddon, repoussés par les Space Wolves et les Grey Knights." },
+  { id:"behemoth", nom:"Flotte-ruche Béhémoth", debut:"745.M41", piste:"xenos", page:"flotte-behemoth.html", carte:"macragge", lire:"tyranides",
+    txt:"Première grande invasion tyranide : les Ultramarines la brisent à Macragge, au prix de leur 1ʳᵉ compagnie." },
+  { id:"armageddon-2", nom:"Seconde Guerre d'Armageddon", debut:"941.M41", piste:"xenos", page:"regiment-armageddon.html", carte:"armageddon", lire:"orks",
+    txt:"Ghazghkull envahit Armageddon. Yarrick organise la résistance ; Mephiston naît dans les ruines de la ruche Hadès." },
+  { id:"kraken", nom:"Flotte-ruche Kraken", debut:"~992.M41", piste:"xenos", page:"flotte-kraken.html", carte:"ichar", lire:"tyranides",
+    txt:"Une nouvelle flotte-ruche frappe l'Est galactique : Ichar IV tient de justesse." },
+  { id:"armageddon-3", nom:"Troisième Guerre d'Armageddon", debut:"998.M41", piste:"xenos", page:"xenos-ghazghkull.html", carte:"armageddon", lire:"orks",
+    txt:"Ghazghkull revient avec la plus grande Waaagh! de l'histoire. Helsreach est l'un de ses théâtres." },
+  { id:"leviathan", nom:"Flotte-ruche Léviathan", debut:"~997.M41", fin:"~M42", piste:"xenos", page:"flotte-leviathan.html", carte:"baal", lire:"blood-angels",
+    txt:"Léviathan surgit par en dessous du plan galactique et assiège Baal." },
+  { id:"cadia", nom:"Chute de Cadia", debut:"999.M41", piste:"chaos", page:"evt-grande-faille.html", carte:"cadia", lire:"black-legion",
+    txt:"La Treizième Croisade Noire brise la Porte de Cadia. La Grande Faille s'ouvre dans son sillage." },
+  { id:"faille", nom:"La Grande Faille", debut:"999.M41", piste:"chaos", page:"evt-grande-faille.html", carte:"faille", lire:"m42",
+    txt:"La Cicatrix Maledictum déchire la galaxie et isole l'Imperium Nihilus." },
+  { id:"indomitus", nom:"Croisade Indomitus", debut:"999.M41", fin:"~012.M42", piste:"imperium", page:"evt-indomitus.html", carte:"macragge", lire:"m42",
+    txt:"Ressuscité, Roboute Guilliman lance la plus grande croisade depuis l'Hérésie, appuyée par les Primaris." },
+  { id:"ere-indomitus", nom:"L'Ère Indomitus", debut:"M42", fin:"M42", piste:"imperium", page:"chrono-indomitus.html", lire:"m42",
+    txt:"Le présent du jeu : un Imperium coupé en deux, assiégé sur tous les fronts, mais qui retrouve ses Primarques." }
+];

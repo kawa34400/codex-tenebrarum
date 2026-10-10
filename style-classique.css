@@ -1,0 +1,433 @@
+/* ============================================================
+   CODEX TENEBRARUM — Bible du lore Warhammer 40 000
+   Feuille de style partagée
+   ============================================================ */
+
+:root {
+  --noir: #0a0a0c;
+  --noir-2: #121216;
+  --noir-3: #1a1a20;
+  --or: #c8a24a;
+  --or-clair: #e7cf8f;
+  --or-sombre: #8a6d2a;
+  --sang: #7a1410;
+  --sang-clair: #a83228;
+  --parchemin: #d8cfb8;
+  --gris: #9a958a;
+  --gris-clair: #c4bfb4;
+  --bordure: #34302a;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background:
+    radial-gradient(ellipse at top, #16151a 0%, var(--noir) 60%),
+    var(--noir);
+  color: var(--parchemin);
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+  line-height: 1.7;
+  font-size: 18px;
+  min-height: 100vh;
+}
+
+/* ---------- En-tête de site ---------- */
+.site-header {
+  border-bottom: 2px solid var(--or-sombre);
+  background: linear-gradient(180deg, #0d0d10 0%, rgba(10,10,12,0.4) 100%);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  backdrop-filter: blur(6px);
+}
+.site-header .inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0.6rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.brand {
+  font-variant: small-caps;
+  letter-spacing: 0.15em;
+  color: var(--or);
+  font-size: 1.1rem;
+  text-decoration: none;
+  font-weight: bold;
+}
+.brand .skull { color: var(--or-clair); margin-right: 0.4rem; }
+
+nav.main-nav {
+  display: flex;
+  gap: 1.2rem;
+  flex-wrap: wrap;
+}
+nav.main-nav a {
+  color: var(--gris-clair);
+  text-decoration: none;
+  font-variant: small-caps;
+  letter-spacing: 0.08em;
+  font-size: 0.95rem;
+  padding-bottom: 2px;
+  border-bottom: 1px solid transparent;
+  transition: color 0.2s, border-color 0.2s;
+}
+nav.main-nav a:hover,
+nav.main-nav a.active {
+  color: var(--or-clair);
+  border-bottom-color: var(--or);
+}
+
+/* ---------- Conteneur ---------- */
+.wrap {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 5rem;
+}
+
+/* ---------- Bandeau de page (hero) ---------- */
+.page-hero {
+  text-align: center;
+  padding: 3.5rem 1.5rem 2.5rem;
+  border-bottom: 1px solid var(--bordure);
+  background:
+    radial-gradient(ellipse at center, rgba(122,20,16,0.18) 0%, transparent 70%);
+}
+.page-hero .eyebrow {
+  font-variant: small-caps;
+  letter-spacing: 0.35em;
+  color: var(--or-sombre);
+  font-size: 0.85rem;
+}
+.page-hero h1 {
+  font-size: clamp(2rem, 5vw, 3.4rem);
+  color: var(--or);
+  margin: 0.5rem 0;
+  letter-spacing: 0.04em;
+  text-shadow: 0 0 30px rgba(200,162,74,0.25);
+  font-weight: 700;
+}
+.page-hero p.tagline {
+  color: var(--gris);
+  font-style: italic;
+  max-width: 640px;
+  margin: 0.5rem auto 0;
+}
+
+/* ---------- Titres ---------- */
+h2 {
+  color: var(--or-clair);
+  font-size: 1.9rem;
+  margin: 3rem 0 1rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--or-sombre);
+  font-variant: small-caps;
+  letter-spacing: 0.05em;
+}
+h3 {
+  color: var(--or);
+  font-size: 1.35rem;
+  margin: 2rem 0 0.6rem;
+  letter-spacing: 0.02em;
+}
+h4 {
+  color: var(--or-clair);
+  font-size: 1.08rem;
+  margin: 1.4rem 0 0.4rem;
+  font-variant: small-caps;
+  letter-spacing: 0.06em;
+}
+
+p { margin: 0.8rem 0; }
+a { color: var(--or-clair); }
+
+strong { color: var(--or-clair); font-weight: 600; }
+em { color: var(--gris-clair); }
+
+/* ---------- Citations ---------- */
+blockquote {
+  border-left: 3px solid var(--sang);
+  margin: 1.6rem 0;
+  padding: 0.6rem 1.4rem;
+  font-style: italic;
+  color: var(--gris-clair);
+  background: rgba(122,20,16,0.06);
+}
+blockquote cite {
+  display: block;
+  margin-top: 0.5rem;
+  font-style: normal;
+  font-variant: small-caps;
+  color: var(--or-sombre);
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+}
+
+/* ---------- Cartes ---------- */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.2rem;
+  margin: 2rem 0;
+}
+.card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  background: linear-gradient(160deg, var(--noir-3) 0%, var(--noir-2) 100%);
+  border: 1px solid var(--bordure);
+  border-radius: 3px;
+  padding: 1.4rem;
+  transition: transform 0.18s, border-color 0.18s, box-shadow 0.18s;
+}
+.card:hover {
+  transform: translateY(-4px);
+  border-color: var(--or-sombre);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+}
+.card .card-tag {
+  font-variant: small-caps;
+  letter-spacing: 0.2em;
+  color: var(--or-sombre);
+  font-size: 0.75rem;
+}
+.card h3 { margin: 0.4rem 0 0.5rem; color: var(--or-clair); }
+.card p { color: var(--gris); font-size: 0.95rem; margin: 0; }
+
+/* ---------- Encadrés faction / fiche ---------- */
+.fiche {
+  background: linear-gradient(160deg, rgba(26,26,32,0.8) 0%, rgba(18,18,22,0.8) 100%);
+  border: 1px solid var(--bordure);
+  border-left: 4px solid var(--or-sombre);
+  border-radius: 3px;
+  padding: 1.4rem 1.6rem;
+  margin: 1.6rem 0;
+}
+.fiche.chaos { border-left-color: var(--sang); }
+.fiche.xenos { border-left-color: #2f7d5b; }
+.fiche.imperium { border-left-color: var(--or); }
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 0.6rem 1.5rem;
+  margin: 1rem 0;
+  font-size: 0.9rem;
+}
+.stat-grid div { border-bottom: 1px dotted var(--bordure); padding: 0.3rem 0; }
+.stat-grid .lbl { color: var(--or-sombre); font-variant: small-caps; letter-spacing: 0.08em; }
+
+/* ---------- Timeline ---------- */
+.timeline { position: relative; margin: 2rem 0; padding-left: 2rem; }
+.timeline::before {
+  content: "";
+  position: absolute;
+  left: 6px; top: 0; bottom: 0;
+  width: 2px;
+  background: linear-gradient(180deg, var(--or-sombre), transparent);
+}
+.tl-item { position: relative; margin-bottom: 2rem; }
+.tl-item::before {
+  content: "";
+  position: absolute;
+  left: -1.7rem; top: 0.5rem;
+  width: 11px; height: 11px;
+  background: var(--or);
+  border-radius: 50%;
+  box-shadow: 0 0 0 3px var(--noir), 0 0 12px var(--or);
+}
+.tl-item .era {
+  font-variant: small-caps;
+  letter-spacing: 0.12em;
+  color: var(--or);
+  font-size: 1.15rem;
+  font-weight: bold;
+}
+.tl-item .date { color: var(--sang-clair); font-size: 0.85rem; font-variant: small-caps; letter-spacing: 0.1em; }
+
+/* ---------- Sommaire latéral interne ---------- */
+.toc {
+  background: var(--noir-2);
+  border: 1px solid var(--bordure);
+  border-radius: 3px;
+  padding: 1.2rem 1.6rem;
+  margin: 2rem 0;
+}
+.toc h4 { margin-top: 0; color: var(--or); }
+.toc ul { list-style: none; columns: 2; column-gap: 2rem; }
+.toc li { margin: 0.25rem 0; break-inside: avoid; }
+.toc a { color: var(--gris-clair); text-decoration: none; }
+.toc a:hover { color: var(--or-clair); }
+
+/* ---------- Tableaux ---------- */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  font-size: 0.92rem;
+}
+th, td {
+  text-align: left;
+  padding: 0.6rem 0.8rem;
+  border-bottom: 1px solid var(--bordure);
+}
+th { color: var(--or); font-variant: small-caps; letter-spacing: 0.06em; border-bottom-color: var(--or-sombre); }
+tr:hover td { background: rgba(200,162,74,0.04); }
+
+/* ---------- Listes ---------- */
+ul, ol { margin: 0.8rem 0 0.8rem 1.4rem; }
+li { margin: 0.4rem 0; }
+
+/* ---------- Retour haut ---------- */
+.back-top {
+  display: inline-block;
+  margin-top: 2rem;
+  font-variant: small-caps;
+  letter-spacing: 0.1em;
+  color: var(--or-sombre);
+  text-decoration: none;
+  font-size: 0.85rem;
+}
+.back-top:hover { color: var(--or-clair); }
+
+/* ---------- Pied de page ---------- */
+.site-footer {
+  border-top: 1px solid var(--bordure);
+  text-align: center;
+  padding: 2.5rem 1.5rem;
+  color: var(--gris);
+  font-size: 0.85rem;
+}
+.site-footer .latin {
+  font-variant: small-caps;
+  letter-spacing: 0.2em;
+  color: var(--or-sombre);
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+/* ---------- Divider orné ---------- */
+.ornament {
+  text-align: center;
+  color: var(--or-sombre);
+  letter-spacing: 0.4em;
+  margin: 2.5rem 0;
+  font-size: 1.2rem;
+}
+
+/* ---------- Fil d'Ariane ---------- */
+.breadcrumb {
+  max-width: 1000px;
+  margin: 1.2rem auto -1rem;
+  padding: 0 1.5rem;
+  font-size: 0.85rem;
+  font-variant: small-caps;
+  letter-spacing: 0.08em;
+  color: var(--gris);
+}
+.breadcrumb a { color: var(--or-sombre); text-decoration: none; }
+.breadcrumb a:hover { color: var(--or-clair); }
+.breadcrumb span { color: var(--gris); }
+
+/* ---------- Étiquette de catégorie (hub) ---------- */
+.cat-label {
+  font-variant: small-caps;
+  letter-spacing: 0.25em;
+  color: var(--or-sombre);
+  font-size: 0.9rem;
+  margin: 2.5rem 0 0.5rem;
+  border-bottom: 1px solid var(--bordure);
+  padding-bottom: 0.4rem;
+}
+.cat-label.chaos { color: var(--sang-clair); }
+.cat-label.xenos { color: #4fa37a; }
+
+/* ---------- Bandeau couleur sous-page ---------- */
+.page-hero.chaos { background: radial-gradient(ellipse at center, rgba(122,20,16,0.30) 0%, transparent 70%); }
+.page-hero.xenos { background: radial-gradient(ellipse at center, rgba(47,125,91,0.20) 0%, transparent 70%); }
+.page-hero.chaos h1 { color: var(--sang-clair); text-shadow: 0 0 30px rgba(168,50,40,0.3); }
+.page-hero.xenos h1 { color: #6fce9f; text-shadow: 0 0 30px rgba(79,163,122,0.25); }
+
+/* ============================================================
+   PAGES CODEX PROFONDES (monographies vétérans)
+   ============================================================ */
+.codex-section { margin-top: 3rem; scroll-margin-top: 5rem; }
+.codex-section > h2 { display: flex; align-items: baseline; gap: 0.7rem; }
+.codex-section > h2 .num {
+  font-size: 1rem;
+  color: var(--sang-clair);
+  font-variant: normal;
+  letter-spacing: 0.1em;
+  border: 1px solid var(--or-sombre);
+  border-radius: 3px;
+  padding: 0.05em 0.5em;
+  flex: none;
+}
+.section-lead {
+  font-style: italic;
+  color: var(--gris-clair);
+  border-bottom: 1px dotted var(--bordure);
+  padding-bottom: 0.8rem;
+  margin-bottom: 1rem;
+}
+
+/* Reliques */
+.relic {
+  border-left: 4px solid var(--or);
+  background: linear-gradient(160deg, rgba(200,162,74,0.08) 0%, rgba(18,18,22,0.85) 100%);
+  border-radius: 3px;
+  padding: 1.1rem 1.5rem;
+  margin: 1.2rem 0;
+}
+.relic h4 { margin-top: 0; color: var(--or); }
+.relic .relic-type {
+  font-variant: small-caps; letter-spacing: 0.15em; color: var(--or-sombre); font-size: 0.75rem;
+}
+
+/* Héros */
+.hero-entry {
+  border-left: 4px solid var(--sang);
+  background: linear-gradient(160deg, rgba(122,20,16,0.10) 0%, rgba(18,18,22,0.85) 100%);
+  border-radius: 3px;
+  padding: 1.1rem 1.5rem;
+  margin: 1.2rem 0;
+}
+.hero-entry h4 { margin-top: 0; color: var(--sang-clair); }
+.hero-entry .hero-role {
+  font-variant: small-caps; letter-spacing: 0.12em; color: var(--or-sombre); font-size: 0.78rem;
+}
+
+/* Encadré de conclusion */
+.conclusion {
+  border: 1px solid var(--or-sombre);
+  border-top: 3px solid var(--or);
+  background: radial-gradient(ellipse at top, rgba(200,162,74,0.10) 0%, var(--noir-2) 70%);
+  border-radius: 4px;
+  padding: 1.8rem 2rem;
+  margin: 3rem 0 1rem;
+}
+.conclusion .conc-label {
+  font-variant: small-caps; letter-spacing: 0.25em; color: var(--or-sombre); font-size: 0.8rem;
+}
+.conclusion .emblem-quote {
+  font-size: 1.35rem; font-style: italic; color: var(--or-clair);
+  margin: 0.6rem 0 1rem; line-height: 1.5;
+}
+.conclusion.chaos { border-top-color: var(--sang); }
+.conclusion.chaos .emblem-quote { color: var(--sang-clair); }
+.conclusion.xenos { border-top-color: #4fa37a; }
+.conclusion.xenos .emblem-quote { color: #6fce9f; }
+
+/* Chip de données d'en-tête */
+.datacard { margin: 1.5rem 0; }
+
+@media (max-width: 600px) {
+  body { font-size: 16px; }
+  .toc ul { columns: 1; }
+  nav.main-nav { gap: 0.8rem; }
+}

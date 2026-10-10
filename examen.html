@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Examen d'Acolyte — Codex Tenebrarum</title>
+<link rel="stylesheet" href="style.css">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#03100a">
+<link rel="icon" href="icones/icone-32.png">
+<link rel="apple-touch-icon" href="icones/icone-180.png">
+<style>
+  .examen { max-width: 860px; }
+  .console-ex { border: 1px solid var(--ph-dim); background: var(--ecran); }
+  .console-ex .barre { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; padding: 0.25rem 0.9rem; background: var(--ph-dim); color: var(--ecran); font-family: var(--crt); font-size: 1.4rem; text-shadow: none; }
+  .ex-corps { padding: 1.2rem 1.4rem 1.4rem; min-height: 360px; }
+  .progression { display: flex; gap: 4px; margin-bottom: 1.2rem; }
+  .progression i { flex: 1; height: 8px; border: 1px solid var(--ph-faint); }
+  .progression i.ok { background: var(--ph); border-color: var(--ph); box-shadow: 0 0 6px var(--ph-glow); }
+  .progression i.ko { background: var(--chaos); border-color: var(--chaos); }
+  .progression i.cur { border-color: var(--ph); }
+  .ex-q { font-family: var(--crt); font-size: clamp(1.95rem, 4vw, 2.56rem); line-height: 1.15; color: var(--ph); margin: 0 0 1.1rem; text-shadow: 0 0 8px var(--ph-glow); }
+  .ex-num { font-family: var(--crt); font-size: 1.46rem; color: var(--ph-dim); }
+  .choix { list-style: none; margin: 0; padding: 0; max-width: none; display: grid; gap: 0.45rem; }
+  .choix li { margin: 0; }
+  .choix li::before { content: none; }
+  .choix button { width: 100%; text-align: left; display: flex; gap: 0.8rem; align-items: baseline; background: transparent; color: var(--ph-txt); border: 1px solid var(--ph-faint); padding: 0.55rem 0.8rem; font-family: var(--mono); font-size: 0.98rem; cursor: pointer; }
+  .choix button b { font-family: var(--crt); font-weight: normal; font-size: 1.65rem; color: var(--ph-dim); min-width: 1.6rem; }
+  .choix button:hover:not(:disabled), .choix button:focus-visible { background: var(--ph); color: var(--ecran); text-shadow: none; outline: none; }
+  .choix button:hover:not(:disabled) b, .choix button:focus-visible b { color: var(--ecran); }
+  .choix button:disabled { cursor: default; }
+  .choix button.bonne { border-color: var(--ph); background: var(--ph-wash); color: var(--ph); }
+  .choix button.bonne b::after { content: " ✓"; }
+  .choix button.fausse { border-color: var(--chaos); color: var(--chaos); }
+  .choix button.fausse b { color: var(--chaos); }
+  .verdict-q { margin-top: 1rem; border-left: 2px solid var(--ph-dim); padding: 0.2rem 0 0.2rem 1rem; }
+  .verdict-q .v { font-family: var(--crt); font-size: 1.71rem; }
+  .verdict-q .v.ok { color: var(--ph); } .verdict-q .v.ko { color: var(--chaos); }
+  .verdict-q p { margin: 0.3rem 0; font-size: 0.93rem; }
+  .ex-actions { margin-top: 1.2rem; display: flex; gap: 0.6rem; flex-wrap: wrap; align-items: center; }
+  .ex-btn { font-family: var(--crt); font-size: 1.71rem; background: var(--ph); color: var(--ecran); border: 1px solid var(--ph); padding: 0.15rem 1.1rem; cursor: pointer; text-shadow: none; }
+  .ex-btn.sec { background: transparent; color: var(--ph); }
+  .ex-btn:hover { box-shadow: 0 0 14px var(--ph-glow); }
+  .aide-clavier { font-family: var(--crt); font-size: 1.28rem; color: var(--ph-faint); }
+  .resultat { text-align: center; padding: 1rem 0; }
+  .sceau { display: inline-grid; place-items: center; width: 190px; height: 190px; border-radius: 50%; border: 3px double var(--ph); margin: 0.6rem auto 1rem; box-shadow: 0 0 30px var(--ph-glow), inset 0 0 30px var(--ph-wash); }
+  .sceau .score { font-family: var(--crt); font-size: 4.2rem; line-height: 1; color: var(--ph); text-shadow: 0 0 12px var(--ph); }
+  .sceau .sur { font-family: var(--crt); font-size: 1.46rem; color: var(--ph-dim); }
+  .grade { font-family: var(--crt); font-size: clamp(2.44rem, 6vw, 3.66rem); line-height: 1.05; color: var(--ph); text-shadow: 0 0 10px var(--ph-glow); }
+  .grade-txt { max-width: 46ch; margin: 0.6rem auto; }
+  .revisions { text-align: left; border-top: 1px dashed var(--ph-faint); margin-top: 1.4rem; padding-top: 0.6rem; }
+  .revisions h4 { margin-top: 0.3rem; }
+  .meilleur { font-family: var(--crt); font-size: 1.46rem; color: var(--ph-dim); }
+  .echelle { list-style: none; margin: 1rem 0 0; padding: 0; max-width: none; font-family: var(--crt); font-size: 1.4rem; color: var(--ph-dim); }
+  .echelle li { margin: 0.1rem 0; display: flex; justify-content: space-between; border-bottom: 1px dotted var(--ph-faint); }
+  .echelle li::before { content: none; }
+  .echelle li.atteint { color: var(--ph); }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="inner">
+    <a class="brand" href="index.html"><span class="skull">✠</span>Codex Tenebrarum</a>
+    <nav class="main-nav">
+      <a href="index.html">Accueil</a>
+      <a href="chronologie.html">Chronologie</a>
+      <a href="factions.html">Factions</a>
+      <a href="personnages.html">Personnages</a>
+      <a href="univers.html">Univers</a>
+      <a href="carte.html">Carte</a>
+      <a href="cartographe.html">Cartographe</a>
+    </nav>
+  </div>
+</header>
+
+<section class="page-hero">
+  <div class="eyebrow">Ordo Hereticus · Évaluation des aspirants</div>
+  <h1>Examen d'Acolyte</h1>
+  <p class="tagline">Dix questions tirées des archives du Codex. Votre grade dépend de vos réponses ; le meilleur est conservé et s'affiche dans le bandeau du cogitator.</p>
+</section>
+
+<main class="wrap examen">
+  <div class="console-ex">
+    <div class="barre"><span id="exTitre">PROTOCOLE D'ÉVALUATION</span><span id="exScore"></span></div>
+    <div class="ex-corps" id="corps"></div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <span class="latin">Innocentia Nihil Probat</span>
+  Codex Tenebrarum — compendium non officiel du lore de Warhammer 40 000.<br>
+  Warhammer 40 000 et tous les éléments associés sont la propriété de Games Workshop. Œuvre de fan, à but informatif.
+</footer>
+
+<script src="examen-data.js"></script>
+<script src="cogitator-titres.js"></script>
+<script>
+(function () {
+  "use strict";
+  var Q = window.EXAMEN_QUESTIONS, G = window.EXAMEN_GRADES, N = 10;
+  var corps = document.getElementById("corps");
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function melanger(a) { a = a.slice(); for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)), t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  function lire(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function ecrire(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  function gradePour(s) { var g = G[0]; G.forEach(function (x) { if (s >= x.min) g = x; }); return g; }
+  function titre(p) { return (window.COGITATOR_TITRES || {})[p] || p; }
+
+  var etat;
+  function accueil() {
+    var best = lire("cogi.grade"), bestS = lire("cogi.score");
+    document.getElementById("exTitre").textContent = "PROTOCOLE D'ÉVALUATION";
+    document.getElementById("exScore").textContent = "";
+    corps.innerHTML =
+      '<p class="ex-num">IDENTIFICATION REQUISE</p>' +
+      '<p class="ex-q">Aspirant, prouvez votre connaissance des archives.</p>' +
+      "<p>" + N + " questions sur les factions, les Primarques, le Chaos et les xenos, tirées parmi " + Q.length + ". Répondez à la souris ou avec les touches <b>1</b> à <b>4</b>.</p>" +
+      (best ? '<p class="meilleur">GRADE ACTUEL : ' + esc(best.toUpperCase()) + " (" + esc(bestS || "?") + "/10)</p>" : "") +
+      '<ul class="echelle">' + G.slice().reverse().map(function (g) {
+        return '<li class="' + (best && G.map(function (x) { return x.nom; }).indexOf(best) >= G.indexOf(g) ? "atteint" : "") + '"><span>' + esc(g.nom) + "</span><span>" + (g.min === 10 ? "10" : g.min + "+") + "</span></li>";
+      }).join("") + "</ul>" +
+      '<div class="ex-actions"><button class="ex-btn" id="go">Commencer l\'examen</button></div>';
+    document.getElementById("go").addEventListener("click", demarrer);
+    document.getElementById("go").focus({ preventScroll: true });
+  }
+
+  function demarrer() {
+    etat = { qs: melanger(Q).slice(0, N).map(function (q) { return { q: q, ordre: melanger([0, 1, 2, 3]) }; }), i: 0, score: 0, res: [], repondu: false };
+    question();
+  }
+
+  function barre() {
+    return '<div class="progression">' + etat.qs.map(function (_, k) {
+      return "<i class=\"" + (k < etat.res.length ? (etat.res[k] ? "ok" : "ko") : (k === etat.i ? "cur" : "")) + '"></i>';
+    }).join("") + "</div>";
+  }
+
+  function question() {
+    var it = etat.qs[etat.i], q = it.q;
+    etat.repondu = false;
+    document.getElementById("exTitre").textContent = "QUESTION " + (etat.i + 1) + " / " + N;
+    document.getElementById("exScore").textContent = "SCORE " + etat.score;
+    corps.innerHTML = barre() + '<p class="ex-q">' + esc(q.q) + "</p>" +
+      '<ul class="choix">' + it.ordre.map(function (k, n) {
+        return '<li><button type="button" data-k="' + k + '"><b>' + (n + 1) + "</b><span>" + esc(q.r[k]) + "</span></button></li>";
+      }).join("") + "</ul>" + '<div id="suite"></div>' + '<p class="aide-clavier">Touches 1–4 pour répondre · Entrée pour continuer</p>';
+    corps.querySelectorAll(".choix button").forEach(function (b) { b.addEventListener("click", function () { repondre(+b.dataset.k); }); });
+    var premier = corps.querySelector(".choix button"); if (premier) premier.focus({ preventScroll: true });
+  }
+
+  function repondre(k) {
+    if (etat.repondu) return; etat.repondu = true;
+    var it = etat.qs[etat.i], ok = k === 0;
+    if (ok) etat.score++;
+    etat.res.push(ok);
+    corps.querySelectorAll(".choix button").forEach(function (b) {
+      b.disabled = true;
+      if (+b.dataset.k === 0) b.classList.add("bonne");
+      else if (+b.dataset.k === k) b.classList.add("fausse");
+    });
+    document.getElementById("exScore").textContent = "SCORE " + etat.score;
+    corps.querySelector(".progression").outerHTML = barre();
+    var der = etat.i === N - 1;
+    document.getElementById("suite").innerHTML =
+      '<div class="verdict-q"><div class="v ' + (ok ? "ok" : "ko") + '">' + (ok ? "+++ RÉPONSE CONFORME +++" : "+++ ERREUR CONSIGNÉE +++") + "</div>" +
+      "<p>" + esc(it.q.x) + '</p><p><a href="' + it.q.page + '">Réviser : ' + esc(titre(it.q.page)) + " ›</a></p></div>" +
+      '<div class="ex-actions"><button class="ex-btn" id="suivant">' + (der ? "Voir le verdict" : "Question suivante") + "</button></div>";
+    var s = document.getElementById("suivant");
+    s.addEventListener("click", function () { if (der) verdict(); else { etat.i++; question(); } });
+    s.focus({ preventScroll: true });
+  }
+
+  function verdict() {
+    var g = gradePour(etat.score);
+    var ancien = lire("cogi.score"), nouveau = !ancien || etat.score > +ancien;
+    if (nouveau) { ecrire("cogi.grade", g.nom); ecrire("cogi.score", String(etat.score)); }
+    document.getElementById("exTitre").textContent = "VERDICT DE L'ORDO";
+    var fautes = etat.qs.filter(function (_, k) { return !etat.res[k]; });
+    corps.innerHTML = barre() +
+      '<div class="resultat"><div class="sceau"><div><div class="score">' + etat.score + '</div><div class="sur">SUR ' + N + "</div></div></div>" +
+      '<div class="grade">' + esc(g.nom) + '</div><p class="grade-txt">' + esc(g.txt) + "</p>" +
+      '<p class="meilleur">' + (nouveau ? "NOUVEAU GRADE ENREGISTRÉ DANS LE COGITATOR." : "Votre meilleur grade reste : " + esc(lire("cogi.grade") || "") + " (" + esc(ancien) + "/10).") + "</p></div>" +
+      (fautes.length ? '<div class="revisions"><h4>Dossiers à réviser</h4><ul>' + fautes.map(function (it) {
+        return '<li><a href="' + it.q.page + '">' + esc(titre(it.q.page)) + "</a> — " + esc(it.q.q) + "</li>";
+      }).join("") + "</ul></div>" : "") +
+      '<div class="ex-actions"><button class="ex-btn" id="re">Repasser l\'examen</button><button class="ex-btn sec" id="ac">Retour</button></div>';
+    document.getElementById("re").addEventListener("click", demarrer);
+    document.getElementById("ac").addEventListener("click", accueil);
+    var st = document.querySelector(".cogi-grade"); if (st && nouveau) st.textContent = g.nom.toUpperCase();
+  }
+
+  document.addEventListener("keydown", function (e) {
+    var a = document.activeElement;
+    if (a && a.id === "cogi-in") return;
+    if (!etat || e.ctrlKey || e.metaKey || e.altKey) return;
+    if (/^[1-4]$/.test(e.key) && !etat.repondu && corps.querySelector(".choix")) {
+      e.preventDefault(); e.stopPropagation();
+      var b = corps.querySelectorAll(".choix button")[+e.key - 1]; if (b) b.click();
+    }
+  }, true);
+
+  accueil();
+})();
+</script>
+<script src="cogitator.js"></script>
+</body>
+</html>

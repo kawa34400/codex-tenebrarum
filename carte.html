@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Carte Galactique — Codex Tenebrarum</title>
+<link rel="stylesheet" href="style.css">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#03100a">
+<link rel="icon" href="icones/icone-32.png">
+<link rel="apple-touch-icon" href="icones/icone-180.png">
+<style>
+  .carte-wrap { max-width: 1280px; }
+  .carte-grille { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 1.2rem; align-items: start; }
+  .ecran-carte { position: relative; border: 1px solid var(--ph-dim); background: #000; }
+  .ecran-carte .barre { display: flex; justify-content: space-between; align-items: center; gap: 0.6rem; flex-wrap: wrap; padding: 0.25rem 0.6rem; border-bottom: 1px solid var(--ph-faint); font-family: var(--crt); font-size: 1.34rem; color: var(--ph-dim); background: var(--ecran); }
+  .zoom button { font-family: var(--crt); font-size: 1.46rem; background: transparent; color: var(--ph); border: 1px solid var(--ph-dim); width: 2rem; line-height: 1.2; cursor: pointer; }
+  .zoom button:hover { background: var(--ph); color: var(--ecran); }
+  .vue { overflow: auto; height: min(74vh, 760px); cursor: grab; touch-action: pan-x pan-y; scrollbar-color: var(--ph-dim) #000; }
+  .vue.glisse { cursor: grabbing; }
+  .plan { position: relative; width: 100%; aspect-ratio: 2000 / 1600; transition: width 0.25s ease; }
+  .plan img { position: absolute; inset: 0; width: 100%; height: 100%; user-select: none; -webkit-user-drag: none;
+    filter: grayscale(1) invert(1) contrast(1.3) brightness(0.72); }
+  .plan .teinte { position: absolute; inset: 0; background: var(--ph); mix-blend-mode: multiply; pointer-events: none; }
+  .plan .grille { position: absolute; inset: 0; pointer-events: none;
+    background-image: linear-gradient(var(--ph-faint) 1px, transparent 1px), linear-gradient(90deg, var(--ph-faint) 1px, transparent 1px);
+    background-size: 10% 12.5%; opacity: 0.35; }
+  .mk { position: absolute; width: 22px; height: 22px; margin: -11px 0 0 -11px; border-radius: 50%; border: 0; padding: 0; background: transparent; cursor: pointer; }
+  .mk::before { content: ""; position: absolute; inset: 6px; border-radius: 50%; background: var(--ph); box-shadow: 0 0 8px var(--ph), 0 0 2px #000; }
+  .mk.t-xenos::before { background: var(--xenos); box-shadow: 0 0 8px var(--xenos); }
+  .mk.t-warp::before { background: var(--chaos); box-shadow: 0 0 8px var(--chaos); }
+  .mk.t-region::before { border-radius: 0; inset: 7px; transform: rotate(45deg); background: transparent; border: 2px solid var(--ph); box-shadow: 0 0 6px var(--ph-glow); }
+  .mk:hover::after, .mk:focus-visible::after, .mk.sel::after { content: ""; position: absolute; inset: -6px; border: 1px solid var(--ph); border-radius: 50%; animation: cible 1.2s ease-out infinite; }
+  .mk.sel::before { background: #fff; }
+  @keyframes cible { from { transform: scale(0.6); opacity: 1; } to { transform: scale(1.6); opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) { .mk::after { animation: none !important; } }
+  .mk .nom { position: absolute; left: 22px; top: 50%; transform: translateY(-50%); white-space: nowrap; font-family: var(--crt); font-size: 1.4rem; color: var(--ecran); background: var(--ph); padding: 0 0.35rem; display: none; text-shadow: none; pointer-events: none; z-index: 2; }
+  .mk:hover .nom, .mk:focus-visible .nom, .mk.sel .nom { display: block; }
+  .mk.cache { display: none; }
+  .reticule { position: absolute; pointer-events: none; border: 1px dashed var(--ph); display: none; }
+  .reticule.h { left: 0; right: 0; height: 0; border-width: 1px 0 0; opacity: 0.45; }
+  .reticule.v { top: 0; bottom: 0; width: 0; border-width: 0 0 0 1px; opacity: 0.45; }
+  .coord { font-variant-numeric: tabular-nums; }
+
+  .panneau { display: flex; flex-direction: column; gap: 1rem; }
+  .fiche-monde { border: 1px solid var(--ph-dim); padding: 0.9rem 1.1rem; background: var(--ecran); min-height: 180px; }
+  .fiche-monde .vide { color: var(--ph-dim); font-family: var(--crt); font-size: 1.52rem; }
+  .fiche-monde h3 { margin: 0.1rem 0 0.2rem; }
+  .fiche-monde h3::before { content: none; }
+  .fiche-monde .type { font-family: var(--crt); font-size: 1.4rem; color: var(--ph-dim); }
+  .fiche-monde p { font-size: 0.92rem; line-height: 1.6; }
+  .fiche-monde .liens a { display: block; font-family: var(--crt); font-size: 1.46rem; text-decoration: none; margin: 0.1rem 0; }
+  .fiche-monde .liens a::before { content: "› "; color: var(--ph-dim); }
+  .fiche-monde .hors { color: var(--chaos); font-family: var(--crt); font-size: 1.4rem; }
+  .localiser { border: 1px solid var(--ph-faint); padding: 0.6rem 0.8rem 0.8rem; }
+  .localiser label { font-family: var(--crt); font-size: 1.46rem; color: var(--ph-dim); display: block; }
+  .localiser .champ { display: flex; gap: 0.4rem; align-items: center; border-bottom: 1px solid var(--ph-dim); margin-bottom: 0.5rem; }
+  .localiser .champ span { font-family: var(--crt); font-size: 1.71rem; color: var(--ph); }
+  .localiser input { flex: 1; min-width: 0; background: transparent; border: 0; outline: none; color: var(--ph); font-family: var(--crt); font-size: 1.71rem; caret-color: var(--ph); }
+  .filtres { display: flex; flex-wrap: wrap; gap: 0.25rem; margin-bottom: 0.5rem; }
+  .filtres button { font-family: var(--crt); font-size: 1.28rem; background: transparent; color: var(--ph-dim); border: 1px solid var(--ph-faint); padding: 0 0.45rem; cursor: pointer; }
+  .filtres button[aria-pressed="true"] { color: var(--ph); border-color: var(--ph-dim); }
+  .filtres button[aria-pressed="false"] { text-decoration: line-through; opacity: 0.6; }
+  .liste-mondes { list-style: none; margin: 0; padding: 0; max-height: 300px; overflow-y: auto; max-width: none; }
+  .liste-mondes li { margin: 0; }
+  .liste-mondes li::before { content: none; }
+  .liste-mondes button { width: 100%; text-align: left; background: transparent; border: 0; color: var(--ph-txt); font-family: var(--mono); font-size: 0.85rem; padding: 0.2rem 0.3rem; cursor: pointer; display: flex; justify-content: space-between; gap: 0.5rem; }
+  .liste-mondes button span { color: var(--ph-dim); font-family: var(--crt); font-size: 1.22rem; }
+  .liste-mondes button:hover, .liste-mondes button.sel { background: var(--ph); color: var(--ecran); text-shadow: none; }
+  .liste-mondes button:hover span, .liste-mondes button.sel span { color: var(--ecran); }
+  .source { font-size: 0.78rem; color: var(--ph-dim); margin-top: 0.8rem; }
+  @media (max-width: 960px) {
+    .carte-grille { grid-template-columns: 1fr; }
+    .vue { height: 60vh; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="inner">
+    <a class="brand" href="index.html"><span class="skull">✠</span>Codex Tenebrarum</a>
+    <nav class="main-nav">
+      <a href="index.html">Accueil</a>
+      <a href="chronologie.html">Chronologie</a>
+      <a href="factions.html">Factions</a>
+      <a href="personnages.html">Personnages</a>
+      <a href="univers.html">Univers</a>
+      <a href="carte.html" class="active">Carte</a>
+      <a href="cartographe.html">Cartographe</a>
+    </nav>
+  </div>
+</header>
+
+<section class="page-hero">
+  <div class="eyebrow">Cartographie impériale · Galaxie, M42</div>
+  <h1>Carte Galactique</h1>
+  <p class="tagline">Les mondes, secteurs et anomalies référencés par les archives. Cliquez une balise pour ouvrir sa fiche, ou tapez dans le terminal : <code>SEARCH SUB-SECTOR AURELIA</code>.</p>
+</section>
+
+<main class="wrap carte-wrap">
+  <div class="carte-grille">
+    <div class="ecran-carte">
+      <div class="barre">
+        <span>RELEVÉ ASTROGRAPHIQUE · <span class="coord" id="coord">X ––– · Y –––</span></span>
+        <span class="zoom" role="group" aria-label="Zoom"><button type="button" id="zmoins" aria-label="Dézoomer">−</button> <span id="zval">×1</span> <button type="button" id="zplus" aria-label="Zoomer">+</button></span>
+      </div>
+      <div class="vue" id="vue">
+        <div class="plan" id="plan">
+          <img src="logo/galaxy-map.jpg" alt="Carte de la galaxie : Segmentums, Grande Faille et mondes majeurs" draggable="false">
+          <div class="teinte"></div>
+          <div class="grille"></div>
+          <div class="reticule h" id="rh"></div><div class="reticule v" id="rv"></div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="panneau">
+      <div class="fiche-monde" id="fiche" aria-live="polite"><div class="vide">Aucune balise sélectionnée. Choisissez un monde sur la carte ou dans la liste.</div></div>
+      <div class="localiser">
+        <label for="loc">Localiser</label>
+        <div class="champ"><span>&gt;</span><input id="loc" spellcheck="false" placeholder="Baal, Cadia, Œil…" autocomplete="off"></div>
+        <div class="filtres" id="filtres"></div>
+        <ul class="liste-mondes" id="liste"></ul>
+      </div>
+    </aside>
+  </div>
+  <p class="source">Image de fond : carte du dossier <code>logo/galaxy-map.jpg</code>. Balises et fiches : <code>carte-data.js</code> (positions en pixels sur l'image d'origine, faciles à ajuster).</p>
+</main>
+
+<footer class="site-footer">
+  <span class="latin">Ad Astra Imperator</span>
+  Codex Tenebrarum — compendium non officiel du lore de Warhammer 40 000.<br>
+  Warhammer 40 000 et tous les éléments associés sont la propriété de Games Workshop. Œuvre de fan, à but informatif.
+</footer>
+
+<script src="carte-data.js"></script>
+<script src="cogitator-titres.js"></script>
+<script>
+(function () {
+  "use strict";
+  var L = window.CARTE_LIEUX, TYPES = window.CARTE_TYPES, W = 2000, H = 1600;
+  var $ = function (id) { return document.getElementById(id); };
+  var plan = $("plan"), vue = $("vue"), sel = null, zoom = 1, ZOOMS = [1, 1.6, 2.4, 3.4];
+  var actifs = {}; Object.keys(TYPES).forEach(function (k) { actifs[k] = true; });
+  function norm(s) { return (s || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/œ/g, "oe").replace(/['’\-]/g, " ").replace(/\s+/g, " ").trim(); }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function segment(l) { return l.seg || ""; }
+  function coordTxt(x, y) { return "X " + String(Math.round(x)).padStart(4, "0") + " · Y " + String(Math.round(y)).padStart(4, "0"); }
+
+  // Balises
+  var mk = {};
+  L.forEach(function (l) {
+    if (l.x == null) return;
+    var b = document.createElement("button");
+    b.type = "button"; b.className = "mk t-" + l.type;
+    b.style.left = (l.x / W * 100) + "%"; b.style.top = (l.y / H * 100) + "%";
+    b.setAttribute("aria-label", l.nom + " — " + TYPES[l.type]);
+    b.innerHTML = '<span class="nom">' + esc(l.nom) + "</span>";
+    b.addEventListener("click", function (e) { e.stopPropagation(); choisir(l.id, false); });
+    plan.appendChild(b); mk[l.id] = b;
+  });
+
+  // Filtres
+  Object.keys(TYPES).forEach(function (k) {
+    if (!L.some(function (l) { return l.type === k; })) return;
+    var COURT = { chapitre: "Chapitres", garde: "Garde", forge: "Forges", sacre: "Sacrés", ruche: "Ruches", bataille: "Batailles", warp: "Warp", xenos: "Xenos", region: "Régions" };
+    var b = document.createElement("button"); b.type = "button"; b.textContent = COURT[k] || TYPES[k]; b.title = TYPES[k]; b.setAttribute("aria-pressed", "true");
+    b.addEventListener("click", function () { actifs[k] = !actifs[k]; b.setAttribute("aria-pressed", actifs[k] ? "true" : "false"); appliquer(); });
+    $("filtres").appendChild(b);
+  });
+
+  function appliquer() {
+    var q = norm($("loc").value), ul = $("liste"); ul.innerHTML = "";
+    L.filter(function (l) {
+      if (!actifs[l.type]) return false;
+      if (!q) return true;
+      return norm(l.nom + " " + l.alias.join(" ")).indexOf(q) >= 0;
+    }).sort(function (a, b) { return a.nom.localeCompare(b.nom, "fr"); }).forEach(function (l) {
+      var li = document.createElement("li"), b = document.createElement("button");
+      b.type = "button"; b.className = l.id === sel ? "sel" : "";
+      b.innerHTML = esc(l.nom) + "<span>" + (l.x == null ? "HORS CARTE" : esc(TYPES[l.type])) + "</span>";
+      b.addEventListener("click", function () { choisir(l.id, true); });
+      li.appendChild(b); ul.appendChild(li);
+    });
+    L.forEach(function (l) { if (mk[l.id]) mk[l.id].classList.toggle("cache", !actifs[l.type]); });
+  }
+  $("loc").addEventListener("input", appliquer);
+  $("loc").addEventListener("keydown", function (e) {
+    if (e.key === "Enter") { var b = $("liste").querySelector("button"); if (b) b.click(); }
+  });
+
+  function choisir(id, centrer) {
+    var l = L.filter(function (x) { return x.id === id; })[0]; if (!l) return;
+    sel = id;
+    Object.keys(mk).forEach(function (k) { mk[k].classList.toggle("sel", k === id); });
+    $("fiche").innerHTML =
+      '<div class="type">' + esc(TYPES[l.type]).toUpperCase() + (segment(l) ? " · " + esc(segment(l)).toUpperCase() : "") + "</div>" +
+      "<h3>" + esc(l.nom) + "</h3>" +
+      (l.x == null ? '<div class="hors">COORDONNÉES NON CARTOGRAPHIÉES — accès restreint</div>' : '<div class="type coord">' + coordTxt(l.x, l.y) + "</div>") +
+      "<p>" + esc(l.desc) + "</p>" +
+      (l.pages.length ? '<div class="liens">' + l.pages.map(function (p) { return '<a href="' + p + '">' + esc(titrePage(p)) + "</a>"; }).join("") + "</div>" : "");
+    appliquer();
+    try { history.replaceState(null, "", "?m=" + id); } catch (e) {}
+    var rh = $("rh"), rv = $("rv");
+    if (l.x != null) {
+      rh.style.display = rv.style.display = "block";
+      rh.style.top = (l.y / H * 100) + "%"; rv.style.left = (l.x / W * 100) + "%";
+      if (centrer) centrerSur(l);
+    } else rh.style.display = rv.style.display = "none";
+  }
+  function titrePage(p) {
+    var t = (window.COGITATOR_TITRES || {})[p];
+    return t ? t : p.replace(".html", "").replace(/^[a-z]+-/, "").replace(/-/g, " ").replace(/^./, function (c) { return c.toUpperCase(); });
+  }
+  function centrerSur(l) {
+    if (zoom === 1) setZoom(1);
+    var pw = plan.clientWidth, ph = plan.clientHeight;
+    vue.scrollTo({ left: l.x / W * pw - vue.clientWidth / 2, top: l.y / H * ph - vue.clientHeight / 2, behavior: "smooth" });
+  }
+
+  // Zoom
+  function setZoom(i) {
+    var cx = (vue.scrollLeft + vue.clientWidth / 2) / plan.clientWidth, cy = (vue.scrollTop + vue.clientHeight / 2) / plan.clientHeight;
+    zoom = Math.max(0, Math.min(ZOOMS.length - 1, i));
+    plan.style.width = (ZOOMS[zoom] * 100) + "%";
+    $("zval").textContent = "×" + ZOOMS[zoom];
+    requestAnimationFrame(function () { setTimeout(function () { vue.scrollLeft = cx * plan.clientWidth - vue.clientWidth / 2; vue.scrollTop = cy * plan.clientHeight - vue.clientHeight / 2; }, 260); });
+  }
+  $("zplus").addEventListener("click", function () { setZoom(zoom + 1); });
+  $("zmoins").addEventListener("click", function () { setZoom(zoom - 1); });
+  // Hauteur initiale : la carte entière tient dans l'écran
+  function ajuster() { if (zoom === 0) { plan.style.width = Math.min(100, (vue.clientHeight * W / H) / vue.clientWidth * 100) + "%"; plan.style.margin = "0 auto"; } }
+  zoom = 0; ajuster(); window.addEventListener("resize", ajuster);
+  ZOOMS[0] = 1;
+  var origSet = setZoom;
+  setZoom = function (i) { plan.style.margin = ""; origSet(i); if (zoom === 0) ajuster(); };
+
+  // Glisser pour se déplacer
+  var g = null;
+  vue.addEventListener("pointerdown", function (e) { if (e.pointerType !== "mouse" || e.target.closest(".mk")) return; g = { x: e.clientX, y: e.clientY, l: vue.scrollLeft, t: vue.scrollTop }; vue.classList.add("glisse"); });
+  window.addEventListener("pointermove", function (e) {
+    var r = plan.getBoundingClientRect();
+    if (e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom)
+      $("coord").textContent = coordTxt((e.clientX - r.left) / r.width * W, (e.clientY - r.top) / r.height * H);
+    if (!g) return; vue.scrollLeft = g.l - (e.clientX - g.x); vue.scrollTop = g.t - (e.clientY - g.y);
+  });
+  window.addEventListener("pointerup", function () { g = null; vue.classList.remove("glisse"); });
+  vue.addEventListener("dblclick", function (e) { if (!e.target.closest(".mk")) setZoom(zoom + 1); });
+
+  appliquer();
+  window.CARTE_CHOISIR = function (id) { choisir(id, true); };
+  var m = location.search.match(/[?&]m=([^&]+)/);
+  if (m) setTimeout(function () { choisir(decodeURIComponent(m[1]), true); }, 50);
+})();
+</script>
+<script src="cogitator.js"></script>
+</body>
+</html>

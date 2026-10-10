@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Forge de Chapitre — Codex Tenebrarum</title>
+<link rel="stylesheet" href="style.css">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#03100a">
+<link rel="icon" href="icones/icone-32.png">
+<link rel="apple-touch-icon" href="icones/icone-180.png">
+<style>
+  .forge-wrap { max-width: 1240px; }
+  .forge-grille { display: grid; grid-template-columns: 360px minmax(0, 1fr); gap: 1.4rem; align-items: start; }
+  .reglages { border: 1px solid var(--ph-dim); padding: 0.9rem 1rem 1rem; background: var(--ecran); }
+  .reglages .ligne { margin-bottom: 0.75rem; }
+  .reglages label { display: block; font-family: var(--crt); font-size: 1.35rem; color: var(--ph-dim); margin-bottom: 0.15rem; }
+  .reglages input[type=text], .reglages select {
+    width: 100%; background: transparent; color: var(--ph); border: 1px solid var(--ph-faint); padding: 0.3rem 0.5rem;
+    font-family: var(--mono); font-size: 0.92rem; outline: none; }
+  .reglages select option { background: var(--ecran); color: var(--ph); }
+  .reglages input[type=text]:focus, .reglages select:focus { border-color: var(--ph); }
+  .nuancier { display: flex; flex-wrap: wrap; gap: 4px; }
+  .nuancier button { width: 26px; height: 26px; border: 1px solid #000; outline: 1px solid var(--ph-faint); cursor: pointer; padding: 0; }
+  .nuancier button[aria-pressed="true"] { outline: 2px solid var(--ph); outline-offset: 1px; }
+  .symboles { display: grid; grid-template-columns: repeat(6, 1fr); gap: 4px; }
+  .symboles button { background: transparent; border: 1px solid var(--ph-faint); padding: 3px; cursor: pointer; aspect-ratio: 1; }
+  .symboles button svg { width: 100%; height: 100%; fill: var(--ph-dim); }
+  .symboles button[aria-pressed="true"] { border-color: var(--ph); } .symboles button[aria-pressed="true"] svg { fill: var(--ph); }
+  .actions { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.8rem; }
+  .actions button { font-family: var(--crt); font-size: 1.4rem; background: transparent; color: var(--ph); border: 1px solid var(--ph-dim); padding: 0.05rem 0.8rem; cursor: pointer; }
+  .actions button.prim { background: var(--ph); color: var(--ecran); border-color: var(--ph); text-shadow: none; }
+  .actions button:hover { box-shadow: 0 0 12px var(--ph-glow); }
+  .note-act { font-family: var(--crt); font-size: 1.2rem; color: var(--ph-dim); min-height: 1.3em; margin-top: 0.3rem; }
+  .fiche-forge { border: 1px solid var(--ph-dim); padding: 1.2rem 1.5rem 1.4rem; background: var(--ecran); }
+  .ff-tete { display: grid; grid-template-columns: 190px minmax(0, 1fr); gap: 1.4rem; align-items: center; border-bottom: 1px solid var(--ph-faint); padding-bottom: 1rem; }
+  .ff-tete .eyebrow { font-family: var(--crt); font-size: 1.4rem; color: var(--ph-dim); }
+  .ff-tete h2 { margin: 0.1rem 0 0.4rem; border: 0; padding: 0; font-size: clamp(2.6rem, 5vw, 3.6rem); }
+  .ff-tete h2::before { content: none; }
+  .ff-tete .devise { font-style: italic; margin: 0; }
+  #epauliere { width: 100%; height: auto; display: block; }
+  .ff-corps h3 { margin-top: 1.2rem; }
+  @media (max-width: 900px) { .forge-grille { grid-template-columns: 1fr; } }
+  @media (max-width: 560px) { .ff-tete { grid-template-columns: 1fr; } #epauliere { max-width: 200px; margin: 0 auto; } }
+  @media print {
+    body::before, body::after, .crt-noise, .crt-roll, #cogi-term, .site-header, .site-footer, .reglages, .page-hero, .breadcrumb { display: none !important; }
+    body { background: #fff; color: #000; text-shadow: none; padding: 0; }
+    .forge-grille { display: block; } .fiche-forge { border: 2px solid #000; background: #fff; }
+    .fiche-forge *, .fiche-forge h2, .fiche-forge strong { color: #000 !important; text-shadow: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="inner">
+    <a class="brand" href="index.html"><span class="skull">✠</span>Codex Tenebrarum</a>
+    <nav class="main-nav">
+      <a href="index.html">Accueil</a>
+      <a href="chronologie.html">Chronologie</a>
+      <a href="factions.html">Factions</a>
+      <a href="personnages.html">Personnages</a>
+      <a href="univers.html">Univers</a>
+      <a href="carte.html">Carte</a>
+      <a href="cartographe.html">Cartographe</a>
+    </nav>
+  </div>
+</header>
+
+<section class="page-hero">
+  <div class="eyebrow">Adeptus Astartes · Registre des Fondations</div>
+  <h1>Forge de Chapitre</h1>
+  <p class="tagline">Créez votre propre Chapitre de Space Marines : nom, lignée, monde natal, couleurs et emblème. Le cogitator rédige sa fiche au format du Codex, prête à imprimer ou à partager.</p>
+</section>
+
+<main class="wrap forge-wrap">
+  <div class="forge-grille">
+    <form class="reglages" id="reglages" autocomplete="off">
+      <div class="ligne"><label for="nom">Nom du Chapitre</label><input type="text" id="nom" maxlength="40" spellcheck="false"></div>
+      <div class="ligne"><label for="lignee">Lignée (Primarque)</label><select id="lignee"></select></div>
+      <div class="ligne"><label for="fondation">Fondation</label><select id="fondation"></select></div>
+      <div class="ligne"><label for="monde">Monde natal</label><select id="monde"></select></div>
+      <div class="ligne"><label for="doctrine">Doctrine de combat</label><select id="doctrine"></select></div>
+      <div class="ligne"><label>Couleur principale</label><div class="nuancier" id="c1"></div></div>
+      <div class="ligne"><label>Couleur secondaire</label><div class="nuancier" id="c2"></div></div>
+      <div class="ligne"><label>Emblème</label><div class="symboles" id="symboles"></div></div>
+      <div class="actions">
+        <button type="button" class="prim" id="hasard">Forger au hasard</button>
+        <button type="button" id="partager">Copier le lien</button>
+        <button type="button" id="imprimer">Imprimer</button>
+      </div>
+      <div class="note-act" id="note" aria-live="polite"></div>
+    </form>
+
+    <article class="fiche-forge" id="fiche">
+      <div class="ff-tete">
+        <svg id="epauliere" viewBox="0 0 200 220" role="img" aria-label="Épaulière du Chapitre"></svg>
+        <div>
+          <div class="eyebrow" id="ffEyebrow"></div>
+          <h2 id="ffNom"></h2>
+          <p class="devise" id="ffDevise"></p>
+        </div>
+      </div>
+      <div class="datacard fiche imperium"><div class="stat-grid" id="ffStats"></div></div>
+      <div class="ff-corps" id="ffCorps"></div>
+    </article>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <span class="latin">Ex Semine Fortitudo</span>
+  Codex Tenebrarum — compendium non officiel du lore de Warhammer 40 000.<br>
+  Propriété de Games Workshop. Œuvre de fan, à but informatif.
+</footer>
+
+<script>
+(function () {
+  "use strict";
+  var $ = function (id) { return document.getElementById(id); };
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+
+  /* ---------- Données ---------- */
+  var LIGNEES = [
+    { id:"guilliman", nom:"Roboute Guilliman (Ultramarines)", court:"Guilliman", page:"primarque-guilliman.html", trait:"une fidélité scrupuleuse au Codex Astartes", defaut:"Aucun défaut connu — une lignée réputée stable" },
+    { id:"sanguinius", nom:"Sanguinius (Blood Angels)", court:"Sanguinius", page:"primarque-sanguinius.html", trait:"une beauté sombre et un goût de l'assaut aérien", defaut:"La Soif Rouge et la menace de la Rage Noire" },
+    { id:"lion", nom:"Lion El'Jonson (Dark Angels)", court:"le Lion", page:"primarque-lion.html", trait:"un goût du secret et une discipline monastique", defaut:"Aucun défaut physique — mais un héritage de secrets" },
+    { id:"russ", nom:"Leman Russ (Space Wolves)", court:"Leman Russ", page:"primarque-russ.html", trait:"une fierté farouche et des traditions de meute", defaut:"La Malédiction du Wulfen" },
+    { id:"dorn", nom:"Rogal Dorn (Imperial Fists)", court:"Rogal Dorn", page:"primarque-dorn.html", trait:"une obstination légendaire dans la défense comme dans le siège", defaut:"Glande de Betcher et implant de l'Omophagea atrophiés" },
+    { id:"vulkan", nom:"Vulkan (Salamanders)", court:"Vulkan", page:"primarque-vulkan.html", trait:"un attachement rare aux populations civiles et à la forge", defaut:"Peau noircie et regard de braise — sans gravité" },
+    { id:"corax", nom:"Corax (Raven Guard)", court:"Corax", page:"primarque-corax.html", trait:"un art de la frappe furtive", defaut:"Glande de Betcher et implant de mucranoïde inactifs" },
+    { id:"khan", nom:"Jaghatai Khan (White Scars)", court:"le Khan", page:"primarque-khan.html", trait:"une guerre de mouvement et d'honneur", defaut:"Aucun défaut connu" },
+    { id:"ferrus", nom:"Ferrus Manus (Iron Hands)", court:"Ferrus Manus", page:"primarque-ferrus.html", trait:"un mépris de la chair et une foi dans le métal", defaut:"Aucun — mais une tendance à remplacer la chair par la machine" },
+    { id:"inconnu", nom:"Inconnue — archives expurgées", court:"un Primarque inconnu", page:"primarques.html", trait:"des traditions dont nul ne connaît l'origine", defaut:"Lignée non consignée : l'Inquisition s'y intéresse" }
+  ];
+  var FONDATIONS = ["IIᵉ Fondation", "IIIᵉ Fondation", "VIIIᵉ Fondation", "XIIIᵉ Fondation", "XXIᵉ Fondation, dite « Maudite »", "XXVIᵉ Fondation", "Fondation Ultima (Primaris)", "Fondation non consignée"];
+  var MONDES = [
+    { id:"desert", nom:"Monde-désert", d:"un monde de sable et de soleil, dont les tribus nomades fournissent des recrues endurcies" },
+    { id:"glace", nom:"Monde de glace", d:"un monde gelé où seule la ténacité permet de survivre jusqu'à l'âge adulte" },
+    { id:"ruche", nom:"Monde-ruche", d:"un monde-ruche surpeuplé, dont les gangs des bas-fonds forment de redoutables aspirants" },
+    { id:"jungle", nom:"Monde-jungle", d:"un monde de jungles mortelles, où chaque enfant apprend à chasser avant de savoir lire" },
+    { id:"ocean", nom:"Monde-océan", d:"un monde couvert d'océans, peuplé de marins et de chasseurs de léviathans" },
+    { id:"feodal", nom:"Monde féodal", d:"un monde médiéval, dont les guerriers voient dans les Space Marines des anges descendus des cieux" },
+    { id:"mort", nom:"Monde mort", d:"un monde dévasté par une ancienne guerre, où la vie s'accroche aux ruines" },
+    { id:"flotte", nom:"Flotte nomade", d:"aucun monde : le Chapitre vit dans sa flotte et recrute au gré de ses croisades" }
+  ];
+  var DOCTRINES = [
+    { id:"codex", nom:"Codex-conforme", d:"Le Chapitre suit les préceptes du Codex Astartes et privilégie l'équilibre entre les armes." },
+    { id:"assaut", nom:"Assaut rapproché", d:"Le Chapitre recherche le corps à corps, ses Marines tombant du ciel à réacteur dorsal." },
+    { id:"siege", nom:"Guerre de siège", d:"Le Chapitre excelle dans la défense et la prise de fortifications, avec une patience minérale." },
+    { id:"furtif", nom:"Frappes furtives", d:"Le Chapitre frappe là où l'ennemi ne l'attend pas, puis disparaît avant la riposte." },
+    { id:"blinde", nom:"Fer de lance blindé", d:"Le Chapitre déploie ses blindés en masse, ses Techmarines entourés d'un respect particulier." },
+    { id:"croisade", nom:"Croisade perpétuelle", d:"Le Chapitre ne revient jamais chez lui : chaque victoire n'est qu'une étape de sa croisade." },
+    { id:"psy", nom:"Archivistes en force", d:"Le Chapitre aligne un Librarius nombreux, ce qui lui vaut la méfiance discrète de l'Inquisition." }
+  ];
+  var COULEURS = [
+    ["Rouge sang", "#8e1b14"], ["Écarlate", "#c4302b"], ["Or", "#c9a227"], ["Jaune", "#e0c21b"], ["Orange", "#d26a1b"],
+    ["Vert sombre", "#1f4d2b"], ["Vert", "#3c8a3a"], ["Bleu nuit", "#1a2747"], ["Bleu", "#2457a6"], ["Turquoise", "#1f8a8a"],
+    ["Violet", "#4f2a6b"], ["Noir", "#16161a"], ["Gris acier", "#5b6470"], ["Blanc os", "#e4ddc8"], ["Argent", "#b7bcc4"], ["Bronze", "#8a5a2b"]
+  ];
+  var SYMBOLES = {
+    aile: "M100 40 C70 60 40 60 18 50 C30 70 40 76 58 80 C42 84 30 84 20 82 C34 98 52 102 70 100 C60 108 52 112 42 116 C64 122 84 116 100 102 C116 116 136 122 158 116 C148 112 140 108 130 100 C148 102 166 98 180 82 C170 84 158 84 142 80 C160 76 170 70 182 50 C160 60 130 60 100 40 Z",
+    epee: "M96 20 L104 20 L106 120 L130 120 L130 130 L106 130 L106 160 L114 172 L100 186 L86 172 L94 160 L94 130 L70 130 L70 120 L94 120 Z",
+    eclair: "M118 18 L62 108 L96 108 L76 186 L140 88 L104 88 L126 18 Z",
+    croix: "M86 30 L114 30 L106 86 L162 78 L162 106 L106 98 L114 160 L86 160 L94 98 L38 106 L38 78 L94 86 Z",
+    crane: "M100 36 C64 36 44 60 44 92 C44 112 54 124 66 130 L66 152 L84 152 L84 140 L92 140 L92 152 L108 152 L108 140 L116 140 L116 152 L134 152 L134 130 C146 124 156 112 156 92 C156 60 136 36 100 36 Z M76 82 C88 82 94 92 92 104 C82 108 70 104 68 96 C68 88 70 82 76 82 Z M124 82 C130 82 132 88 132 96 C130 104 118 108 108 104 C106 92 112 82 124 82 Z M100 108 L108 124 L92 124 Z",
+    goutte: "M100 28 C100 28 56 92 56 124 C56 150 76 170 100 170 C124 170 144 150 144 124 C144 92 100 28 100 28 Z",
+    etoile: "M100 22 L118 78 L176 78 L130 112 L148 168 L100 134 L52 168 L70 112 L24 78 L82 78 Z",
+    flamme: "M100 20 C112 54 140 66 140 108 C140 140 122 168 100 172 C78 168 60 140 60 108 C60 88 72 78 80 66 C84 86 92 92 98 96 C96 72 92 48 100 20 Z",
+    griffe: "M54 40 C66 80 70 120 64 170 L80 170 C86 120 80 80 66 40 Z M92 30 C104 76 106 124 98 176 L114 176 C122 124 116 76 104 30 Z M130 40 C140 80 140 120 132 170 L148 170 C156 120 152 80 142 40 Z",
+    oeil: "M20 100 C50 56 150 56 180 100 C150 144 50 144 20 100 Z M100 74 C86 74 74 86 74 100 C74 114 86 126 100 126 C114 126 126 114 126 100 C126 86 114 74 100 74 Z",
+    croc: "M60 30 L140 30 L128 60 L118 140 L100 180 L82 140 L72 60 Z",
+    soleil: "M100 60 A40 40 0 1 0 100.1 60 Z M96 14 L104 14 L104 46 L96 46 Z M96 154 L104 154 L104 186 L96 186 Z M14 96 L46 96 L46 104 L14 104 Z M154 96 L186 96 L186 104 L154 104 Z M38 44 L44 38 L66 60 L60 66 Z M134 140 L140 134 L162 156 L156 162 Z M156 38 L162 44 L140 66 L134 60 Z M60 134 L66 140 L44 162 L38 156 Z"
+  };
+  var NOMS_A = ["Ashen", "Iron", "Storm", "Night", "Crimson", "Silver", "Void", "Grim", "Obsidian", "Ember", "Frost", "Sable", "Star", "Doom", "Hollow", "Bone", "Ebon", "Ghost", "Thunder", "Solar", "Black", "Steel", "Blood", "Dusk"];
+  var NOMS_B = ["Wardens", "Reapers", "Hawks", "Blades", "Sentinels", "Lions", "Templars", "Guardians", "Talons", "Serpents", "Hammers", "Spears", "Jackals", "Vipers", "Paladins", "Revenants", "Stalkers", "Drakes", "Heralds", "Lancers", "Crusaders", "Watch", "Sons", "Angels"];
+  var CANON = ["Storm Wardens", "Iron Hands", "Blood Angels", "Crimson Fists", "Silver Skulls", "Night Lords", "Black Templars", "Iron Warriors", "Blood Ravens", "Storm Lords", "Doom Eagles", "Star Phantoms", "Silver Templars", "Iron Snakes", "Steel Confessors", "Crimson Consuls", "Silver Guard"];
+  var DEVISES = ["Par le feu, nous sommes purifiés.", "Nous ne reculons pas. Nous ne pardonnons pas.", "Que l'ennemi apprenne notre nom en mourant.", "Notre foi est notre bouclier, notre colère est notre lame.", "Là où nous passons, l'hérésie se tait.", "Pour l'Empereur et pour ceux qui sont tombés.", "Debout jusqu'au dernier.", "Le silence est notre cri de guerre.", "Nous sommes la tempête qui précède l'aube.", "Aucune étoile trop lointaine, aucun ennemi trop fort."];
+  var EXPLOITS = ["la défense héroïque d'un monde-sanctuaire contre une Waaagh! ork", "la reconquête d'un système perdu depuis un millénaire", "la destruction d'une flotte de pillards de la Black Legion", "le sauvetage d'un monde-forge assiégé par les Nécrons", "la purge d'un culte genestealer infiltré jusqu'au gouverneur planétaire", "la retraite légendaire d'une seule compagnie face à une flotte-ruche", "la traque, sur trois siècles, d'un seigneur de guerre renégat"];
+
+  /* ---------- Hasard reproductible ---------- */
+  var graine = 1;
+  function alea() { graine = (graine * 1664525 + 1013904223) % 4294967296; return graine / 4294967296; }
+  function pick(a) { return a[Math.floor(alea() * a.length)]; }
+  function hash(s) { var h = 2166136261; for (var i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; }
+
+  /* ---------- Interface ---------- */
+  function remplir(sel, liste, lbl) { liste.forEach(function (x, i) { var o = document.createElement("option"); o.value = x.id || i; o.textContent = lbl ? lbl(x) : (x.nom || x); sel.appendChild(o); }); }
+  remplir($("lignee"), LIGNEES); remplir($("fondation"), FONDATIONS.map(function (f, i) { return { id: String(i), nom: f }; }));
+  remplir($("monde"), MONDES); remplir($("doctrine"), DOCTRINES);
+  var etat = { c1: 7, c2: 2, sym: "aile" };
+  function nuancier(id, cle) {
+    COULEURS.forEach(function (c, i) {
+      var b = document.createElement("button"); b.type = "button"; b.title = c[0]; b.setAttribute("aria-label", c[0]); b.style.background = c[1];
+      b.addEventListener("click", function () { etat[cle] = i; maj(); });
+      $(id).appendChild(b);
+    });
+  }
+  nuancier("c1", "c1"); nuancier("c2", "c2");
+  Object.keys(SYMBOLES).forEach(function (k) {
+    var b = document.createElement("button"); b.type = "button"; b.dataset.s = k; b.setAttribute("aria-label", "Emblème " + k);
+    b.innerHTML = '<svg viewBox="0 0 200 200"><path d="' + SYMBOLES[k] + '" fill-rule="evenodd"/></svg>';
+    b.addEventListener("click", function () { etat.sym = k; maj(); });
+    $("symboles").appendChild(b);
+  });
+  ["nom", "lignee", "fondation", "monde", "doctrine"].forEach(function (id) { $(id).addEventListener(id === "nom" ? "input" : "change", maj); });
+
+  function nomAleatoire() { var n; do { n = pick(NOMS_A) + " " + pick(NOMS_B); } while (CANON.indexOf(n) >= 0); return n; }
+  function hasard() {
+    graine = (Date.now() ^ Math.floor(Math.random() * 1e9)) >>> 0;
+    $("nom").value = nomAleatoire();
+    $("lignee").selectedIndex = Math.floor(alea() * LIGNEES.length);
+    $("fondation").selectedIndex = Math.floor(alea() * FONDATIONS.length);
+    $("monde").selectedIndex = Math.floor(alea() * MONDES.length);
+    $("doctrine").selectedIndex = Math.floor(alea() * DOCTRINES.length);
+    etat.c1 = Math.floor(alea() * COULEURS.length);
+    do { etat.c2 = Math.floor(alea() * COULEURS.length); } while (etat.c2 === etat.c1);
+    var ks = Object.keys(SYMBOLES); etat.sym = ks[Math.floor(alea() * ks.length)];
+    maj();
+  }
+
+  function clair(hex) { var n = parseInt(hex.slice(1), 16); return ((n >> 16) * 0.3 + ((n >> 8) & 255) * 0.59 + (n & 255) * 0.11) > 140; }
+  function epauliere(c1, c2, sym) {
+    var s = $("epauliere");
+    s.innerHTML =
+      '<defs><linearGradient id="relief" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".28"/><stop offset=".55" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".35"/></linearGradient></defs>' +
+      '<path d="M20 70 C20 30 60 12 100 12 C140 12 180 30 180 70 L180 150 C180 190 140 210 100 210 C60 210 20 190 20 150 Z" fill="' + c1 + '" stroke="#000" stroke-width="3"/>' +
+      '<path d="M20 70 C20 30 60 12 100 12 C140 12 180 30 180 70 L180 82 C150 62 50 62 20 82 Z" fill="' + c2 + '" stroke="#000" stroke-width="2"/>' +
+      '<path d="M26 150 C26 186 64 204 100 204 C136 204 174 186 174 150" fill="none" stroke="' + c2 + '" stroke-width="8"/>' +
+      '<g transform="translate(40 76) scale(0.6)"><path d="' + SYMBOLES[sym] + '" fill-rule="evenodd" fill="' + (clair(c1) ? "#111" : c2) + '" stroke="#000" stroke-width="4"/></g>' +
+      '<path d="M20 70 C20 30 60 12 100 12 C140 12 180 30 180 70 L180 150 C180 190 140 210 100 210 C60 210 20 190 20 150 Z" fill="url(#relief)"/>';
+  }
+
+  function maj() {
+    var nom = $("nom").value.trim() || "Chapitre sans nom";
+    var L = LIGNEES[$("lignee").selectedIndex], F = FONDATIONS[$("fondation").selectedIndex];
+    var Mo = MONDES[$("monde").selectedIndex], Do = DOCTRINES[$("doctrine").selectedIndex];
+    var c1 = COULEURS[etat.c1], c2 = COULEURS[etat.c2];
+    // Textes stables pour un même nom : la graine dépend des choix
+    graine = hash(nom + L.id + Mo.id + Do.id);
+    var devise = pick(DEVISES), exploit = pick(EXPLOITS), nomMonde = nom.split(" ")[0] + (Mo.id === "flotte" ? "" : pick([" Prime", " Secundus", " Majoris", "", " IV"]));
+    document.querySelectorAll("#c1 button").forEach(function (b, i) { b.setAttribute("aria-pressed", i === etat.c1 ? "true" : "false"); });
+    document.querySelectorAll("#c2 button").forEach(function (b, i) { b.setAttribute("aria-pressed", i === etat.c2 ? "true" : "false"); });
+    document.querySelectorAll("#symboles button").forEach(function (b) { b.setAttribute("aria-pressed", b.dataset.s === etat.sym ? "true" : "false"); });
+    epauliere(c1[1], c2[1], etat.sym);
+    $("ffEyebrow").textContent = "Chapitre de l'Adeptus Astartes · " + F;
+    $("ffNom").textContent = nom;
+    $("ffDevise").textContent = "« " + devise + " »";
+    var stats = [["Désignation", "Chapitre « " + nom + " »"], ["Lignée", L.nom], ["Fondation", F],
+      ["Monde natal", Mo.id === "flotte" ? "Aucun — flotte nomade" : nomMonde + " (" + Mo.nom.toLowerCase() + ")"],
+      ["Couleurs", c1[0] + " et " + c2[0].toLowerCase()], ["Doctrine", Do.nom]];
+    $("ffStats").innerHTML = stats.map(function (s) { return '<div><span class="lbl">' + esc(s[0]) + "</span><br>" + esc(s[1]) + "</div>"; }).join("");
+    $("ffCorps").innerHTML =
+      "<h3>Origines</h3><p>Les <strong>" + esc(nom) + "</strong> sont issus de la " + esc(F.replace(/,.*$/, "")) + ". Leur gène-semence remonte à " +
+      (L.id === "inconnu" ? "un Primarque que les archives refusent de nommer" : '<a href="' + L.page + '">' + esc(L.court) + "</a>") +
+      ", dont ils ont hérité " + esc(L.trait) + ".</p>" +
+      "<h3>Monde natal</h3><p>" + (Mo.id === "flotte" ? "Le Chapitre n'a " : "Le Chapitre recrute sur <strong>" + esc(nomMonde) + "</strong>, ") + esc(Mo.d) + ".</p>" +
+      "<h3>Doctrine</h3><p>" + esc(Do.d) + "</p>" +
+      "<h3>Gène-semence</h3><p>" + esc(L.defaut) + ".</p>" +
+      "<h3>Haut fait</h3><p>Les annales du Chapitre retiennent avant tout " + esc(exploit) + ".</p>" +
+      '<p style="color:var(--ph-dim);font-size:.85rem">Chapitre de fan, généré par la Forge du Codex Tenebrarum.</p>';
+    // Lien partageable
+    var q = new URLSearchParams({ n: nom, l: L.id, f: $("fondation").selectedIndex, m: Mo.id, d: Do.id, a: etat.c1, b: etat.c2, s: etat.sym });
+    try { history.replaceState(null, "", "?" + q.toString()); } catch (e) {}
+  }
+
+  $("hasard").addEventListener("click", hasard);
+  $("imprimer").addEventListener("click", function () { window.print(); });
+  $("partager").addEventListener("click", function () {
+    var url = location.href, n = $("note");
+    if (navigator.clipboard) navigator.clipboard.writeText(url).then(function () { n.textContent = "Lien copié : il recrée exactement ce Chapitre."; }, function () { n.textContent = url; });
+    else n.textContent = url;
+  });
+
+  // Chargement depuis un lien partagé
+  var p = new URLSearchParams(location.search);
+  if (p.get("n")) {
+    $("nom").value = p.get("n");
+    var idx = function (liste, id) { var i = liste.map(function (x) { return x.id; }).indexOf(id); return i < 0 ? 0 : i; };
+    $("lignee").selectedIndex = idx(LIGNEES, p.get("l")); $("fondation").selectedIndex = Math.min(FONDATIONS.length - 1, +p.get("f") || 0);
+    $("monde").selectedIndex = idx(MONDES, p.get("m")); $("doctrine").selectedIndex = idx(DOCTRINES, p.get("d"));
+    etat.c1 = Math.min(COULEURS.length - 1, +p.get("a") || 0); etat.c2 = Math.min(COULEURS.length - 1, +p.get("b") || 0);
+    if (SYMBOLES[p.get("s")]) etat.sym = p.get("s");
+    maj();
+  } else hasard();
+})();
+</script>
+<script src="cogitator.js"></script>
+</body>
+</html>

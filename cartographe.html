@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cartographe de la Black Library — Codex Tenebrarum</title>
+<link rel="stylesheet" href="style.css">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#03100a">
+<link rel="icon" href="icones/icone-32.png">
+<link rel="apple-touch-icon" href="icones/icone-180.png">
+<style>
+  .carto { max-width: 1240px; }
+  .carto-req { display: flex; gap: 0.6rem; align-items: stretch; flex-wrap: wrap; margin: 0.6rem 0 0.8rem; }
+  .carto-req label { flex-basis: 100%; font-family: var(--crt); font-size: 1.65rem; color: var(--ph-dim); }
+  .carto-req .champ { flex: 1 1 320px; display: flex; align-items: center; gap: 0.5rem; border: 1px solid var(--ph-dim); padding: 0.35rem 0.8rem; background: var(--ph-wash); }
+  .carto-req .champ span { font-family: var(--crt); font-size: 1.83rem; color: var(--ph); }
+  .carto-req input { flex: 1; min-width: 0; background: transparent; border: 0; outline: none; color: var(--ph); caret-color: var(--ph); font-family: var(--crt); font-size: 1.89rem; text-shadow: 0 0 6px var(--ph-glow); }
+  .carto-req input::placeholder { color: var(--ph-faint); }
+  .carto-req button, .carto-opt button { font-family: var(--crt); font-size: 1.65rem; background: var(--ph); color: var(--ecran); border: 1px solid var(--ph); padding: 0.2rem 1rem; cursor: pointer; text-shadow: none; }
+  .carto-req button:hover { box-shadow: 0 0 14px var(--ph-glow); }
+  .puces { display: flex; flex-wrap: wrap; gap: 0.3rem; margin: 0 0 1.2rem; }
+  .puces button { font-family: var(--crt); font-size: 1.4rem; background: transparent; color: var(--ph-dim); border: 1px solid var(--ph-faint); padding: 0.1rem 0.55rem; cursor: pointer; }
+  .puces button:hover, .puces button[aria-pressed="true"] { background: var(--ph); color: var(--ecran); border-color: var(--ph); text-shadow: none; }
+  .carto-opt { display: flex; flex-wrap: wrap; gap: 0.4rem 1.6rem; align-items: center; font-family: var(--crt); font-size: 1.46rem; color: var(--ph-dim); border-top: 1px dashed var(--ph-faint); border-bottom: 1px dashed var(--ph-faint); padding: 0.4rem 0; margin-bottom: 1.2rem; }
+  .carto-opt .grp { display: flex; gap: 0.2rem; align-items: center; }
+  .carto-opt .grp > span { margin-right: 0.4rem; }
+  .carto-opt button { font-size: 1.4rem; background: transparent; color: var(--ph-dim); border-color: var(--ph-faint); padding: 0.05rem 0.6rem; }
+  .carto-opt button[aria-pressed="true"] { background: var(--ph); color: var(--ecran); border-color: var(--ph); }
+  .carto-opt .prog { margin-left: auto; color: var(--ph); }
+  .barre { display: inline-block; vertical-align: middle; width: 120px; height: 10px; border: 1px solid var(--ph-dim); margin-left: 0.4rem; position: relative; }
+  .barre i { position: absolute; inset: 1px auto 1px 1px; background: var(--ph); box-shadow: 0 0 8px var(--ph-glow); }
+
+  .verdict { font-family: var(--crt); font-size: 1.59rem; line-height: 1.3; color: var(--ph-dim); margin-bottom: 0.3rem; }
+  .verdict b { color: var(--ph); font-weight: normal; }
+  .verdict.err b { color: var(--chaos); }
+  #titreParcours { margin-top: 0.4rem; }
+  #introParcours { color: var(--ph-txt); }
+
+  .carto-grille { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 1.2rem; align-items: start; margin: 1rem 0 2rem; }
+  .carto-grille > div { min-width: 0; }
+  .graphe { border: 1px solid var(--ph-faint); background: rgba(0,0,0,0.25); position: relative; overflow: auto; max-height: 78vh; }
+  .graphe svg { display: block; }
+  .graphe .cadre-titre { position: sticky; left: 0; top: 0; display: block; font-family: var(--crt); font-size: 1.34rem; color: var(--ph-dim); padding: 0.25rem 0.7rem; background: var(--ecran); border-bottom: 1px solid var(--ph-faint); z-index: 2; }
+  .fiche-livre { position: sticky; top: 1rem; border: 1px solid var(--ph-dim); padding: 1rem 1.1rem; background: var(--ecran); min-height: 200px; }
+  .fiche-livre .vide { color: var(--ph-dim); font-family: var(--crt); font-size: 1.52rem; }
+  .fiche-livre h3 { margin: 0.2rem 0 0.1rem; font-size: 1.1rem; }
+  .fiche-livre h3::before { content: none; }
+  .meta { font-family: var(--crt); font-size: 1.4rem; line-height: 1.25; color: var(--ph-dim); }
+  .meta b { color: var(--ph); font-weight: normal; }
+  .fiche-livre p, .etape p { font-size: 0.92rem; line-height: 1.6; margin: 0.5rem 0; }
+  .pourquoi { color: var(--ph); }
+  .pourquoi::before { content: "› "; color: var(--ph-dim); }
+  .apres { font-size: 0.85rem; color: var(--ph-dim); margin: 0.25rem 0; }
+  .apres a { color: var(--ph-txt); }
+  .lu-btn { font-family: var(--crt); font-size: 1.4rem; background: transparent; color: var(--ph); border: 1px solid var(--ph-dim); padding: 0.1rem 0.6rem; cursor: pointer; margin-top: 0.4rem; }
+  .lu-btn[aria-pressed="true"] { background: var(--ph); color: var(--ecran); text-shadow: none; }
+  .badge { display: inline-block; font-family: var(--crt); font-size: 1.28rem; line-height: 1.2; padding: 0 0.4rem; border: 1px solid var(--ph-faint); color: var(--ph-dim); margin: 0 0.2rem 0.2rem 0; }
+  .badge.ctx { border-style: dashed; }
+  .badge.chaos { color: var(--chaos); border-color: var(--chaos-dim); }
+  .badge.xenos { color: var(--xenos); border-color: var(--xenos-dim); }
+
+  /* Nœuds du graphe */
+  .nd { cursor: pointer; }
+  .nd rect.boite { fill: var(--ecran); stroke: var(--ph-dim); stroke-width: 1.2; }
+  .nd.chaos rect.boite { stroke: var(--chaos-dim); }
+  .nd.xenos rect.boite { stroke: var(--xenos-dim); }
+  .nd.ctx rect.boite { stroke-dasharray: 5 4; }
+  .nd text { font-family: "IBM Plex Mono", Consolas, monospace; fill: var(--ph-txt); }
+  .nd .t1 { font-size: 13px; font-weight: 600; fill: var(--ph); }
+  .nd.chaos .t1 { fill: var(--chaos); } .nd.xenos .t1 { fill: var(--xenos); }
+  .nd .t2 { font-size: 11px; fill: var(--ph-dim); }
+  .nd .num { font-family: "VT323", monospace; font-size: 24px; fill: var(--ecran); }
+  .nd rect.pastille { fill: var(--ph); }
+  .nd.chaos rect.pastille { fill: var(--chaos); } .nd.xenos rect.pastille { fill: var(--xenos); }
+  .nd.lu rect.boite { fill: var(--ph-wash); }
+  .nd .coche { font-family: "VT323", monospace; font-size: 21px; fill: var(--ph); }
+  .nd:hover rect.boite, .nd.sel rect.boite { stroke: var(--ph); stroke-width: 2.4; filter: drop-shadow(0 0 6px var(--ph-glow)); }
+  .nd.chaos:hover rect.boite, .nd.chaos.sel rect.boite { stroke: var(--chaos); }
+  .nd.xenos:hover rect.boite, .nd.xenos.sel rect.boite { stroke: var(--xenos); }
+  .nd:focus { outline: none; } .nd:focus-visible rect.boite { stroke: var(--ph); stroke-width: 3; }
+  .ligne { fill: none; stroke: var(--ph); stroke-width: 3; opacity: 0.55; filter: drop-shadow(0 0 4px var(--ph-glow)); }
+  .lien-req { fill: none; stroke: var(--ph-dim); stroke-width: 1.3; }
+  .lien-ctx { fill: none; stroke: var(--ph-dim); stroke-width: 1.1; stroke-dasharray: 4 4; opacity: 0.8; }
+  .lien-on { stroke: var(--ph) !important; opacity: 1; stroke-width: 2.2; }
+  /* Vue d'ensemble */
+  .pt { cursor: pointer; }
+  .pt circle { fill: var(--ecran); stroke: var(--ph-dim); stroke-width: 1.5; }
+  .pt.chaos circle { stroke: var(--chaos); } .pt.xenos circle { stroke: var(--xenos); }
+  .pt.lu circle { fill: var(--ph-dim); }
+  .pt text { font-family: "VT323", monospace; font-size: 18px; fill: var(--ph-dim); pointer-events: none; }
+  .pt:hover circle, .pt.sel circle { fill: var(--ph); stroke: var(--ph); }
+  .pt:hover text, .pt.sel text { fill: var(--ph); }
+  .pt.att circle { stroke-width: 3; stroke: var(--ph); }
+  .pt.att text { fill: var(--ph-txt); }
+  .pt text.cache { display: none; }
+  .pt:hover text.cache, .pt.sel text.cache { display: inline; }
+
+  /* Itinéraire en liste */
+  .itin { list-style: none; margin: 0; padding: 0; max-width: none; counter-reset: etape; }
+  .itin > li::before { content: none; }
+  .etape { border-left: 2px solid var(--ph-faint); padding: 0.2rem 0 1rem 1.4rem; margin: 0 0 0 0.7rem; position: relative; }
+  .etape::after { content: attr(data-n); position: absolute; left: -0.95rem; top: 0.15rem; min-width: 1.8rem; text-align: center; font-family: var(--crt); font-size: 1.52rem; line-height: 1.35; background: var(--ph); color: var(--ecran); text-shadow: none; }
+  .etape.chaos::after { background: var(--chaos); } .etape.xenos::after { background: var(--xenos); }
+  .etape.ctx::after { background: var(--ecran); color: var(--ph-dim); outline: 1px dashed var(--ph-dim); }
+  .etape h3 { margin: 0 0 0.1rem; font-size: 1.05rem; cursor: pointer; }
+  .etape h3::before { content: none; }
+  .etape.chaos h3 { color: var(--chaos); } .etape.xenos h3 { color: var(--xenos); }
+  .etape.lu h3 { text-decoration: line-through; text-decoration-color: var(--ph-dim); }
+  .plusloin { border: 1px dashed var(--ph-faint); padding: 0.7rem 1rem; margin: 1rem 0 0; }
+  .plusloin h4 { margin-top: 0; }
+  .legende { display: flex; flex-wrap: wrap; gap: 0.3rem 1.4rem; font-family: var(--crt); font-size: 1.34rem; color: var(--ph-dim); margin-top: 0.4rem; }
+  .legende svg { vertical-align: middle; margin-right: 0.3rem; }
+
+  @media (max-width: 600px) { .carto-req .champ { flex-basis: 100%; } .carto-req button { width: 100%; } }
+  @media (max-width: 960px) {
+    .carto-grille { grid-template-columns: 1fr; }
+    .fiche-livre { position: static; }
+    .carto-opt .prog { margin-left: 0; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="inner">
+    <a class="brand" href="index.html"><span class="skull">✠</span>Codex Tenebrarum</a>
+    <nav class="main-nav">
+      <a href="index.html">Accueil</a>
+      <a href="chronologie.html">Chronologie</a>
+      <a href="factions.html">Factions</a>
+      <a href="personnages.html">Personnages</a>
+      <a href="univers.html">Univers</a>
+      <a href="carte.html">Carte</a>
+      <a href="cartographe.html" class="active">Cartographe</a>
+    </nav>
+  </div>
+</header>
+
+<section class="page-hero">
+  <div class="eyebrow">Black Library · parcours de lecture</div>
+  <h1>Cartographe</h1>
+  <p class="tagline">Des centaines de romans, plus de soixante pour la seule Hérésie d'Horus. Dites ce qui vous attire : le Cartographe trace un chemin de lecture dans le bon ordre, sans rien vous gâcher.</p>
+</section>
+
+<main class="wrap carto">
+
+  <form class="carto-req" id="formReq" autocomplete="off">
+    <label for="q">Que voulez-vous lire ?</label>
+    <div class="champ"><span>&gt;</span><input id="q" name="q" spellcheck="false" placeholder="ex. je veux lire sur les Blood Angels"></div>
+    <button type="submit">Tracer le parcours</button>
+  </form>
+  <div class="puces" id="puces" aria-label="Sujets fréquents"></div>
+
+  <div class="carto-opt">
+    <div class="grp" role="group" aria-label="Vue"><span>Vue</span>
+      <button type="button" data-vue="parcours" aria-pressed="true">Parcours</button>
+      <button type="button" data-vue="tout" aria-pressed="false">Bibliothèque entière</button>
+    </div>
+    <div class="grp" role="group" aria-label="Longueur"><span>Détours de contexte</span>
+      <button type="button" data-long="complet" aria-pressed="true">Inclus</button>
+      <button type="button" data-long="court" aria-pressed="false">Suites seulement</button>
+    </div>
+    <div class="prog" id="prog"></div>
+  </div>
+
+  <div class="verdict" id="verdict"></div>
+  <h2 id="titreParcours">Choisissez un sujet</h2>
+  <p id="introParcours">Tapez une faction, un personnage ou une époque — ou choisissez un sujet ci-dessus. Chaque nœud du graphe est un roman ; cliquez-le pour lire son résumé.</p>
+
+  <div class="carto-grille">
+    <div>
+      <div class="graphe" id="graphe"><span class="cadre-titre" id="cadreTitre">GRAPHE DE LECTURE</span><svg id="svg" role="img" aria-label="Graphe des romans"></svg></div>
+      <div class="legende">
+        <span><svg width="34" height="10"><line x1="0" y1="5" x2="34" y2="5" stroke="currentColor" stroke-width="3"/></svg>ordre de lecture</span>
+        <span><svg width="34" height="10"><line x1="0" y1="5" x2="34" y2="5" stroke="currentColor" stroke-width="1.3"/></svg>suite directe</span>
+        <span><svg width="34" height="10"><line x1="0" y1="5" x2="34" y2="5" stroke="currentColor" stroke-dasharray="4 4"/></svg>contexte conseillé</span>
+        <span style="color:var(--ph)">■ Imperium</span><span style="color:var(--chaos)">■ Chaos</span><span style="color:var(--xenos)">■ Xenos</span>
+      </div>
+    </div>
+    <aside class="fiche-livre" id="fiche" aria-live="polite"><div class="vide">Sélectionnez un nœud pour afficher la fiche du roman.</div></aside>
+  </div>
+
+  <h2 id="titreListe">Itinéraire</h2>
+  <ol class="itin" id="itin"></ol>
+  <div id="plusloin"></div>
+
+  <p class="apres" style="margin-top:2.5rem">Résumés limités à la prémisse de chaque livre. Titres français indiqués quand une traduction existe sous ce nom. Pour ajouter des romans, éditez <code>cartographe-data.js</code>.</p>
+</main>
+
+<footer class="site-footer">
+  <span class="latin">Lectio Sine Fine</span>
+  Codex Tenebrarum — compendium non officiel du lore de Warhammer 40 000.<br>
+  Warhammer 40 000, la Black Library et tous les éléments associés sont la propriété de Games Workshop. Œuvre de fan, à but informatif.
+</footer>
+
+<script src="cartographe-data.js"></script>
+<script>
+(function () {
+  "use strict";
+  var LIVRES = window.CARTO_LIVRES, THEMES = window.CARTO_THEMES;
+  var P = {}; LIVRES.forEach(function (b) { P[b.id] = b; });
+  var $ = function (id) { return document.getElementById(id); };
+  var svgNS = "http://www.w3.org/2000/svg";
+  function norm(s) { return (s || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/['’`\-]/g, " ").replace(/œ/g, "oe").replace(/[^a-z0-9 ]/g, " ").replace(/\s+/g, " ").trim(); }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function S(tag, at, parent) { var e = document.createElementNS(svgNS, tag); for (var k in at) e.setAttribute(k, at[k]); if (parent) parent.appendChild(e); return e; }
+
+  /* ---------- Livres lus (mémoire locale) ---------- */
+  var lus = {};
+  try { lus = JSON.parse(localStorage.getItem("carto.lus") || "{}"); } catch (e) { lus = {}; }
+  function basculerLu(id) { if (lus[id]) delete lus[id]; else lus[id] = 1; try { localStorage.setItem("carto.lus", JSON.stringify(lus)); } catch (e) {} rendre(); if (sel) fiche(sel); }
+
+  /* ---------- État ---------- */
+  var etat = { vue: "parcours", long: "complet", q: "", themes: [], ordre: [], role: {}, plusloin: [] };
+  var sel = null;
+
+  /* ---------- Interprétation de la requête ---------- */
+  var ALIAS = [];
+  THEMES.forEach(function (t) { t.alias.concat([norm(t.nom)]).forEach(function (a) { ALIAS.push({ a: norm(a), t: t }); }); });
+  ALIAS.sort(function (x, y) { return y.a.length - x.a.length; });
+  var VIDES = "je veux voudrais lire sur les le la des de du un une et ou en l d histoire livres livre romans roman parcours commencer par sur moi me plus tout quoi quel quels que qui aime j".split(" ");
+
+  function interpreter(q) {
+    var n = " " + norm(q) + " ", trouves = [];
+    ALIAS.forEach(function (x) {
+      var cle = " " + x.a + " ";
+      if (x.a && n.indexOf(cle) >= 0) {
+        if (trouves.indexOf(x.t) < 0) trouves.push(x.t);
+        n = n.split(cle).join("  ");
+      }
+    });
+    if (trouves.length) return { themes: trouves };
+    // Recherche libre dans les livres
+    var mots = norm(q).split(" ").filter(function (m) { return m.length > 2 && VIDES.indexOf(m) < 0; });
+    if (!mots.length) return { themes: [], livres: [] };
+    var res = LIVRES.map(function (b) {
+      var h = norm(b.t + " " + (b.vf || "") + " " + b.a + " " + (b.serie || "") + " " + b.tags.join(" ") + " " + b.resume);
+      var sc = 0; mots.forEach(function (m) { if (norm(b.t + " " + (b.vf || "")).indexOf(m) >= 0) sc += 5; if (h.indexOf(m) >= 0) sc += 1; });
+      return { b: b, sc: sc };
+    }).filter(function (x) { return x.sc >= Math.max(1, mots.length); }).sort(function (a, b) { return b.sc - a.sc; });
+    return { themes: [], livres: res.slice(0, 10).map(function (x) { return x.b.id; }), mots: mots };
+  }
+
+  /* ---------- Construction du parcours ---------- */
+  function fermetureReq(id, acc) { (P[id].req || []).forEach(function (r) { if (!acc[r]) { acc[r] = 1; fermetureReq(r, acc); } }); return acc; }
+  function cle(b) { return b.niv * 100 + (b.y - 1990); }
+
+  function construire(seeds, ordreImpose) {
+    var role = {}, plusloin = [], estSeed = {};
+    seeds.forEach(function (id) { estSeed[id] = 1; });
+    var garde = seeds.filter(function (id) {
+      var cl = Object.keys(fermetureReq(id, {})).filter(function (r) { return !estSeed[r]; });
+      if (cl.length > 2 && !ordreImpose) { plusloin.push({ id: id, manque: cl }); return false; }
+      return true;
+    });
+    var dans = {};
+    garde.forEach(function (id) { dans[id] = 1; role[id] = "theme"; Object.keys(fermetureReq(id, {})).forEach(function (r) { dans[r] = 1; if (!role[r]) role[r] = "suite"; }); });
+    if (etat.long === "complet") {
+      Object.keys(dans).forEach(function (id) {
+        (P[id].ctx || []).forEach(function (c) {
+          if (dans[c[0]]) return;
+          var aj = [c[0]].concat(Object.keys(fermetureReq(c[0], {}))).filter(function (x) { return !dans[x]; });
+          if (aj.length <= 3) aj.forEach(function (x) { dans[x] = 1; role[x] = "contexte"; });
+        });
+      });
+    }
+    var tries = garde.slice();
+    if (!ordreImpose) tries.sort(function (a, b) { return cle(P[a]) - cle(P[b]); });
+    var ordre = [], vu = {};
+    function visiter(id) {
+      if (vu[id] || !dans[id]) return; vu[id] = 1;
+      var pre = (P[id].req || []).slice();
+      (P[id].ctx || []).forEach(function (c) { pre.push(c[0]); });
+      pre.filter(function (x) { return dans[x]; }).sort(function (a, b) { return cle(P[a]) - cle(P[b]); }).forEach(visiter);
+      ordre.push(id);
+    }
+    tries.forEach(visiter);
+    return { ordre: ordre, role: role, plusloin: plusloin };
+  }
+
+  function tracer(q) {
+    etat.q = q || "";
+    $("q").value = etat.q;
+    try { history.replaceState(null, "", etat.q ? "?q=" + encodeURIComponent(etat.q) : location.pathname); } catch (e) {}
+    var r = interpreter(etat.q), v = $("verdict");
+    etat.themes = r.themes || [];
+    var seeds = [], impose = false;
+    if (etat.themes.length) {
+      etat.themes.forEach(function (t) {
+        var ids = t.choix ? t.choix.slice() : LIVRES.filter(function (b) { return b.tags.some(function (x) { return t.tags.indexOf(x) >= 0; }); }).map(function (b) { return b.id; });
+        ids.forEach(function (id) { if (seeds.indexOf(id) < 0) seeds.push(id); });
+      });
+      impose = etat.themes.length === 1 && !!etat.themes[0].choix;
+      v.className = "verdict"; v.innerHTML = "REQUÊTE INTERPRÉTÉE : <b>" + esc(etat.themes.map(function (t) { return t.nom.toUpperCase(); }).join(" + ")) + "</b>";
+      $("titreParcours").textContent = etat.themes.map(function (t) { return t.nom; }).join(" + ");
+      $("introParcours").textContent = etat.themes.length === 1 ? etat.themes[0].intro : "Parcours combiné : les livres des deux sujets, fusionnés dans un ordre qui respecte les suites de chacun.";
+    } else if (r.livres && r.livres.length) {
+      seeds = r.livres;
+      v.className = "verdict"; v.innerHTML = "AUCUN SUJET RECONNU — RECHERCHE LIBRE SUR : <b>" + esc(r.mots.join(" ").toUpperCase()) + "</b>";
+      $("titreParcours").textContent = "Résultats pour « " + etat.q + " »";
+      $("introParcours").textContent = "Romans dont le titre, l'auteur ou la prémisse correspondent, avec les livres à lire avant eux.";
+    } else if (etat.q) {
+      v.className = "verdict err"; v.innerHTML = "<b>AUCUNE ARCHIVE NE CORRESPOND À « " + esc(etat.q.toUpperCase()) + " ».</b> Essayez une faction (Orks, Inquisition…), un personnage (Abaddon, Dante…) ou « débuter ».";
+      $("titreParcours").textContent = "Aucun parcours";
+      $("introParcours").textContent = "";
+    } else {
+      v.innerHTML = ""; $("titreParcours").textContent = "Choisissez un sujet";
+    }
+    var c = construire(seeds, impose);
+    etat.ordre = c.ordre; etat.role = c.role; etat.plusloin = c.plusloin;
+    document.querySelectorAll("#puces button").forEach(function (b) { b.setAttribute("aria-pressed", etat.themes.length === 1 && etat.themes[0].id === b.dataset.t ? "true" : "false"); });
+    sel = etat.ordre[0] || null;
+    if (!etat.ordre.length && etat.vue === "parcours" && !etat.q) { /* écran d'accueil : vue d'ensemble */ }
+    rendre();
+    if (sel) fiche(sel); else $("fiche").innerHTML = '<div class="vide">Sélectionnez un nœud pour afficher la fiche du roman.</div>';
+  }
+  window.CARTO_TRACER = tracer;
+
+  /* ---------- Rendu ---------- */
+  function rendre() { rendreGraphe(); rendreListe(); rendreProg(); }
+
+  function rendreProg() {
+    var o = etat.ordre, n = o.filter(function (id) { return lus[id]; }).length;
+    if (!o.length) { $("prog").innerHTML = ""; return; }
+    var pc = Math.round(n / o.length * 100);
+    $("prog").innerHTML = "LUS " + n + "/" + o.length + '<span class="barre"><i style="width:calc(' + pc + '% - 2px)"></i></span>';
+  }
+
+  function decouper(t, max) {
+    var mots = t.split(" "), l = [""];
+    mots.forEach(function (m) { var c = l[l.length - 1]; if ((c + " " + m).trim().length > max && c) l.push(m); else l[l.length - 1] = (c + " " + m).trim(); });
+    if (l.length > 2) { l = l.slice(0, 2); l[1] = l[1].slice(0, max - 1) + "…"; }
+    return l;
+  }
+
+  function rendreGraphe() {
+    var svg = $("svg"); while (svg.firstChild) svg.removeChild(svg.firstChild);
+    if (etat.vue === "tout" || !etat.ordre.length) { $("cadreTitre").textContent = "BIBLIOTHÈQUE ENTIÈRE — " + LIVRES.length + " ROMANS" + (etat.ordre.length ? " · parcours en surbrillance" : " · cliquez un nœud"); return vueEnsemble(svg); }
+    $("cadreTitre").textContent = "GRAPHE DE LECTURE — " + etat.ordre.length + " ROMANS";
+    var W = Math.max(280, $("graphe").clientWidth - 2);
+    var nw = W < 520 ? W - 60 : 210, nh = 66, gx = 46, gy = 52, marge = 24;
+    var cols = Math.max(1, Math.floor((W - 2 * marge + gx) / (nw + gx)));
+    var usedW = cols * nw + (cols - 1) * gx, x0 = Math.max(marge, (W - usedW) / 2);
+    var pos = {};
+    etat.ordre.forEach(function (id, i) {
+      var r = Math.floor(i / cols), c = i % cols; if (r % 2) c = cols - 1 - c;
+      pos[id] = { x: x0 + c * (nw + gx), y: 40 + r * (nh + gy), i: i };
+    });
+    var rows = Math.ceil(etat.ordre.length / cols), H = 40 + rows * (nh + gy);
+    svg.setAttribute("width", W); svg.setAttribute("height", H); svg.setAttribute("viewBox", "0 0 " + W + " " + H);
+    var gL = S("g", {}, svg), gE = S("g", {}, svg), gN = S("g", {}, svg);
+    // ligne de parcours (serpentin)
+    var d = "";
+    etat.ordre.forEach(function (id, i) {
+      var p = pos[id], cx = p.x + nw / 2, cy = p.y + nh / 2;
+      if (!i) { d = "M" + cx + " " + cy; return; }
+      var q = pos[etat.ordre[i - 1]];
+      if (q.y === p.y) d += " L" + cx + " " + cy;
+      else { var bx = (Math.floor(i / cols) % 2) ? q.x + nw + gx / 2 : q.x - gx / 2; if (cols === 1) bx = q.x + nw + gx / 2 - 10; d += " L" + (q.x + nw / 2) + " " + (q.y + nh / 2) + " C" + bx + " " + (q.y + nh / 2) + " " + bx + " " + cy + " " + (cx) + " " + cy; }
+    });
+    if (etat.ordre.length > 1) S("path", { d: d, "class": "ligne" }, gL);
+    // dépendances non consécutives
+    etat.ordre.forEach(function (id) {
+      var b = P[id];
+      var deps = (b.req || []).map(function (r) { return [r, "req"]; }).concat((b.ctx || []).map(function (c) { return [c[0], "ctx"]; }));
+      deps.forEach(function (dp) {
+        var a = pos[dp[0]], z = pos[id]; if (!a || z.i - a.i === 1) return;
+        var x1 = a.x + nw / 2, y1 = a.y + nh, x2 = z.x + nw / 2, y2 = z.y;
+        if (a.y === z.y) { y1 = a.y; y2 = z.y; var my = a.y - 28; S("path", { d: "M" + x1 + " " + y1 + " C" + x1 + " " + my + " " + x2 + " " + my + " " + x2 + " " + y2, "class": dp[1] === "req" ? "lien-req" : "lien-ctx", "data-a": dp[0], "data-b": id }, gE); return; }
+        var ym = (y1 + y2) / 2;
+        S("path", { d: "M" + (x1 + 30) + " " + y1 + " C" + (x1 + 30) + " " + ym + " " + (x2 - 30) + " " + ym + " " + (x2 - 30) + " " + y2, "class": dp[1] === "req" ? "lien-req" : "lien-ctx", "data-a": dp[0], "data-b": id }, gE);
+      });
+    });
+    // nœuds
+    var maxc = Math.floor((nw - 46) / 7.9);
+    etat.ordre.forEach(function (id, i) {
+      var b = P[id], p = pos[id];
+      var g = S("g", { "class": "nd " + b.fam + (etat.role[id] === "contexte" ? " ctx" : "") + (lus[id] ? " lu" : "") + (sel === id ? " sel" : ""), transform: "translate(" + p.x + "," + p.y + ")", tabindex: "0", role: "button", "aria-label": (i + 1) + ". " + b.t + ", " + b.a }, gN);
+      g.dataset.id = id;
+      S("rect", { "class": "boite", width: nw, height: nh }, g);
+      S("rect", { "class": "pastille", width: 30, height: nh }, g);
+      var tn = S("text", { "class": "num", x: 15, y: nh / 2 + 6, "text-anchor": "middle" }, g); tn.textContent = i + 1;
+      decouper(b.t, maxc).forEach(function (l, k) { var t = S("text", { "class": "t1", x: 40, y: 21 + k * 16 }, g); t.textContent = l; });
+      var t2 = S("text", { "class": "t2", x: 40, y: nh - 9 }, g); t2.textContent = (b.a + " · " + b.y).slice(0, maxc + 4);
+      if (lus[id]) { var ck = S("text", { "class": "coche", x: nw - 8, y: 17, "text-anchor": "end" }, g); ck.textContent = "LU"; }
+      g.addEventListener("click", function () { choisir(id); });
+      g.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); choisir(id); } });
+    });
+    surligner();
+  }
+
+  /* Vue d'ensemble : graphe de forces calculé une fois */
+  var layout = null;
+  function calculerLayout(W, H) {
+    var nodes = LIVRES.map(function (b, i) {
+      var cx = b.fam === "chaos" ? W * 0.74 : b.fam === "xenos" ? W * 0.22 : W * 0.5;
+      var cy = b.ere === "M31" ? H * 0.3 : b.ere === "M42" ? H * 0.72 : H * 0.55;
+      var a = i * 2.39996;
+      return { id: b.id, x: cx + Math.cos(a) * (30 + i % 7 * 12), y: cy + Math.sin(a) * (30 + i % 5 * 12), vx: 0, vy: 0, b: b, cx: cx, cy: cy };
+    });
+    var idx = {}; nodes.forEach(function (n, i) { idx[n.id] = i; });
+    var links = [];
+    LIVRES.forEach(function (b) { (b.req || []).forEach(function (r) { links.push([idx[r], idx[b.id], 46]); }); (b.ctx || []).forEach(function (c) { links.push([idx[c[0]], idx[b.id], 90]); }); });
+    // liens faibles entre livres partageant un tag principal
+    for (var it = 0; it < 320; it++) {
+      var alpha = 1 - it / 320;
+      for (var i = 0; i < nodes.length; i++) for (var j = i + 1; j < nodes.length; j++) {
+        var a = nodes[i], c = nodes[j], dx = c.x - a.x, dy = c.y - a.y, d2 = dx * dx + dy * dy + 0.01;
+        if (d2 > 90000) continue;
+        var f = 2600 / d2 * alpha, d = Math.sqrt(d2);
+        a.vx -= dx / d * f; a.vy -= dy / d * f; c.vx += dx / d * f; c.vy += dy / d * f;
+      }
+      links.forEach(function (l) {
+        var a = nodes[l[0]], c = nodes[l[1]], dx = c.x - a.x, dy = c.y - a.y, d = Math.sqrt(dx * dx + dy * dy) + 0.01;
+        var f = (d - l[2]) * 0.02 * alpha; a.vx += dx / d * f; a.vy += dy / d * f; c.vx -= dx / d * f; c.vy -= dy / d * f;
+      });
+      nodes.forEach(function (n) {
+        n.vx += (n.cx - n.x) * 0.0025 * alpha; n.vy += (n.cy - n.y) * 0.0025 * alpha;
+        n.x += n.vx; n.y += n.vy; n.vx *= 0.6; n.vy *= 0.6;
+        n.x = Math.max(30, Math.min(W - 150, n.x)); n.y = Math.max(30, Math.min(H - 30, n.y));
+      });
+    }
+    return { nodes: nodes, idx: idx };
+  }
+  function vueEnsemble(svg) {
+    var W = 1100, H = 820;
+    if (!layout) layout = calculerLayout(W, H);
+    var Wc = Math.max(760, $("graphe").clientWidth - 2);
+    svg.setAttribute("width", Wc); svg.setAttribute("height", Math.round(H * Wc / W)); svg.setAttribute("viewBox", "0 0 " + W + " " + H);
+    var dans = {}; etat.ordre.forEach(function (id) { dans[id] = 1; });
+    var gE = S("g", {}, svg), gN = S("g", {}, svg);
+    // étiquettes de zones
+    [["XENOS", 0.22, "var(--xenos-dim)"], ["IMPERIUM", 0.5, "var(--ph-faint)"], ["CHAOS", 0.74, "var(--chaos-dim)"]].forEach(function (z) {
+      var t = S("text", { x: W * z[1], y: 26, "text-anchor": "middle", style: "font-family:VT323,monospace;font-size:27px;fill:" + z[2] }, svg); t.textContent = z[0];
+    });
+    LIVRES.forEach(function (b) {
+      var z = layout.nodes[layout.idx[b.id]];
+      (b.req || []).concat((b.ctx || []).map(function (c) { return c[0]; })).forEach(function (r) {
+        var a = layout.nodes[layout.idx[r]], isReq = (b.req || []).indexOf(r) >= 0;
+        var on = dans[r] && dans[b.id];
+        S("line", { x1: a.x, y1: a.y, x2: z.x, y2: z.y, "class": (isReq ? "lien-req" : "lien-ctx") + (on ? " lien-on" : ""), "data-a": r, "data-b": b.id, opacity: etat.ordre.length && !on ? 0.25 : 0.8 }, gE);
+      });
+    });
+    layout.nodes.forEach(function (n) {
+      var b = n.b, att = dans[b.id];
+      var g = S("g", { "class": "pt " + b.fam + (att ? " att" : "") + (lus[b.id] ? " lu" : "") + (sel === b.id ? " sel" : ""), transform: "translate(" + n.x + "," + n.y + ")", tabindex: "0", role: "button", "aria-label": b.t + ", " + b.a, opacity: etat.ordre.length && !att ? 0.45 : 1 }, gN);
+      g.dataset.id = b.id;
+      S("circle", { r: att ? 8 : 6 }, g);
+      var t = S("text", { x: 11, y: 5, "class": (etat.ordre.length && !att) ? "cache" : "" }, g); t.textContent = b.t.length > 22 ? b.t.slice(0, 21) + "…" : b.t;
+      g.addEventListener("click", function () { choisir(b.id); });
+      g.addEventListener("keydown", function (e) { if (e.key === "Enter") choisir(b.id); });
+    });
+    surligner();
+  }
+
+  function surligner() {
+    document.querySelectorAll("#svg [data-id]").forEach(function (g) { g.classList.toggle("sel", g.dataset.id === sel); });
+    document.querySelectorAll("#svg [data-a]").forEach(function (l) {
+      var on = sel && (l.dataset.a === sel || l.dataset.b === sel);
+      l.classList.toggle("lien-on", !!on || (etat.vue === "tout" && etat.ordre.indexOf(l.dataset.a) >= 0 && etat.ordre.indexOf(l.dataset.b) >= 0));
+    });
+  }
+
+  function choisir(id) { sel = id; surligner(); fiche(id); }
+
+  function meta(b) {
+    return '<div class="meta"><b>' + esc(b.a) + "</b> · " + b.y + (b.serie ? " · " + esc(b.serie) : "") + "</div>";
+  }
+  function badges(b, role) {
+    var niv = ["", "Idéal pour débuter", "Intermédiaire", "Pour vétérans"][b.niv];
+    var ere = { M31: "Hérésie · M31", M41: "41ᵉ millénaire", M42: "Ère Indomitus · M42" }[b.ere];
+    return '<span class="badge ' + b.fam + '">' + ere + '</span><span class="badge">' + niv + "</span>" +
+      (role === "contexte" ? '<span class="badge ctx">Détour de contexte</span>' : role === "suite" ? '<span class="badge">Tome précédent requis</span>' : "");
+  }
+  function apres(b) {
+    var h = "";
+    (b.req || []).forEach(function (r) { h += '<div class="apres">Suite directe de <a href="#" data-go="' + r + '">' + esc(P[r].t) + "</a></div>"; });
+    (b.ctx || []).forEach(function (c) { h += '<div class="apres">Conseillé après <a href="#" data-go="' + c[0] + '">' + esc(P[c[0]].t) + "</a> — " + esc(c[1]) + "</div>"; });
+    return h;
+  }
+  function fiche(id) {
+    var b = P[id], n = etat.ordre.indexOf(id);
+    $("fiche").innerHTML =
+      '<div class="meta">' + (n >= 0 ? "ÉTAPE " + (n + 1) + " / " + etat.ordre.length : "HORS PARCOURS") + "</div>" +
+      "<h3>" + esc(b.t) + "</h3>" + (b.vf ? '<div class="meta">VF : <b>' + esc(b.vf) + "</b></div>" : "") + meta(b) +
+      '<div style="margin-top:.5rem">' + badges(b, etat.role[id]) + "</div>" +
+      "<p>" + esc(b.resume) + "</p>" + '<p class="pourquoi">' + esc(b.pourquoi) + "</p>" + apres(b) +
+      '<button type="button" class="lu-btn" aria-pressed="' + (lus[id] ? "true" : "false") + '">' + (lus[id] ? "✓ Lu" : "Marquer comme lu") + "</button>";
+    $("fiche").querySelector(".lu-btn").addEventListener("click", function () { basculerLu(id); });
+    lierGo($("fiche"));
+  }
+  function lierGo(racine) {
+    racine.querySelectorAll("[data-go]").forEach(function (a) { a.addEventListener("click", function (e) { e.preventDefault(); choisir(a.dataset.go); }); });
+  }
+
+  function rendreListe() {
+    var ol = $("itin"); ol.innerHTML = "";
+    $("titreListe").style.display = etat.ordre.length ? "" : "none";
+    etat.ordre.forEach(function (id, i) {
+      var b = P[id], li = document.createElement("li");
+      li.className = "etape " + b.fam + (etat.role[id] === "contexte" ? " ctx" : "") + (lus[id] ? " lu" : "");
+      li.dataset.n = i + 1;
+      li.innerHTML = "<h3>" + esc(b.t) + (b.vf ? ' <span style="font-weight:400;color:var(--ph-dim)">— ' + esc(b.vf) + "</span>" : "") + "</h3>" + meta(b) +
+        '<div style="margin-top:.3rem">' + badges(b, etat.role[id]) + "</div><p>" + esc(b.resume) + '</p><p class="pourquoi">' + esc(b.pourquoi) + "</p>" + apres(b) +
+        '<button type="button" class="lu-btn" aria-pressed="' + (lus[id] ? "true" : "false") + '">' + (lus[id] ? "✓ Lu" : "Marquer comme lu") + "</button>";
+      li.querySelector("h3").addEventListener("click", function () { choisir(id); $("graphe").scrollIntoView({ block: "nearest" }); });
+      li.querySelector(".lu-btn").addEventListener("click", function () { basculerLu(id); });
+      lierGo(li);
+      ol.appendChild(li);
+    });
+    var pl = $("plusloin");
+    if (etat.plusloin.length) {
+      pl.innerHTML = '<div class="plusloin"><h4>Pour aller plus loin</h4>' + etat.plusloin.map(function (x) {
+        var b = P[x.id];
+        return '<div class="apres"><a href="#" data-go="' + x.id + '">' + esc(b.t) + "</a> — à garder pour plus tard : il suppose " + x.manque.length + " tomes préalables (" + esc(x.manque.map(function (m) { return P[m].t; }).slice(0, 3).join(", ")) + (x.manque.length > 3 ? "…" : "") + ").</div>";
+      }).join("") + "</div>";
+      lierGo(pl);
+    } else pl.innerHTML = "";
+  }
+
+  /* ---------- Contrôles ---------- */
+  var PUCES = ["debutant", "heresie", "inquisition", "blood-angels", "ultramarines", "space-wolves", "dark-angels", "garde", "chaos", "black-legion", "mechanicus", "necrons", "aeldari", "orks", "tau", "m42", "humour"];
+  PUCES.forEach(function (tid) {
+    var t = THEMES.filter(function (x) { return x.id === tid; })[0]; if (!t) return;
+    var b = document.createElement("button"); b.type = "button"; b.textContent = t.nom; b.dataset.t = t.id; b.setAttribute("aria-pressed", "false");
+    b.addEventListener("click", function () { etat.vue = "parcours"; majBoutons(); tracer(t.nom); });
+    $("puces").appendChild(b);
+  });
+  $("formReq").addEventListener("submit", function (e) { e.preventDefault(); etat.vue = "parcours"; majBoutons(); tracer($("q").value); });
+  function majBoutons() {
+    document.querySelectorAll("[data-vue]").forEach(function (b) { b.setAttribute("aria-pressed", b.dataset.vue === etat.vue ? "true" : "false"); });
+    document.querySelectorAll("[data-long]").forEach(function (b) { b.setAttribute("aria-pressed", b.dataset.long === etat.long ? "true" : "false"); });
+  }
+  document.querySelectorAll("[data-vue]").forEach(function (b) { b.addEventListener("click", function () { etat.vue = b.dataset.vue; majBoutons(); rendreGraphe(); }); });
+  document.querySelectorAll("[data-long]").forEach(function (b) { b.addEventListener("click", function () { etat.long = b.dataset.long; majBoutons(); tracer(etat.q); }); });
+  var rz; window.addEventListener("resize", function () { clearTimeout(rz); rz = setTimeout(rendreGraphe, 150); });
+
+  var m = location.search.match(/[?&]q=([^&]*)/);
+  tracer(m ? decodeURIComponent(m[1].replace(/\+/g, " ")) : "");
+})();
+</script>
+<script src="cogitator.js"></script>
+</body>
+</html>

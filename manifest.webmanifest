@@ -1,0 +1,16 @@
+{
+  "name": "Codex Tenebrarum — Cogitator Inquisitorial",
+  "short_name": "Codex Tenebrarum",
+  "description": "Bible du lore de Warhammer 40 000 : dossiers, carte galactique, frise, Cartographe de la Black Library.",
+  "lang": "fr",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#03100a",
+  "theme_color": "#03100a",
+  "icons": [
+    { "src": "icones/icone-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icones/icone-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
