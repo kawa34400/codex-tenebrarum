@@ -19,8 +19,9 @@
   /* Phosphore (par défaut : P1 vert) */
   --ph:        #4dff8a;   /* trait vif */
   --ph-txt:    #a9f2c0;   /* texte courant */
-  --ph-dim:    #2a9c55;   /* secondaire */
-  --ph-faint:  #12502b;   /* filets, bordures */
+  --ph-dim:    #3dbb6b;   /* secondaire (contraste ≥ 7:1) */
+  --ph-mute:   #25884d;   /* texte décoratif discret */
+  --ph-faint:  #175f35;   /* filets, bordures */
   --ph-glow:   rgba(77,255,138,0.45);
   --ph-wash:   rgba(77,255,138,0.06);
 
@@ -41,19 +42,22 @@
 
 /* Phosphore ambre (THEME AMBRE) */
 html[data-phos="ambre"] {
-  --ph: #ffb43d; --ph-txt: #f3d6a2; --ph-dim: #a8701c; --ph-faint: #55380e;
+  --ph: #ffb43d; --ph-txt: #f3d6a2; --ph-dim: #cf9033; --ph-mute: #8f6420; --ph-faint: #5e3f12;
   --ph-glow: rgba(255,180,61,0.45); --ph-wash: rgba(255,180,61,0.06);
   --ecran: #110a02; --ecran-2: #1a1005;
 }
 /* Phosphore blanc (THEME BLANC) */
 html[data-phos="blanc"] {
-  --ph: #e8f1ff; --ph-txt: #c9d3e0; --ph-dim: #7d8899; --ph-faint: #303845;
+  --ph: #e8f1ff; --ph-txt: #d3dbe6; --ph-dim: #9ba6b7; --ph-mute: #677284; --ph-faint: #363f4d;
   --ph-glow: rgba(220,235,255,0.35); --ph-wash: rgba(220,235,255,0.05);
   --ecran: #05070b; --ecran-2: #0a0e15;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; background: var(--carter); }
+html { scroll-behavior: smooth; background: var(--carter); font-size: 100%; }
+/* Taille du texte (bouton TEXTE du bandeau, commande TEXTE) */
+html[data-taille="grand"] { font-size: 112.5%; }
+html[data-taille="tres-grand"] { font-size: 125%; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 
 body {
@@ -62,10 +66,10 @@ body {
   background-attachment: fixed;
   color: var(--ph-txt);
   font-family: var(--mono);
-  font-size: 16.5px;
+  font-size: 1.06rem;
   line-height: 1.72;
   min-height: 100vh;
-  text-shadow: 0 0 2px var(--ph-glow);
+  text-shadow: none; /* texte net : la lueur est réservée aux titres */
   padding-bottom: 4.5rem; /* place pour la ligne de commande */
   -webkit-font-smoothing: antialiased;
 }
@@ -81,7 +85,7 @@ body::before {
   background: repeating-linear-gradient(
     to bottom,
     rgba(0,0,0,0) 0px, rgba(0,0,0,0) 2px,
-    rgba(0,0,0,0.28) 3px, rgba(0,0,0,0) 4px);
+    rgba(0,0,0,0.14) 3px, rgba(0,0,0,0) 4px);
 }
 /* Vignettage, courbure du verre et scintillement */
 body::after {
@@ -107,7 +111,7 @@ body::after {
   position: fixed; inset: -50%;
   pointer-events: none;
   z-index: 899;
-  opacity: 0.055;
+  opacity: 0.03;
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 1.4 -0.2'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
   animation: crt-static 0.6s steps(6) infinite;
 }
@@ -171,7 +175,7 @@ nav.main-nav a {
   text-decoration: none;
   padding: 0.05rem 0.45rem;
 }
-nav.main-nav a::before { content: counter(menu) ":"; color: var(--ph-faint); margin-right: 0.25em; }
+nav.main-nav a::before { content: counter(menu) ":"; color: var(--ph-mute); margin-right: 0.25em; }
 nav.main-nav a:hover, nav.main-nav a:focus-visible {
   background: var(--ph); color: var(--ecran); text-shadow: none; outline: none;
 }
@@ -203,10 +207,10 @@ nav.main-nav a.active::after { content: " ◂"; }
   font-family: var(--crt); font-size: 1.46rem; line-height: 1.3;
   color: var(--ph-dim);
 }
-.breadcrumb::before { content: "ACCÈS:\\TENEBRARUM\\"; color: var(--ph-faint); }
+.breadcrumb::before { content: "ACCÈS:\\TENEBRARUM\\"; color: var(--ph-mute); }
 .breadcrumb a { color: var(--ph-dim); text-decoration: none; }
 .breadcrumb a:hover { color: var(--ecran); background: var(--ph); text-shadow: none; }
-.breadcrumb span { color: var(--ph-faint); }
+.breadcrumb span { color: var(--ph-mute); }
 
 /* ---------- En-tête de dossier ---------- */
 .page-hero {
@@ -219,7 +223,7 @@ nav.main-nav a.active::after { content: " ◂"; }
   font-family: var(--crt); font-size: 1.52rem; line-height: 1.3;
   color: var(--ph-dim);
 }
-.page-hero .eyebrow::before { content: "DOSSIER // "; color: var(--ph-faint); }
+.page-hero .eyebrow::before { content: "DOSSIER // "; color: var(--ph-mute); }
 .page-hero h1 {
   font-family: var(--crt);
   font-weight: normal;
@@ -238,7 +242,7 @@ nav.main-nav a.active::after { content: " ◂"; }
 @keyframes curseur { 50% { opacity: 0; } }
 @media (prefers-reduced-motion: reduce) { .page-hero h1::after { animation: none; } }
 .page-hero p.tagline {
-  color: var(--ph-txt); opacity: 0.85;
+  color: var(--ph-txt);
   font-style: italic;
   max-width: 62ch;
   margin: 0;
@@ -330,9 +334,9 @@ blockquote cite {
   font-family: var(--crt); font-size: 1.4rem; line-height: 1.1;
   color: var(--ph-dim);
 }
-.card .card-tag::before { content: "[" counter(entree, decimal-leading-zero) "] "; color: var(--ph-faint); }
+.card .card-tag::before { content: "[" counter(entree, decimal-leading-zero) "] "; color: var(--ph-mute); }
 .card h3 { margin: 0.25rem 0 0.35rem; font-size: 1.05rem; color: var(--ph); }
-.card p { color: var(--ph-txt); opacity: 0.8; font-size: 0.9rem; line-height: 1.55; margin: 0; }
+.card p { color: var(--ph-txt); font-size: 0.95rem; line-height: 1.55; margin: 0; }
 .card:hover, .card:focus-visible {
   background: var(--ph); color: var(--ecran); text-shadow: none; outline: none;
 }
@@ -366,7 +370,7 @@ blockquote cite {
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 0.2rem 1.6rem;
   margin: 0.6rem 0;
-  font-size: 0.9rem; line-height: 1.5;
+  font-size: 0.96rem; line-height: 1.5;
 }
 .stat-grid div { padding: 0.35rem 0; border-bottom: 1px dotted var(--ph-faint); }
 .stat-grid .lbl {
@@ -395,11 +399,11 @@ blockquote cite {
 .toc h4::before { content: "> "; color: var(--ph-dim); }
 .toc ul { list-style: none; columns: 2; column-gap: 2rem; margin: 0.4rem 0 0; }
 .toc li { margin: 0.1rem 0; break-inside: avoid; }
-.toc a { color: var(--ph-txt); text-decoration: none; font-size: 0.92rem; }
+.toc a { color: var(--ph-txt); text-decoration: none; font-size: 0.96rem; }
 .toc a:hover { color: var(--ecran); }
 
 /* ---------- Tableaux ---------- */
-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.88rem; }
+table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.94rem; }
 th, td { text-align: left; padding: 0.5rem 0.7rem; border: 1px solid var(--ph-faint); vertical-align: top; }
 th { font-family: var(--crt); font-weight: normal; font-size: 1.46rem; color: var(--ph); background: var(--ph-wash); }
 tr:hover td { background: var(--ph-wash); }
@@ -433,7 +437,7 @@ li { margin: 0.35rem 0; }
 .site-footer .latin::before, .site-footer .latin::after { content: " +++ "; color: var(--ph-dim); }
 
 .ornament {
-  text-align: center; color: var(--ph-faint);
+  text-align: center; color: var(--ph-mute);
   margin: 2.2rem 0; font-size: 1rem; letter-spacing: 0.3em;
 }
 
@@ -469,8 +473,8 @@ li { margin: 0.35rem 0; }
 .relic .relic-type, .hero-entry .hero-role {
   font-family: var(--crt); font-size: 1.34rem; color: var(--ph-dim);
 }
-.relic .relic-type::before { content: "RELIQUE · "; color: var(--ph-faint); }
-.hero-entry .hero-role::before { content: "DOSSIER PERSONNEL · "; color: var(--ph-faint); }
+.relic .relic-type::before { content: "RELIQUE · "; color: var(--ph-mute); }
+.hero-entry .hero-role::before { content: "DOSSIER PERSONNEL · "; color: var(--ph-mute); }
 
 .conclusion {
   border: 1px solid var(--ph-dim);
@@ -540,7 +544,7 @@ li { margin: 0.35rem 0; }
   text-transform: uppercase;
   text-shadow: 0 0 6px var(--ph-glow);
 }
-#cogi-in::placeholder { color: var(--ph-faint); text-transform: none; }
+#cogi-in::placeholder { color: var(--ph-mute); text-transform: none; }
 .cogi-keys { display: flex; gap: 0.25rem; flex-wrap: nowrap; }
 .cogi-keys button {
   font-family: var(--crt); font-size: 1.34rem; line-height: 1;
@@ -549,7 +553,7 @@ li { margin: 0.35rem 0; }
   padding: 0.3rem 0.5rem; cursor: pointer;
 }
 .cogi-keys button:hover { background: var(--ph); color: var(--ecran); border-color: var(--ph); }
-.cogi-keys button span { color: var(--ph-faint); margin-right: 0.25em; }
+.cogi-keys button span { color: var(--ph-mute); margin-right: 0.25em; }
 .cogi-keys button:hover span { color: var(--ecran); }
 @media (max-width: 760px) {
   .cogi-keys button.opt { display: none; }
@@ -573,7 +577,7 @@ li { margin: 0.35rem 0; }
   text-shadow: 0 0 6px var(--ph), 0 0 30px var(--ph-glow);
   margin: 0.8rem 0;
 }
-#cogi-boot .passer { position: absolute; bottom: 1.5rem; right: 2rem; color: var(--ph-faint); }
+#cogi-boot .passer { position: absolute; bottom: 1.5rem; right: 2rem; color: var(--ph-mute); }
 #cogi-boot.fin { animation: eteindre 0.35s ease-in forwards; }
 @keyframes eteindre {
   0% { transform: scale(1,1); filter: brightness(1); }
@@ -674,7 +678,7 @@ li { margin: 0.35rem 0; }
 .cogi-status button { font: inherit; color: var(--ph); background: transparent; border: 0; border-bottom: 1px dashed var(--ph-dim); padding: 0; cursor: pointer; text-shadow: inherit; }
 .cogi-status button:hover, .cogi-status button:focus-visible { background: var(--ph); color: var(--ecran); text-shadow: none; outline: none; }
 .lecture-en-cours { outline: 1px dashed var(--ph); outline-offset: 4px; background: var(--ph-wash); }
-.breadcrumb .fil-toile { float: right; color: var(--ph-faint); }
+.breadcrumb .fil-toile { float: right; color: var(--ph-mute); }
 .breadcrumb .fil-toile:hover { color: var(--ecran); }
 @media (max-width: 640px) { .breadcrumb .fil-toile { float: none; display: block; } }
 
@@ -700,7 +704,7 @@ li { margin: 0.35rem 0; }
    IMPRESSION DES DOSSIERS — « relevé » (défaut) ou « parchemin »
    (choix via le fil d'Ariane ou la commande IMPRIMER PARCHEMIN)
    ========================================================= */
-.breadcrumb .fil-impr { float: right; margin-right: 1.2rem; color: var(--ph-faint); font: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+.breadcrumb .fil-impr { float: right; margin-right: 1.2rem; color: var(--ph-mute); font: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
 .breadcrumb .fil-impr button { font: inherit; background: none; border: 0; padding: 0 0.15rem; color: var(--ph-dim); cursor: pointer; }
 .breadcrumb .fil-impr button:hover { color: var(--ecran); background: var(--ph); text-shadow: none; }
 .impr-entete { display: none; }

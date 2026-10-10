@@ -17,6 +17,10 @@
   var reduit = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   html.setAttribute("data-phos", lire("phos", "vert"));
   html.setAttribute("data-crt", lire("crt", "on"));
+  var TAILLES = ["normal", "grand", "tres-grand"], NOM_TAILLE = { normal: "A", grand: "A+", "tres-grand": "A++" };
+  html.setAttribute("data-taille", lire("taille", "normal"));
+  function regleTaille(t) { if (TAILLES.indexOf(t) < 0) t = "normal"; html.setAttribute("data-taille", t); ecrire("taille", t); var b = doc.querySelector(".cogi-taille"); if (b) b.textContent = "TEXTE " + NOM_TAILLE[t]; }
+  function regleCrt(v) { html.setAttribute("data-crt", v); ecrire("crt", v); var b = doc.querySelector(".cogi-crt"); if (b) b.textContent = v === "off" ? "EFFETS COUPÉS" : "EFFETS CRT"; }
 
   /* ---------- Utilitaires ---------- */
   function norm(s) {
@@ -170,10 +174,14 @@
     try { grade = localStorage.getItem("cogi.grade"); } catch (e) { grade = null; }
     st.innerHTML = '<span>COGITATOR MK.XIV · DATE <b>' + dateImperiale() + '</b> · ACCRÉDITATION <a class="cogi-grade" href="examen.html">' +
       esc(grade ? grade.toUpperCase() : "NON ÉVALUÉE") + '</a> · <button type="button" class="cogi-son">' + (sonActif ? "SON ACTIF" : "SON COUPÉ") + '</button>' +
-      (doc.querySelector("main .codex-section, main p") ? ' · <button type="button" class="cogi-voix">LECTURE SERVITOR</button>' : "") + '</span>' +
+      (doc.querySelector("main .codex-section, main p") ? ' · <button type="button" class="cogi-voix">LECTURE SERVITOR</button>' : "") +
+      ' · <button type="button" class="cogi-taille" title="Taille du texte">TEXTE ' + NOM_TAILLE[html.getAttribute("data-taille")] + '</button>' +
+      ' · <button type="button" class="cogi-crt" title="Lignes de balayage, grain et scintillement">' + (html.getAttribute("data-crt") === "off" ? "EFFETS COUPÉS" : "EFFETS CRT") + '</button></span>' +
       '<span class="pensee">PENSÉE DU JOUR : ' + esc(PENSEES[jour % PENSEES.length]) + '</span>';
     inner.appendChild(st);
     st.querySelector(".cogi-son").addEventListener("click", function () { regleSon(!sonActif); });
+    st.querySelector(".cogi-taille").addEventListener("click", function () { var t = html.getAttribute("data-taille"); regleTaille(TAILLES[(TAILLES.indexOf(t) + 1) % TAILLES.length]); });
+    st.querySelector(".cogi-crt").addEventListener("click", function () { regleCrt(html.getAttribute("data-crt") === "off" ? "on" : "off"); });
     var bv = st.querySelector(".cogi-voix");
     if (bv) bv.addEventListener("click", function () { if (lecture) arreterLecture(); else lireDossier(); });
   }
@@ -437,6 +445,7 @@
       ["ACCUEIL · RETOUR", "Navigation (alias HOME · BACK)"],
       ["THEME VERT|AMBRE|BLANC", "Change la couleur du phosphore"],
       ["CRT ON|OFF", "Active ou coupe les effets du tube"],
+      ["TEXTE + | - | NORMAL", "Agrandit ou réduit le texte"],
       ["EFFACER", "Vide le journal (alias CLEAR)"]
     ].forEach(function (c) { ln("  " + c[0].padEnd(24) + c[1]); });
     ln("Raccourcis : tapez n'importe où pour écrire · ↑↓ historique · Tab complète · Échap ferme.", "dim");
@@ -623,8 +632,14 @@
   cmd(["CRT"], "Effets", function (arg) {
     var v = norm(arg || "").trim();
     if (v !== "on" && v !== "off") { ln("SYNTAXE : CRT ON | CRT OFF", "err"); return; }
-    html.setAttribute("data-crt", v); ecrire("crt", v);
+    regleCrt(v);
     ln(v === "off" ? "Effets du tube coupés. Lecture facilitée." : "Effets du tube rétablis.", "ok");
+  });
+  cmd(["TEXTE", "TAILLE", "ZOOM"], "Taille du texte", function (arg) {
+    var v = norm(arg || "").trim(), t = html.getAttribute("data-taille"), i = TAILLES.indexOf(t);
+    if (v === "+" || v === "plus") i = Math.min(2, i + 1); else if (v === "-" || v === "moins") i = Math.max(0, i - 1);
+    else if (v === "normal") i = 0; else if (v === "grand") i = 1; else if (v === "tres grand" || v === "tres-grand") i = 2; else i = (i + 1) % 3;
+    regleTaille(TAILLES[i]); ln("Taille du texte : " + NOM_TAILLE[TAILLES[i]] + ".", "ok");
   });
   cmd(["ETAT", "STATUS"], "État", function () {
     ln("COGITATOR MK.XIV — DATE " + dateImperiale(), "ok");
@@ -695,7 +710,7 @@
     transTimer = setTimeout(function () { transmission(false); planifierTrans(false); }, (premier ? 60 + Math.random() * 90 : 240 + Math.random() * 240) * 1000);
   }
   planifierTrans(true);
-  cmd(["TRANSMISSIONS", "TRANSMISSION", "IMPRIMER ", "INTERCEPTER", "ASTROPATHE"], "Transmissions interceptées", function (arg) {
+  cmd(["TRANSMISSIONS", "TRANSMISSION", "IMPRIMER ", "TEXTE ", "INTERCEPTER", "ASTROPATHE"], "Transmissions interceptées", function (arg) {
     var a = (arg || "").toUpperCase();
     if (a === "OFF") { transOn = false; ecrire("trans", "off"); clearTimeout(transTimer); ln("Écoute astropathique suspendue.", "ok"); return; }
     if (a === "ON") { transOn = true; ecrire("trans", "on"); planifierTrans(true); ln("Écoute astropathique rétablie.", "ok"); return; }

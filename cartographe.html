@@ -25,85 +25,143 @@
 <link rel="icon" href="icones/icone-32.png">
 <link rel="apple-touch-icon" href="icones/icone-180.png">
 <style>
-  .carto { max-width: 1240px; }
-  .carto-req { display: flex; gap: 0.6rem; align-items: stretch; flex-wrap: wrap; margin: 0.6rem 0 0.8rem; }
-  .carto-req label { flex-basis: 100%; font-family: var(--crt); font-size: 1.65rem; color: var(--ph-dim); }
+  .carto { max-width: 1180px; }
+  /* --- Requête --- */
+  .carto-req { display: flex; gap: 0.6rem; align-items: stretch; flex-wrap: wrap; margin: 0.4rem 0 0.9rem; }
+  .carto-req label { flex-basis: 100%; font-family: var(--crt); font-size: 1.7rem; color: var(--ph); }
   .carto-req .champ { flex: 1 1 320px; display: flex; align-items: center; gap: 0.5rem; border: 1px solid var(--ph-dim); padding: 0.35rem 0.8rem; background: var(--ph-wash); }
-  .carto-req .champ span { font-family: var(--crt); font-size: 1.83rem; color: var(--ph); }
-  .carto-req input { flex: 1; min-width: 0; background: transparent; border: 0; outline: none; color: var(--ph); caret-color: var(--ph); font-family: var(--crt); font-size: 1.89rem; text-shadow: 0 0 6px var(--ph-glow); }
-  .carto-req input::placeholder { color: var(--ph-faint); }
-  .carto-req button, .carto-opt button { font-family: var(--crt); font-size: 1.65rem; background: var(--ph); color: var(--ecran); border: 1px solid var(--ph); padding: 0.2rem 1rem; cursor: pointer; text-shadow: none; }
+  .carto-req .champ span { font-family: var(--crt); font-size: 1.85rem; color: var(--ph); }
+  .carto-req input { flex: 1; min-width: 0; background: transparent; border: 0; outline: none; color: var(--ph); caret-color: var(--ph); font-family: var(--mono); font-size: 1.08rem; padding: 0.35rem 0; }
+  .carto-req input::placeholder { color: var(--ph-mute); }
+  .carto-req button { font-family: var(--crt); font-size: 1.65rem; background: var(--ph); color: var(--ecran); border: 1px solid var(--ph); padding: 0.2rem 1.1rem; cursor: pointer; text-shadow: none; }
   .carto-req button:hover { box-shadow: 0 0 14px var(--ph-glow); }
-  .puces { display: flex; flex-wrap: wrap; gap: 0.3rem; margin: 0 0 1.2rem; }
-  .puces button { font-family: var(--crt); font-size: 1.4rem; background: transparent; color: var(--ph-dim); border: 1px solid var(--ph-faint); padding: 0.1rem 0.55rem; cursor: pointer; }
-  .puces button:hover, .puces button[aria-pressed="true"] { background: var(--ph); color: var(--ecran); border-color: var(--ph); text-shadow: none; }
-  .carto-opt { display: flex; flex-wrap: wrap; gap: 0.4rem 1.6rem; align-items: center; font-family: var(--crt); font-size: 1.46rem; color: var(--ph-dim); border-top: 1px dashed var(--ph-faint); border-bottom: 1px dashed var(--ph-faint); padding: 0.4rem 0; margin-bottom: 1.2rem; }
-  .carto-opt .grp { display: flex; gap: 0.2rem; align-items: center; }
-  .carto-opt .grp > span { margin-right: 0.4rem; }
-  .carto-opt button { font-size: 1.4rem; background: transparent; color: var(--ph-dim); border-color: var(--ph-faint); padding: 0.05rem 0.6rem; }
-  .carto-opt button[aria-pressed="true"] { background: var(--ph); color: var(--ecran); border-color: var(--ph); }
-  .carto-opt .prog { margin-left: auto; color: var(--ph); }
-  .barre { display: inline-block; vertical-align: middle; width: 120px; height: 10px; border: 1px solid var(--ph-dim); margin-left: 0.4rem; position: relative; }
-  .barre i { position: absolute; inset: 1px auto 1px 1px; background: var(--ph); box-shadow: 0 0 8px var(--ph-glow); }
+  .sujets { display: flex; flex-wrap: wrap; gap: 0.4rem; align-items: center; margin: 0 0 0.6rem; }
+  .sujets > span { font-family: var(--crt); font-size: 1.4rem; color: var(--ph-dim); margin-right: 0.3rem; }
+  .sujets button, .tous button { font-family: var(--mono); font-size: 0.88rem; background: transparent; color: var(--ph-txt); border: 1px solid var(--ph-faint); padding: 0.2rem 0.7rem; cursor: pointer; border-radius: 2px; }
+  .sujets button:hover, .sujets button[aria-pressed="true"], .tous button:hover, .tous button[aria-pressed="true"] { background: var(--ph); color: var(--ecran); border-color: var(--ph); text-shadow: none; }
+  details.tous { margin: 0 0 1.4rem; }
+  details.tous > summary { font-family: var(--crt); font-size: 1.45rem; color: var(--ph-dim); cursor: pointer; list-style: none; display: inline-block; }
+  details.tous > summary::-webkit-details-marker { display: none; }
+  details.tous > summary::before { content: "▸ "; }
+  details.tous[open] > summary::before { content: "▾ "; }
+  details.tous > summary:hover { color: var(--ph); }
+  .tous-grille { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 0.9rem 1.6rem; border: 1px solid var(--ph-faint); padding: 0.9rem 1.1rem; margin-top: 0.5rem; background: var(--ph-wash); }
+  .tous-grille h4 { margin: 0 0 0.35rem; font-size: 1.45rem; color: var(--ph-dim); }
+  .tous-grille div > div { display: flex; flex-wrap: wrap; gap: 0.3rem; }
 
-  .verdict { font-family: var(--crt); font-size: 1.59rem; line-height: 1.3; color: var(--ph-dim); margin-bottom: 0.3rem; }
+  /* --- En-tête du parcours --- */
+  .verdict { font-family: var(--crt); font-size: 1.4rem; line-height: 1.3; color: var(--ph-dim); margin: 0.6rem 0 0; }
   .verdict b { color: var(--ph); font-weight: normal; }
   .verdict.err b { color: var(--chaos); }
-  #titreParcours { margin-top: 0.4rem; }
-  #introParcours { color: var(--ph-txt); }
+  #titreParcours { margin-top: 0.3rem; }
+  #introParcours { color: var(--ph-txt); font-size: 1.02rem; }
+  .resume-p { display: flex; flex-wrap: wrap; gap: 0.3rem 1.4rem; font-family: var(--crt); font-size: 1.45rem; color: var(--ph-dim); margin: 0.4rem 0 0; }
+  .resume-p b { color: var(--ph); font-weight: normal; }
+  .barre { display: inline-block; vertical-align: middle; width: 90px; height: 9px; border: 1px solid var(--ph-dim); margin-left: 0.4rem; position: relative; }
+  .barre i { position: absolute; inset: 1px auto 1px 1px; background: var(--ph); }
 
-  .carto-grille { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 1.2rem; align-items: start; margin: 1rem 0 2rem; }
+  /* --- Barre d'onglets --- */
+  .carto-barre { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 0.6rem 1.5rem; border-bottom: 1px solid var(--ph-dim); margin: 1.6rem 0 1.4rem; }
+  .onglets { display: flex; gap: 0.2rem; flex-wrap: wrap; }
+  .onglets button { font-family: var(--crt); font-size: 1.6rem; background: transparent; color: var(--ph-dim); border: 1px solid var(--ph-faint); border-bottom: 0; padding: 0.15rem 1rem; cursor: pointer; margin-bottom: -1px; }
+  .onglets button[aria-selected="true"] { color: var(--ecran); background: var(--ph); border-color: var(--ph); text-shadow: none; }
+  .onglets button:not([aria-selected="true"]):hover { color: var(--ph); border-color: var(--ph-dim); }
+  .detours { font-family: var(--crt); font-size: 1.4rem; color: var(--ph-dim); display: flex; align-items: center; gap: 0.5rem; padding-bottom: 0.3rem; cursor: pointer; }
+  .detours input { accent-color: var(--ph); width: 1rem; height: 1rem; }
+
+  /* --- Itinéraire : arcs et fiches --- */
+  .arc { margin: 0 0 2rem; }
+  .arc.seul { margin-bottom: 0.9rem; }
+  .arc.seul + .arc:not(.seul) { margin-top: 1.8rem; }
+  .arc-tete { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.2rem 0.9rem; margin-bottom: 0.8rem; padding-bottom: 0.3rem; border-bottom: 1px dashed var(--ph-faint); }
+  .arc-tete .etiq { font-family: var(--crt); font-size: 1.35rem; color: var(--ecran); background: var(--ph-dim); padding: 0 0.5rem; text-shadow: none; }
+  .arc-tete h3 { margin: 0; font-size: 1.15rem; }
+  .arc-tete h3::before { content: none; }
+  .arc-tete .qui { font-family: var(--crt); font-size: 1.35rem; color: var(--ph-dim); }
+  .arc.ctx .arc-tete .etiq { background: transparent; color: var(--ph-dim); outline: 1px dashed var(--ph-dim); }
+  .arc-note { font-size: 0.95rem; color: var(--ph-txt); margin: -0.3rem 0 0.9rem; max-width: 80ch; }
+  .arc-note::before { content: "ⓘ "; color: var(--ph-dim); }
+  .livres { display: flex; flex-direction: column; gap: 0.75rem; }
+  .livre { display: grid; grid-template-columns: 3rem minmax(220px, 290px) minmax(0, 1fr); border: 1px solid var(--ph-faint); background: rgba(0,0,0,0.22); }
+  .livre .num { font-family: var(--crt); font-size: 2rem; line-height: 1; text-align: center; padding-top: 0.8rem; background: var(--ph-wash); color: var(--ph); border-right: 1px solid var(--ph-faint); }
+  .livre.chaos .num { color: var(--chaos); } .livre.xenos .num { color: var(--xenos); }
+  .arc.ctx .livre { border-style: dashed; }
+  .livre .tete { padding: 0.75rem 1rem 0.8rem; border-right: 1px dotted var(--ph-faint); display: flex; flex-direction: column; min-width: 0; }
+  .livre .texte { padding: 0.75rem 1.2rem 0.85rem; min-width: 0; }
+  .livre h4 { font-family: var(--mono); font-weight: 600; font-size: 1.08rem; line-height: 1.3; margin: 0; color: var(--ph); }
+  .livre.chaos h4 { color: var(--chaos); } .livre.xenos h4 { color: var(--xenos); }
+  .livre .vf { font-size: 0.88rem; color: var(--ph-dim); margin-top: 0.15rem; }
+  .livre .meta { font-family: var(--crt); font-size: 1.32rem; line-height: 1.3; color: var(--ph-dim); margin: 0.35rem 0 0; }
+  .livre .meta b { color: var(--ph-txt); font-weight: normal; }
+  .niv { white-space: nowrap; display: block; }
+  .niv i { display: inline-block; width: 6px; height: 0.75em; margin-right: 2px; border: 1px solid var(--ph-dim); vertical-align: -1px; }
+  .niv i.on { background: var(--ph-dim); }
+  .livre p { margin: 0 0 0.5rem; font-size: 0.97rem; line-height: 1.62; max-width: 70ch; }
+  .livre .pourquoi { color: var(--ph); margin-bottom: 0; }
+  .livre .pourquoi::before { content: "› "; color: var(--ph-dim); }
+  .livre .apres { font-size: 0.86rem; color: var(--ph-dim); margin-top: 0.45rem; }
+  .livre .pied { margin-top: auto; padding-top: 0.7rem; display: flex; justify-content: space-between; align-items: center; gap: 0.6rem; }
+  .livre .voir { font-family: var(--crt); font-size: 1.25rem; color: var(--ph-dim); background: none; border: 0; cursor: pointer; padding: 0; text-decoration: underline; text-decoration-color: var(--ph-faint); }
+  .livre .voir:hover { color: var(--ph); }
+  .lu-btn { font-family: var(--crt); font-size: 1.25rem; background: transparent; color: var(--ph-dim); border: 1px solid var(--ph-faint); padding: 0 0.5rem; cursor: pointer; }
+  .lu-btn[aria-pressed="true"] { background: var(--ph-dim); color: var(--ecran); border-color: var(--ph-dim); text-shadow: none; }
+  .livre.lu { opacity: 0.7; }
+  .livre.lu h4 { text-decoration: line-through; text-decoration-color: var(--ph-dim); }
+  .livre.flash { outline: 2px solid var(--ph); outline-offset: 2px; }
+  .plusloin { border: 1px dashed var(--ph-faint); padding: 0.8rem 1.1rem; margin: 0.5rem 0 0; }
+  .plusloin h4 { margin-top: 0; }
+  .plusloin .apres { font-size: 0.92rem; margin: 0.3rem 0; }
+
+  /* --- Graphe --- */
+  .carto-grille { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 1.2rem; align-items: start; }
   .carto-grille > div { min-width: 0; }
-  .graphe { border: 1px solid var(--ph-faint); background: rgba(0,0,0,0.25); position: relative; overflow: auto; max-height: 78vh; }
+  .graphe { border: 1px solid var(--ph-faint); background: rgba(0,0,0,0.25); position: relative; overflow: auto; max-height: 80vh; }
   .graphe svg { display: block; }
-  .graphe .cadre-titre { position: sticky; left: 0; top: 0; display: block; font-family: var(--crt); font-size: 1.34rem; color: var(--ph-dim); padding: 0.25rem 0.7rem; background: var(--ecran); border-bottom: 1px solid var(--ph-faint); z-index: 2; }
-  .fiche-livre { position: sticky; top: 1rem; border: 1px solid var(--ph-dim); padding: 1rem 1.1rem; background: var(--ecran); min-height: 200px; }
-  .fiche-livre .vide { color: var(--ph-dim); font-family: var(--crt); font-size: 1.52rem; }
-  .fiche-livre h3 { margin: 0.2rem 0 0.1rem; font-size: 1.1rem; }
+  .graphe .cadre-titre { position: sticky; left: 0; top: 0; display: block; font-family: var(--crt); font-size: 1.35rem; color: var(--ph-dim); padding: 0.25rem 0.7rem; background: var(--ecran); border-bottom: 1px solid var(--ph-faint); z-index: 2; }
+  .fiche-livre { position: sticky; top: 1rem; border: 1px solid var(--ph-dim); padding: 1rem 1.2rem; background: var(--ecran); min-height: 200px; }
+  .fiche-livre .vide { color: var(--ph-dim); font-family: var(--crt); font-size: 1.5rem; }
+  .fiche-livre .etap { font-family: var(--crt); font-size: 1.35rem; color: var(--ph-dim); }
+  .fiche-livre h3 { margin: 0.2rem 0 0.1rem; font-size: 1.2rem; }
   .fiche-livre h3::before { content: none; }
-  .meta { font-family: var(--crt); font-size: 1.4rem; line-height: 1.25; color: var(--ph-dim); }
-  .meta b { color: var(--ph); font-weight: normal; }
-  .fiche-livre p, .etape p { font-size: 0.92rem; line-height: 1.6; margin: 0.5rem 0; }
-  .pourquoi { color: var(--ph); }
-  .pourquoi::before { content: "› "; color: var(--ph-dim); }
-  .apres { font-size: 0.85rem; color: var(--ph-dim); margin: 0.25rem 0; }
+  .fiche-livre .meta { font-family: var(--crt); font-size: 1.35rem; line-height: 1.25; color: var(--ph-dim); }
+  .fiche-livre .meta b { color: var(--ph-txt); font-weight: normal; }
+  .fiche-livre p { font-size: 0.98rem; line-height: 1.6; margin: 0.6rem 0; }
+  .fiche-livre .pourquoi { color: var(--ph); }
+  .fiche-livre .pourquoi::before { content: "› "; color: var(--ph-dim); }
+  .fiche-livre .apres { font-size: 0.88rem; color: var(--ph-dim); margin: 0.25rem 0; }
   .apres a { color: var(--ph-txt); }
-  .lu-btn { font-family: var(--crt); font-size: 1.4rem; background: transparent; color: var(--ph); border: 1px solid var(--ph-dim); padding: 0.1rem 0.6rem; cursor: pointer; margin-top: 0.4rem; }
-  .lu-btn[aria-pressed="true"] { background: var(--ph); color: var(--ecran); text-shadow: none; }
-  .badge { display: inline-block; font-family: var(--crt); font-size: 1.28rem; line-height: 1.2; padding: 0 0.4rem; border: 1px solid var(--ph-faint); color: var(--ph-dim); margin: 0 0.2rem 0.2rem 0; }
-  .badge.ctx { border-style: dashed; }
-  .badge.chaos { color: var(--chaos); border-color: var(--chaos-dim); }
-  .badge.xenos { color: var(--xenos); border-color: var(--xenos-dim); }
+  .legende { display: flex; flex-wrap: wrap; gap: 0.3rem 1.4rem; font-family: var(--crt); font-size: 1.35rem; color: var(--ph-dim); margin-top: 0.5rem; }
+  .legende svg { vertical-align: middle; margin-right: 0.3rem; }
 
-  /* Nœuds du graphe */
   .nd { cursor: pointer; }
   .nd rect.boite { fill: var(--ecran); stroke: var(--ph-dim); stroke-width: 1.2; }
   .nd.chaos rect.boite { stroke: var(--chaos-dim); }
   .nd.xenos rect.boite { stroke: var(--xenos-dim); }
   .nd.ctx rect.boite { stroke-dasharray: 5 4; }
   .nd text { font-family: "IBM Plex Mono", Consolas, monospace; fill: var(--ph-txt); }
-  .nd .t1 { font-size: 13px; font-weight: 600; fill: var(--ph); }
+  .nd .t1 { font-size: 15px; font-weight: 600; fill: var(--ph); }
   .nd.chaos .t1 { fill: var(--chaos); } .nd.xenos .t1 { fill: var(--xenos); }
-  .nd .t2 { font-size: 11px; fill: var(--ph-dim); }
-  .nd .num { font-family: "VT323", monospace; font-size: 24px; fill: var(--ecran); }
+  .nd .t2 { font-size: 12.5px; fill: var(--ph-dim); }
+  .nd .num { font-family: "VT323", monospace; font-size: 27px; fill: var(--ecran); }
   .nd rect.pastille { fill: var(--ph); }
   .nd.chaos rect.pastille { fill: var(--chaos); } .nd.xenos rect.pastille { fill: var(--xenos); }
+  .nd.ctx rect.pastille { fill: var(--ph-dim); }
   .nd.lu rect.boite { fill: var(--ph-wash); }
-  .nd .coche { font-family: "VT323", monospace; font-size: 21px; fill: var(--ph); }
-  .nd:hover rect.boite, .nd.sel rect.boite { stroke: var(--ph); stroke-width: 2.4; filter: drop-shadow(0 0 6px var(--ph-glow)); }
+  .nd .coche { font-family: "VT323", monospace; font-size: 20px; fill: var(--ph-dim); }
+  .nd:hover rect.boite, .nd.sel rect.boite { stroke: var(--ph); stroke-width: 2.4; }
   .nd.chaos:hover rect.boite, .nd.chaos.sel rect.boite { stroke: var(--chaos); }
   .nd.xenos:hover rect.boite, .nd.xenos.sel rect.boite { stroke: var(--xenos); }
   .nd:focus { outline: none; } .nd:focus-visible rect.boite { stroke: var(--ph); stroke-width: 3; }
-  .ligne { fill: none; stroke: var(--ph); stroke-width: 3; opacity: 0.55; filter: drop-shadow(0 0 4px var(--ph-glow)); }
+  .ligne { fill: none; stroke: var(--ph); stroke-width: 2.5; opacity: 0.45; }
   .lien-req { fill: none; stroke: var(--ph-dim); stroke-width: 1.3; }
   .lien-ctx { fill: none; stroke: var(--ph-dim); stroke-width: 1.1; stroke-dasharray: 4 4; opacity: 0.8; }
-  .lien-on { stroke: var(--ph) !important; opacity: 1; stroke-width: 2.2; }
-  /* Vue d'ensemble */
+  .parc.lien-req, .parc.lien-ctx { opacity: 0; transition: opacity 0.15s; }
+  .lien-on { stroke: var(--ph) !important; opacity: 1 !important; stroke-width: 2.2; }
   .pt { cursor: pointer; }
   .pt circle { fill: var(--ecran); stroke: var(--ph-dim); stroke-width: 1.5; }
   .pt.chaos circle { stroke: var(--chaos); } .pt.xenos circle { stroke: var(--xenos); }
   .pt.lu circle { fill: var(--ph-dim); }
-  .pt text { font-family: "VT323", monospace; font-size: 18px; fill: var(--ph-dim); pointer-events: none; }
+  .pt text { font-family: "VT323", monospace; font-size: 19px; fill: var(--ph-dim); pointer-events: none; }
   .pt:hover circle, .pt.sel circle { fill: var(--ph); stroke: var(--ph); }
   .pt:hover text, .pt.sel text { fill: var(--ph); }
   .pt.att circle { stroke-width: 3; stroke: var(--ph); }
@@ -111,28 +169,24 @@
   .pt text.cache { display: none; }
   .pt:hover text.cache, .pt.sel text.cache { display: inline; }
 
-  /* Itinéraire en liste */
-  .itin { list-style: none; margin: 0; padding: 0; max-width: none; counter-reset: etape; }
-  .itin > li::before { content: none; }
-  .etape { border-left: 2px solid var(--ph-faint); padding: 0.2rem 0 1rem 1.4rem; margin: 0 0 0 0.7rem; position: relative; }
-  .etape::after { content: attr(data-n); position: absolute; left: -0.95rem; top: 0.15rem; min-width: 1.8rem; text-align: center; font-family: var(--crt); font-size: 1.52rem; line-height: 1.35; background: var(--ph); color: var(--ecran); text-shadow: none; }
-  .etape.chaos::after { background: var(--chaos); } .etape.xenos::after { background: var(--xenos); }
-  .etape.ctx::after { background: var(--ecran); color: var(--ph-dim); outline: 1px dashed var(--ph-dim); }
-  .etape h3 { margin: 0 0 0.1rem; font-size: 1.05rem; cursor: pointer; }
-  .etape h3::before { content: none; }
-  .etape.chaos h3 { color: var(--chaos); } .etape.xenos h3 { color: var(--xenos); }
-  .etape.lu h3 { text-decoration: line-through; text-decoration-color: var(--ph-dim); }
-  .plusloin { border: 1px dashed var(--ph-faint); padding: 0.7rem 1rem; margin: 1rem 0 0; }
-  .plusloin h4 { margin-top: 0; }
-  .legende { display: flex; flex-wrap: wrap; gap: 0.3rem 1.4rem; font-family: var(--crt); font-size: 1.34rem; color: var(--ph-dim); margin-top: 0.4rem; }
-  .legende svg { vertical-align: middle; margin-right: 0.3rem; }
-
-  @media (max-width: 600px) { .carto-req .champ { flex-basis: 100%; } .carto-req button { width: 100%; } }
+  @media (max-width: 760px) {
+    .livre { grid-template-columns: 2.6rem minmax(0, 1fr); }
+    .livre .tete { border-right: 0; padding-bottom: 0.2rem; }
+    .livre .texte { grid-column: 2; padding: 0.4rem 1rem 0.85rem; }
+    .livre .num { grid-row: span 2; }
+  }
+  @media (max-width: 600px) {
+    .carto-req .champ { flex-basis: 100%; } .carto-req button { width: 100%; }
+    .sujets { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 0.4rem; scrollbar-width: thin; }
+    .sujets button { white-space: nowrap; flex: none; }
+    .onglets .long { display: none; }
+    .onglets button { font-size: 1.4rem; padding: 0.15rem 0.6rem; }
+  }
   @media (max-width: 960px) {
     .carto-grille { grid-template-columns: 1fr; }
     .fiche-livre { position: static; }
-    .carto-opt .prog { margin-left: 0; }
   }
+  @media print { .carto-req, .sujets, details.tous, .carto-barre, .lu-btn, .voir { display: none !important; } .livre { break-inside: avoid; } }
 </style>
 </head>
 <body>
@@ -165,42 +219,43 @@
     <div class="champ"><span>&gt;</span><input id="q" name="q" spellcheck="false" placeholder="ex. je veux lire sur les Blood Angels"></div>
     <button type="submit">Tracer le parcours</button>
   </form>
-  <div class="puces" id="puces" aria-label="Sujets fréquents"></div>
-
-  <div class="carto-opt">
-    <div class="grp" role="group" aria-label="Vue"><span>Vue</span>
-      <button type="button" data-vue="parcours" aria-pressed="true">Parcours</button>
-      <button type="button" data-vue="tout" aria-pressed="false">Bibliothèque entière</button>
-    </div>
-    <div class="grp" role="group" aria-label="Longueur"><span>Détours de contexte</span>
-      <button type="button" data-long="complet" aria-pressed="true">Inclus</button>
-      <button type="button" data-long="court" aria-pressed="false">Suites seulement</button>
-    </div>
-    <div class="prog" id="prog"></div>
-  </div>
+  <div class="sujets" id="puces" aria-label="Sujets fréquents"><span>Suggestions :</span></div>
+  <details class="tous" id="tous"><summary id="tousTitre">Tous les sujets</summary><div class="tous-grille" id="tousGrille"></div></details>
 
   <div class="verdict" id="verdict"></div>
   <h2 id="titreParcours">Choisissez un sujet</h2>
-  <p id="introParcours">Tapez une faction, un personnage ou une époque — ou choisissez un sujet ci-dessus. Chaque nœud du graphe est un roman ; cliquez-le pour lire son résumé.</p>
+  <p id="introParcours">Tapez une faction, un personnage ou une époque, ou choisissez un sujet ci-dessus. Le Cartographe vous propose les romans dans l'ordre, regroupés par série.</p>
+  <div class="resume-p" id="resumeP"></div>
 
-  <div class="carto-grille">
-    <div>
-      <div class="graphe" id="graphe"><span class="cadre-titre" id="cadreTitre">GRAPHE DE LECTURE</span><svg id="svg" role="img" aria-label="Graphe des romans"></svg></div>
-      <div class="legende">
-        <span><svg width="34" height="10"><line x1="0" y1="5" x2="34" y2="5" stroke="currentColor" stroke-width="3"/></svg>ordre de lecture</span>
-        <span><svg width="34" height="10"><line x1="0" y1="5" x2="34" y2="5" stroke="currentColor" stroke-width="1.3"/></svg>suite directe</span>
-        <span><svg width="34" height="10"><line x1="0" y1="5" x2="34" y2="5" stroke="currentColor" stroke-dasharray="4 4"/></svg>contexte conseillé</span>
-        <span style="color:var(--ph)">■ Imperium</span><span style="color:var(--chaos)">■ Chaos</span><span style="color:var(--xenos)">■ Xenos</span>
-      </div>
+  <div class="carto-barre">
+    <div class="onglets" role="tablist" aria-label="Affichage">
+      <button type="button" role="tab" data-vue="itin" aria-selected="true">Itinéraire</button>
+      <button type="button" role="tab" data-vue="graphe" aria-selected="false">Graphe</button>
+      <button type="button" role="tab" data-vue="tout" aria-selected="false">Bibliothèque<span class="long"> entière</span></button>
     </div>
-    <aside class="fiche-livre" id="fiche" aria-live="polite"><div class="vide">Sélectionnez un nœud pour afficher la fiche du roman.</div></aside>
+    <label class="detours"><input type="checkbox" id="detours" checked> Inclure les détours de contexte</label>
   </div>
 
-  <h2 id="titreListe">Itinéraire</h2>
-  <ol class="itin" id="itin"></ol>
-  <div id="plusloin"></div>
+  <div id="vueItin" role="tabpanel">
+    <div id="itin"></div>
+    <div id="plusloin"></div>
+  </div>
 
-  <p class="apres" style="margin-top:2.5rem">Résumés limités à la prémisse de chaque livre. Titres français indiqués quand une traduction existe sous ce nom. Pour ajouter des romans, éditez <code>cartographe-data.js</code>.</p>
+  <div id="vueGraphe" role="tabpanel" hidden>
+    <div class="carto-grille">
+      <div>
+        <div class="graphe" id="graphe"><span class="cadre-titre" id="cadreTitre">GRAPHE DE LECTURE</span><svg id="svg" role="img" aria-label="Graphe des romans"></svg></div>
+        <div class="legende" id="legende">
+          <span><svg width="34" height="10"><line x1="0" y1="5" x2="34" y2="5" stroke="currentColor" stroke-width="3"/></svg>ordre de lecture</span>
+          <span><svg width="34" height="10"><rect x="1" y="1" width="32" height="8" fill="none" stroke="currentColor" stroke-dasharray="4 3"/></svg>détour de contexte</span>
+          <span>Cliquez un roman pour voir sa fiche et ses liens.</span>
+        </div>
+      </div>
+      <aside class="fiche-livre" id="fiche" aria-live="polite"><div class="vide">Sélectionnez un roman pour afficher sa fiche.</div></aside>
+    </div>
+  </div>
+
+  <p class="apres" style="margin-top:2.5rem;font-size:.88rem;color:var(--ph-dim)">Résumés limités à la prémisse de chaque livre. Titres français indiqués quand une traduction existe sous ce nom. Pour ajouter des romans, éditez <code>cartographe-data.js</code>.</p>
 </main>
 
 <footer class="site-footer">
@@ -224,10 +279,10 @@
   /* ---------- Livres lus (mémoire locale) ---------- */
   var lus = {};
   try { lus = JSON.parse(localStorage.getItem("carto.lus") || "{}"); } catch (e) { lus = {}; }
-  function basculerLu(id) { if (lus[id]) delete lus[id]; else lus[id] = 1; try { localStorage.setItem("carto.lus", JSON.stringify(lus)); } catch (e) {} rendre(); if (sel) fiche(sel); }
+  function basculerLu(id) { if (lus[id]) delete lus[id]; else lus[id] = 1; try { localStorage.setItem("carto.lus", JSON.stringify(lus)); } catch (e) {} var y = window.scrollY; rendre(); if (sel && etat.vue !== "itin") fiche(sel); window.scrollTo(0, y); }
 
   /* ---------- État ---------- */
-  var etat = { vue: "parcours", long: "complet", q: "", themes: [], ordre: [], role: {}, plusloin: [] };
+  var etat = { vue: "itin", long: "complet", q: "", themes: [], ordre: [], role: {}, plusloin: [] };
   var sel = null;
 
   /* ---------- Interprétation de la requête ---------- */
@@ -324,22 +379,24 @@
     }
     var c = construire(seeds, impose);
     etat.ordre = c.ordre; etat.role = c.role; etat.plusloin = c.plusloin;
-    document.querySelectorAll("#puces button").forEach(function (b) { b.setAttribute("aria-pressed", etat.themes.length === 1 && etat.themes[0].id === b.dataset.t ? "true" : "false"); });
+    document.querySelectorAll("#puces button, #tousGrille button").forEach(function (b) { b.setAttribute("aria-pressed", etat.themes.length === 1 && etat.themes[0].id === b.dataset.t ? "true" : "false"); });
     sel = etat.ordre[0] || null;
     if (!etat.ordre.length && etat.vue === "parcours" && !etat.q) { /* écran d'accueil : vue d'ensemble */ }
     rendre();
-    if (sel) fiche(sel); else $("fiche").innerHTML = '<div class="vide">Sélectionnez un nœud pour afficher la fiche du roman.</div>';
+    if (sel) fiche(sel); else $("fiche").innerHTML = '<div class="vide">Sélectionnez un roman pour afficher sa fiche.</div>';
   }
   window.CARTO_TRACER = tracer;
 
   /* ---------- Rendu ---------- */
-  function rendre() { rendreGraphe(); rendreListe(); rendreProg(); }
+  function rendre() { rendreResume(); if (etat.vue === "itin") rendreListe(); else rendreGraphe(); }
 
-  function rendreProg() {
-    var o = etat.ordre, n = o.filter(function (id) { return lus[id]; }).length;
-    if (!o.length) { $("prog").innerHTML = ""; return; }
+  function rendreResume() {
+    var o = etat.ordre, r = $("resumeP");
+    if (!o.length) { r.innerHTML = ""; return; }
+    var ctx = o.filter(function (id) { return etat.role[id] === "contexte"; }).length, n = o.filter(function (id) { return lus[id]; }).length;
     var pc = Math.round(n / o.length * 100);
-    $("prog").innerHTML = "LUS " + n + "/" + o.length + '<span class="barre"><i style="width:calc(' + pc + '% - 2px)"></i></span>';
+    r.innerHTML = "<span><b>" + o.length + "</b> romans</span>" + (ctx ? "<span><b>" + (o.length - ctx) + "</b> dans le parcours · <b>" + ctx + "</b> détour" + (ctx > 1 ? "s" : "") + " de contexte</span>" : "") +
+      "<span>Lus : <b>" + n + "/" + o.length + '</b><span class="barre"><i style="width:calc(' + pc + '% - 2px)"></i></span></span>';
   }
 
   function decouper(t, max) {
@@ -351,10 +408,11 @@
 
   function rendreGraphe() {
     var svg = $("svg"); while (svg.firstChild) svg.removeChild(svg.firstChild);
-    if (etat.vue === "tout" || !etat.ordre.length) { $("cadreTitre").textContent = "BIBLIOTHÈQUE ENTIÈRE — " + LIVRES.length + " ROMANS" + (etat.ordre.length ? " · parcours en surbrillance" : " · cliquez un nœud"); return vueEnsemble(svg); }
+    $("legende").style.display = etat.vue === "tout" ? "none" : "";
+    if (etat.vue === "tout" || !etat.ordre.length) { $("cadreTitre").textContent = "BIBLIOTHÈQUE ENTIÈRE — " + LIVRES.length + " ROMANS" + (etat.ordre.length ? " · parcours en surbrillance" : " · cliquez un point"); return vueEnsemble(svg); }
     $("cadreTitre").textContent = "GRAPHE DE LECTURE — " + etat.ordre.length + " ROMANS";
     var W = Math.max(280, $("graphe").clientWidth - 2);
-    var nw = W < 520 ? W - 60 : 210, nh = 66, gx = 46, gy = 52, marge = 24;
+    var nw = W < 560 ? W - 48 : 250, nh = 80, gx = 44, gy = 46, marge = 22;
     var cols = Math.max(1, Math.floor((W - 2 * marge + gx) / (nw + gx)));
     var usedW = cols * nw + (cols - 1) * gx, x0 = Math.max(marge, (W - usedW) / 2);
     var pos = {};
@@ -365,7 +423,6 @@
     var rows = Math.ceil(etat.ordre.length / cols), H = 40 + rows * (nh + gy);
     svg.setAttribute("width", W); svg.setAttribute("height", H); svg.setAttribute("viewBox", "0 0 " + W + " " + H);
     var gL = S("g", {}, svg), gE = S("g", {}, svg), gN = S("g", {}, svg);
-    // ligne de parcours (serpentin)
     var d = "";
     etat.ordre.forEach(function (id, i) {
       var p = pos[id], cx = p.x + nw / 2, cy = p.y + nh / 2;
@@ -375,31 +432,34 @@
       else { var bx = (Math.floor(i / cols) % 2) ? q.x + nw + gx / 2 : q.x - gx / 2; if (cols === 1) bx = q.x + nw + gx / 2 - 10; d += " L" + (q.x + nw / 2) + " " + (q.y + nh / 2) + " C" + bx + " " + (q.y + nh / 2) + " " + bx + " " + cy + " " + (cx) + " " + cy; }
     });
     if (etat.ordre.length > 1) S("path", { d: d, "class": "ligne" }, gL);
-    // dépendances non consécutives
+    // dépendances : invisibles par défaut, révélées pour le roman sélectionné
     etat.ordre.forEach(function (id) {
       var b = P[id];
       var deps = (b.req || []).map(function (r) { return [r, "req"]; }).concat((b.ctx || []).map(function (c) { return [c[0], "ctx"]; }));
       deps.forEach(function (dp) {
         var a = pos[dp[0]], z = pos[id]; if (!a || z.i - a.i === 1) return;
         var x1 = a.x + nw / 2, y1 = a.y + nh, x2 = z.x + nw / 2, y2 = z.y;
-        if (a.y === z.y) { y1 = a.y; y2 = z.y; var my = a.y - 28; S("path", { d: "M" + x1 + " " + y1 + " C" + x1 + " " + my + " " + x2 + " " + my + " " + x2 + " " + y2, "class": dp[1] === "req" ? "lien-req" : "lien-ctx", "data-a": dp[0], "data-b": id }, gE); return; }
+        var cls = "parc " + (dp[1] === "req" ? "lien-req" : "lien-ctx");
+        if (a.y === z.y) { y1 = a.y; y2 = z.y; var my = a.y - 26; S("path", { d: "M" + x1 + " " + y1 + " C" + x1 + " " + my + " " + x2 + " " + my + " " + x2 + " " + y2, "class": cls, "data-a": dp[0], "data-b": id }, gE); return; }
         var ym = (y1 + y2) / 2;
-        S("path", { d: "M" + (x1 + 30) + " " + y1 + " C" + (x1 + 30) + " " + ym + " " + (x2 - 30) + " " + ym + " " + (x2 - 30) + " " + y2, "class": dp[1] === "req" ? "lien-req" : "lien-ctx", "data-a": dp[0], "data-b": id }, gE);
+        S("path", { d: "M" + (x1 + 30) + " " + y1 + " C" + (x1 + 30) + " " + ym + " " + (x2 - 30) + " " + ym + " " + (x2 - 30) + " " + y2, "class": cls, "data-a": dp[0], "data-b": id }, gE);
       });
     });
-    // nœuds
-    var maxc = Math.floor((nw - 46) / 7.9);
+    var maxc = Math.floor((nw - 54) / 9.1);
     etat.ordre.forEach(function (id, i) {
       var b = P[id], p = pos[id];
       var g = S("g", { "class": "nd " + b.fam + (etat.role[id] === "contexte" ? " ctx" : "") + (lus[id] ? " lu" : "") + (sel === id ? " sel" : ""), transform: "translate(" + p.x + "," + p.y + ")", tabindex: "0", role: "button", "aria-label": (i + 1) + ". " + b.t + ", " + b.a }, gN);
       g.dataset.id = id;
       S("rect", { "class": "boite", width: nw, height: nh }, g);
-      S("rect", { "class": "pastille", width: 30, height: nh }, g);
-      var tn = S("text", { "class": "num", x: 15, y: nh / 2 + 6, "text-anchor": "middle" }, g); tn.textContent = i + 1;
-      decouper(b.t, maxc).forEach(function (l, k) { var t = S("text", { "class": "t1", x: 40, y: 21 + k * 16 }, g); t.textContent = l; });
-      var t2 = S("text", { "class": "t2", x: 40, y: nh - 9 }, g); t2.textContent = (b.a + " · " + b.y).slice(0, maxc + 4);
-      if (lus[id]) { var ck = S("text", { "class": "coche", x: nw - 8, y: 17, "text-anchor": "end" }, g); ck.textContent = "LU"; }
+      S("rect", { "class": "pastille", width: 34, height: nh }, g);
+      var tn = S("text", { "class": "num", x: 17, y: nh / 2 + 7, "text-anchor": "middle" }, g); tn.textContent = i + 1;
+      var lignes = decouper(b.t, maxc);
+      lignes.forEach(function (l, k) { var t = S("text", { "class": "t1", x: 46, y: (lignes.length > 1 ? 24 : 32) + k * 18 }, g); t.textContent = l; });
+      var t2 = S("text", { "class": "t2", x: 46, y: nh - 12 }, g); t2.textContent = (b.a + " · " + b.y).slice(0, maxc + 6);
+      if (lus[id]) { var ck = S("text", { "class": "coche", x: nw - 8, y: 18, "text-anchor": "end" }, g); ck.textContent = "LU"; }
       g.addEventListener("click", function () { choisir(id); });
+      g.addEventListener("mouseenter", function () { survol(id); });
+      g.addEventListener("mouseleave", function () { survol(null); });
       g.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); choisir(id); } });
     });
     surligner();
@@ -417,7 +477,6 @@
     var idx = {}; nodes.forEach(function (n, i) { idx[n.id] = i; });
     var links = [];
     LIVRES.forEach(function (b) { (b.req || []).forEach(function (r) { links.push([idx[r], idx[b.id], 46]); }); (b.ctx || []).forEach(function (c) { links.push([idx[c[0]], idx[b.id], 90]); }); });
-    // liens faibles entre livres partageant un tag principal
     for (var it = 0; it < 320; it++) {
       var alpha = 1 - it / 320;
       for (var i = 0; i < nodes.length; i++) for (var j = i + 1; j < nodes.length; j++) {
@@ -445,8 +504,7 @@
     svg.setAttribute("width", Wc); svg.setAttribute("height", Math.round(H * Wc / W)); svg.setAttribute("viewBox", "0 0 " + W + " " + H);
     var dans = {}; etat.ordre.forEach(function (id) { dans[id] = 1; });
     var gE = S("g", {}, svg), gN = S("g", {}, svg);
-    // étiquettes de zones
-    [["XENOS", 0.22, "var(--xenos-dim)"], ["IMPERIUM", 0.5, "var(--ph-faint)"], ["CHAOS", 0.74, "var(--chaos-dim)"]].forEach(function (z) {
+    [["XENOS", 0.22, "var(--xenos-dim)"], ["IMPERIUM", 0.5, "var(--ph-dim)"], ["CHAOS", 0.74, "var(--chaos-dim)"]].forEach(function (z) {
       var t = S("text", { x: W * z[1], y: 26, "text-anchor": "middle", style: "font-family:VT323,monospace;font-size:27px;fill:" + z[2] }, svg); t.textContent = z[0];
     });
     LIVRES.forEach(function (b) {
@@ -454,12 +512,12 @@
       (b.req || []).concat((b.ctx || []).map(function (c) { return c[0]; })).forEach(function (r) {
         var a = layout.nodes[layout.idx[r]], isReq = (b.req || []).indexOf(r) >= 0;
         var on = dans[r] && dans[b.id];
-        S("line", { x1: a.x, y1: a.y, x2: z.x, y2: z.y, "class": (isReq ? "lien-req" : "lien-ctx") + (on ? " lien-on" : ""), "data-a": r, "data-b": b.id, opacity: etat.ordre.length && !on ? 0.25 : 0.8 }, gE);
+        S("line", { x1: a.x, y1: a.y, x2: z.x, y2: z.y, "class": (isReq ? "lien-req" : "lien-ctx") + (on ? " lien-on" : ""), "data-a": r, "data-b": b.id, opacity: etat.ordre.length && !on ? 0.2 : 0.7 }, gE);
       });
     });
     layout.nodes.forEach(function (n) {
       var b = n.b, att = dans[b.id];
-      var g = S("g", { "class": "pt " + b.fam + (att ? " att" : "") + (lus[b.id] ? " lu" : "") + (sel === b.id ? " sel" : ""), transform: "translate(" + n.x + "," + n.y + ")", tabindex: "0", role: "button", "aria-label": b.t + ", " + b.a, opacity: etat.ordre.length && !att ? 0.45 : 1 }, gN);
+      var g = S("g", { "class": "pt " + b.fam + (att ? " att" : "") + (lus[b.id] ? " lu" : "") + (sel === b.id ? " sel" : ""), transform: "translate(" + n.x + "," + n.y + ")", tabindex: "0", role: "button", "aria-label": b.t + ", " + b.a, opacity: etat.ordre.length && !att ? 0.4 : 1 }, gN);
       g.dataset.id = b.id;
       S("circle", { r: att ? 8 : 6 }, g);
       var t = S("text", { x: 11, y: 5, "class": (etat.ordre.length && !att) ? "cache" : "" }, g); t.textContent = b.t.length > 22 ? b.t.slice(0, 21) + "…" : b.t;
@@ -469,60 +527,105 @@
     surligner();
   }
 
+  var survolId = null;
+  function survol(id) { survolId = id; surligner(); }
   function surligner() {
     document.querySelectorAll("#svg [data-id]").forEach(function (g) { g.classList.toggle("sel", g.dataset.id === sel); });
+    var foc = survolId || sel;
     document.querySelectorAll("#svg [data-a]").forEach(function (l) {
-      var on = sel && (l.dataset.a === sel || l.dataset.b === sel);
+      var on = foc && (l.dataset.a === foc || l.dataset.b === foc);
       l.classList.toggle("lien-on", !!on || (etat.vue === "tout" && etat.ordre.indexOf(l.dataset.a) >= 0 && etat.ordre.indexOf(l.dataset.b) >= 0));
     });
   }
 
   function choisir(id) { sel = id; surligner(); fiche(id); }
 
-  function meta(b) {
-    return '<div class="meta"><b>' + esc(b.a) + "</b> · " + b.y + (b.serie ? " · " + esc(b.serie) : "") + "</div>";
+  var NIV = ["", "Pour débuter", "Intermédiaire", "Pour vétérans"];
+  var ERE = { M31: "Hérésie · M31", M41: "M41", M42: "Ère Indomitus · M42" };
+  function niveau(b) {
+    var h = '<span class="niv" title="Niveau : ' + NIV[b.niv] + '">';
+    for (var i = 1; i <= 3; i++) h += '<i class="' + (i <= b.niv ? "on" : "") + '"></i>';
+    return h + " " + NIV[b.niv] + "</span>";
   }
-  function badges(b, role) {
-    var niv = ["", "Idéal pour débuter", "Intermédiaire", "Pour vétérans"][b.niv];
-    var ere = { M31: "Hérésie · M31", M41: "41ᵉ millénaire", M42: "Ère Indomitus · M42" }[b.ere];
-    return '<span class="badge ' + b.fam + '">' + ere + '</span><span class="badge">' + niv + "</span>" +
-      (role === "contexte" ? '<span class="badge ctx">Détour de contexte</span>' : role === "suite" ? '<span class="badge">Tome précédent requis</span>' : "");
+  function tome(b) { var m = (b.serie || "").match(/·\s*(\d+)\s*$/); return m ? "tome " + m[1] : ""; }
+  function nomSerie(b) { return (b.serie || "").replace(/\s*·\s*\d+\s*$/, ""); }
+  function meta(b, avecSerie) {
+    return "<b>" + esc(b.a) + "</b><br>" + [b.y, avecSerie && b.serie ? esc(b.serie) : tome(b), ERE[b.ere]].filter(Boolean).join(" · ") + niveau(b);
   }
-  function apres(b) {
+  function apres(b, precedent) {
     var h = "";
-    (b.req || []).forEach(function (r) { h += '<div class="apres">Suite directe de <a href="#" data-go="' + r + '">' + esc(P[r].t) + "</a></div>"; });
-    (b.ctx || []).forEach(function (c) { h += '<div class="apres">Conseillé après <a href="#" data-go="' + c[0] + '">' + esc(P[c[0]].t) + "</a> — " + esc(c[1]) + "</div>"; });
+    (b.req || []).forEach(function (r) { if (r !== precedent) h += '<div class="apres">Suite directe de <a href="#" data-go="' + r + '">' + esc(P[r].t) + "</a></div>"; });
+    (b.ctx || []).forEach(function (c) { if (c[0] !== precedent) h += '<div class="apres">Conseillé après <a href="#" data-go="' + c[0] + '">' + esc(P[c[0]].t) + "</a> — " + esc(c[1]) + "</div>"; });
     return h;
   }
   function fiche(id) {
     var b = P[id], n = etat.ordre.indexOf(id);
     $("fiche").innerHTML =
-      '<div class="meta">' + (n >= 0 ? "ÉTAPE " + (n + 1) + " / " + etat.ordre.length : "HORS PARCOURS") + "</div>" +
-      "<h3>" + esc(b.t) + "</h3>" + (b.vf ? '<div class="meta">VF : <b>' + esc(b.vf) + "</b></div>" : "") + meta(b) +
-      '<div style="margin-top:.5rem">' + badges(b, etat.role[id]) + "</div>" +
-      "<p>" + esc(b.resume) + "</p>" + '<p class="pourquoi">' + esc(b.pourquoi) + "</p>" + apres(b) +
+      '<div class="etap">' + (n >= 0 ? "ÉTAPE " + (n + 1) + " / " + etat.ordre.length + (etat.role[id] === "contexte" ? " · DÉTOUR DE CONTEXTE" : "") : "HORS PARCOURS") + "</div>" +
+      "<h3>" + esc(b.t) + "</h3>" + (b.vf ? '<div class="meta">VF : <b>' + esc(b.vf) + "</b></div>" : "") + '<div class="meta">' + meta(b, true) + "</div>" +
+      "<p>" + esc(b.resume) + "</p>" + '<p class="pourquoi">' + esc(b.pourquoi) + "</p>" + apres(b, null) +
       '<button type="button" class="lu-btn" aria-pressed="' + (lus[id] ? "true" : "false") + '">' + (lus[id] ? "✓ Lu" : "Marquer comme lu") + "</button>";
     $("fiche").querySelector(".lu-btn").addEventListener("click", function () { basculerLu(id); });
     lierGo($("fiche"));
   }
   function lierGo(racine) {
-    racine.querySelectorAll("[data-go]").forEach(function (a) { a.addEventListener("click", function (e) { e.preventDefault(); choisir(a.dataset.go); }); });
+    racine.querySelectorAll("[data-go]").forEach(function (a) {
+      a.addEventListener("click", function (e) {
+        e.preventDefault();
+        if (etat.vue === "itin") { var c = document.querySelector('.livre[data-id="' + a.dataset.go + '"]'); if (c) { c.scrollIntoView({ block: "center" }); c.classList.add("flash"); setTimeout(function () { c.classList.remove("flash"); }, 1400); return; } }
+        if (etat.vue === "itin") changerVue("graphe");
+        choisir(a.dataset.go);
+      });
+    });
   }
 
-  function rendreListe() {
-    var ol = $("itin"); ol.innerHTML = "";
-    $("titreListe").style.display = etat.ordre.length ? "" : "none";
+  /* Itinéraire : romans consécutifs d'une même série regroupés en arcs */
+  function arcs() {
+    var G = [];
     etat.ordre.forEach(function (id, i) {
-      var b = P[id], li = document.createElement("li");
-      li.className = "etape " + b.fam + (etat.role[id] === "contexte" ? " ctx" : "") + (lus[id] ? " lu" : "");
-      li.dataset.n = i + 1;
-      li.innerHTML = "<h3>" + esc(b.t) + (b.vf ? ' <span style="font-weight:400;color:var(--ph-dim)">— ' + esc(b.vf) + "</span>" : "") + "</h3>" + meta(b) +
-        '<div style="margin-top:.3rem">' + badges(b, etat.role[id]) + "</div><p>" + esc(b.resume) + '</p><p class="pourquoi">' + esc(b.pourquoi) + "</p>" + apres(b) +
-        '<button type="button" class="lu-btn" aria-pressed="' + (lus[id] ? "true" : "false") + '">' + (lus[id] ? "✓ Lu" : "Marquer comme lu") + "</button>";
-      li.querySelector("h3").addEventListener("click", function () { choisir(id); $("graphe").scrollIntoView({ block: "nearest" }); });
-      li.querySelector(".lu-btn").addEventListener("click", function () { basculerLu(id); });
-      lierGo(li);
-      ol.appendChild(li);
+      var b = P[id], ctx = etat.role[id] === "contexte", s = nomSerie(b);
+      var key = (ctx ? "ctx|" : "") + s;
+      var g = G[G.length - 1];
+      if (!g || g.key !== key) { g = { key: key, ctx: ctx, serie: s, ids: [], debut: i }; G.push(g); }
+      g.ids.push(id);
+    });
+    return G;
+  }
+  function raisonDetour(g) {
+    for (var k = 0; k < etat.ordre.length; k++) {
+      var b = P[etat.ordre[k]];
+      for (var j = 0; j < (b.ctx || []).length; j++) if (g.ids.indexOf(b.ctx[j][0]) >= 0) return "Facultatif, conseillé avant « " + b.t + " » : " + b.ctx[j][1];
+    }
+    return "Facultatif : ces romans éclairent l'arrière-plan du parcours.";
+  }
+  function rendreListe() {
+    var box = $("itin"); box.innerHTML = "";
+    if (!etat.ordre.length) { box.innerHTML = '<p style="color:var(--ph-dim)">Aucun parcours tracé pour l\'instant.</p>'; $("plusloin").innerHTML = ""; return; }
+    arcs().forEach(function (g) {
+      var sec = document.createElement("section"); sec.className = "arc" + (g.ctx ? " ctx" : "") + (g.ids.length < 2 && !g.ctx ? " seul" : "");
+      var auteurs = [];
+      g.ids.forEach(function (id) { if (auteurs.indexOf(P[id].a) < 0) auteurs.push(P[id].a); });
+      var fin = g.debut + g.ids.length;
+      var etiq = g.ctx ? "DÉTOUR" : (g.ids.length > 1 ? "ÉTAPES " + (g.debut + 1) + "–" + fin : "ÉTAPE " + (g.debut + 1));
+      var titre = g.serie || (g.ctx ? "Contexte" : (g.ids.length > 1 ? "Romans indépendants" : P[g.ids[0]].t));
+      var seul = g.ids.length < 2 && !g.ctx;
+      sec.innerHTML = seul ? '<div class="livres"></div>' : '<div class="arc-tete"><span class="etiq">' + etiq + "</span><h3>" + esc(titre) + '</h3><span class="qui">' +
+        g.ids.length + " roman" + (g.ids.length > 1 ? "s" : "") + " · " + esc(auteurs.slice(0, 3).join(", ")) + (auteurs.length > 3 ? "…" : "") + "</span></div>" +
+        (g.ctx ? '<p class="arc-note">' + esc(raisonDetour(g)) + "</p>" : "") + '<div class="livres"></div>';
+      var grille = sec.querySelector(".livres");
+      g.ids.forEach(function (id) {
+        var i = etat.ordre.indexOf(id), b = P[id], art = document.createElement("article");
+        art.className = "livre " + b.fam + (lus[id] ? " lu" : ""); art.dataset.id = id;
+        art.innerHTML = '<div class="num">' + (i + 1) + '</div><div class="tete"><h4>' + esc(b.t) + "</h4>" +
+          (b.vf ? '<div class="vf">VF : ' + esc(b.vf) + "</div>" : "") + '<div class="meta">' + meta(b, seul) + "</div>" +
+          '<div class="pied"><button type="button" class="voir">voir dans le graphe</button><button type="button" class="lu-btn" aria-pressed="' + (lus[id] ? "true" : "false") + '">' + (lus[id] ? "✓ lu" : "☐ lu") + "</button></div></div>" +
+          '<div class="texte"><p>' + esc(b.resume) + '</p><p class="pourquoi">' + esc(b.pourquoi) + "</p>" + apres(b, etat.ordre[i - 1]) + "</div>";
+        art.querySelector(".lu-btn").addEventListener("click", function () { basculerLu(id); });
+        art.querySelector(".voir").addEventListener("click", function () { changerVue("graphe"); choisir(id); });
+        lierGo(art);
+        grille.appendChild(art);
+      });
+      box.appendChild(sec);
     });
     var pl = $("plusloin");
     if (etat.plusloin.length) {
@@ -530,27 +633,56 @@
         var b = P[x.id];
         return '<div class="apres"><a href="#" data-go="' + x.id + '">' + esc(b.t) + "</a> — à garder pour plus tard : il suppose " + x.manque.length + " tomes préalables (" + esc(x.manque.map(function (m) { return P[m].t; }).slice(0, 3).join(", ")) + (x.manque.length > 3 ? "…" : "") + ").</div>";
       }).join("") + "</div>";
-      lierGo(pl);
+      pl.querySelectorAll("[data-go]").forEach(function (a) { a.addEventListener("click", function (e) { e.preventDefault(); changerVue("graphe"); choisir(a.dataset.go); }); });
     } else pl.innerHTML = "";
   }
 
   /* ---------- Contrôles ---------- */
-  var PUCES = ["debutant", "heresie", "inquisition", "blood-angels", "ultramarines", "space-wolves", "dark-angels", "garde", "chaos", "black-legion", "mechanicus", "necrons", "aeldari", "orks", "tau", "m42", "humour"];
-  PUCES.forEach(function (tid) {
-    var t = THEMES.filter(function (x) { return x.id === tid; })[0]; if (!t) return;
-    var b = document.createElement("button"); b.type = "button"; b.textContent = t.nom; b.dataset.t = t.id; b.setAttribute("aria-pressed", "false");
-    b.addEventListener("click", function () { etat.vue = "parcours"; majBoutons(); tracer(t.nom); });
-    $("puces").appendChild(b);
-  });
-  $("formReq").addEventListener("submit", function (e) { e.preventDefault(); etat.vue = "parcours"; majBoutons(); tracer($("q").value); });
-  function majBoutons() {
-    document.querySelectorAll("[data-vue]").forEach(function (b) { b.setAttribute("aria-pressed", b.dataset.vue === etat.vue ? "true" : "false"); });
-    document.querySelectorAll("[data-long]").forEach(function (b) { b.setAttribute("aria-pressed", b.dataset.long === etat.long ? "true" : "false"); });
+  function changerVue(v) {
+    etat.vue = v; try { localStorage.setItem("carto.vue", v); } catch (e) {}
+    document.querySelectorAll("[data-vue]").forEach(function (b) { b.setAttribute("aria-selected", b.dataset.vue === v ? "true" : "false"); });
+    $("vueItin").hidden = v !== "itin"; $("vueGraphe").hidden = v === "itin";
+    rendre();
+    if (v !== "itin" && sel) fiche(sel);
   }
-  document.querySelectorAll("[data-vue]").forEach(function (b) { b.addEventListener("click", function () { etat.vue = b.dataset.vue; majBoutons(); rendreGraphe(); }); });
-  document.querySelectorAll("[data-long]").forEach(function (b) { b.addEventListener("click", function () { etat.long = b.dataset.long; majBoutons(); tracer(etat.q); }); });
-  var rz; window.addEventListener("resize", function () { clearTimeout(rz); rz = setTimeout(rendreGraphe, 150); });
+  function lancer(q) { if (etat.vue === "tout") changerVue("itin"); tracer(q); }
+  var PUCES = ["debutant", "heresie", "inquisition", "blood-angels", "ultramarines", "space-wolves", "chaos", "necrons", "aeldari", "orks", "m42"];
+  function boutonTheme(t) {
+    var b = document.createElement("button"); b.type = "button"; b.textContent = t.nom; b.dataset.t = t.id; b.setAttribute("aria-pressed", "false");
+    b.addEventListener("click", function () { $("tous").open = false; lancer(t.nom); $("titreParcours").scrollIntoView({ block: "start" }); });
+    return b;
+  }
+  PUCES.forEach(function (tid) { var t = THEMES.filter(function (x) { return x.id === tid; })[0]; if (t) $("puces").appendChild(boutonTheme(t)); });
+  var FAMILLES = [
+    ["Pour commencer", ["debutant", "humour", "crime", "gaunt", "cain"]],
+    ["L'Hérésie d'Horus", ["heresie", "heresie-integrale", "siege-terra", "primarchs"]],
+    ["Space Marines", ["blood-angels", "ultramarines", "dark-angels", "space-wolves", "salamanders", "white-scars", "raven-guard", "iron-hands", "imperial-fists", "black-templars", "grey-knights", "deathwatch", "blood-ravens", "carcharodons", "soul-drinkers", "silver-skulls"]],
+    ["Imperium", ["inquisition", "custodes", "mechanicus", "sororitas", "assassins", "garde", "knights"]],
+    ["Chaos", ["chaos", "black-legion", "night-lords", "word-bearers", "iron-warriors", "world-eaters", "death-guard", "emperors-children", "thousand-sons", "alpha-legion"]],
+    ["Xenos", ["necrons", "aeldari", "drukhari", "orks", "tau", "tyranides"]],
+    ["Ère Indomitus", ["m42", "dawn-of-fire"]]
+  ];
+  var classes = {};
+  FAMILLES.forEach(function (f) { f[1].forEach(function (id) { classes[id] = 1; }); });
+  var autres = THEMES.filter(function (t) { return !classes[t.id]; }).map(function (t) { return t.id; });
+  if (autres.length) FAMILLES.push(["Autres", autres]);
+  FAMILLES.forEach(function (f) {
+    var col = document.createElement("div"); col.innerHTML = "<h4>" + esc(f[0]) + "</h4><div></div>";
+    f[1].forEach(function (id) { var t = THEMES.filter(function (x) { return x.id === id; })[0]; if (t) col.lastChild.appendChild(boutonTheme(t)); });
+    $("tousGrille").appendChild(col);
+  });
+  $("tousTitre").textContent = "Tous les sujets (" + THEMES.length + ")";
 
+  $("formReq").addEventListener("submit", function (e) { e.preventDefault(); lancer($("q").value); });
+  document.querySelectorAll("[data-vue]").forEach(function (b) { b.addEventListener("click", function () { changerVue(b.dataset.vue); }); });
+  $("detours").addEventListener("change", function () { etat.long = $("detours").checked ? "complet" : "court"; tracer(etat.q); });
+  var rz; window.addEventListener("resize", function () { clearTimeout(rz); rz = setTimeout(function () { if (etat.vue !== "itin") rendreGraphe(); }, 150); });
+
+  var vInit = "itin"; try { vInit = localStorage.getItem("carto.vue") || "itin"; } catch (e) {}
+  if (["itin", "graphe", "tout"].indexOf(vInit) < 0) vInit = "itin";
+  etat.vue = vInit;
+  document.querySelectorAll("[data-vue]").forEach(function (b) { b.setAttribute("aria-selected", b.dataset.vue === vInit ? "true" : "false"); });
+  $("vueItin").hidden = vInit !== "itin"; $("vueGraphe").hidden = vInit === "itin";
   var m = location.search.match(/[?&]q=([^&]*)/);
   tracer(m ? decodeURIComponent(m[1].replace(/\+/g, " ")) : "");
 })();
